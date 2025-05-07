@@ -1,7 +1,8 @@
 // src/routes/products.js
-const express = require('express');
+import express from 'express';
+import products from '../models/product.js';
+
 const router = express.Router();
-const products = require('../models/product');
 
 // Get all products (with basic info)
 router.get('/', (req, res) => {
@@ -74,4 +75,4 @@ router.get('/featured/items', (req, res) => {
   res.json(productsList);
 });
 
-module.exports = router;
+export default router;

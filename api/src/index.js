@@ -1,7 +1,8 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import productRoutes from './routes/products.js';
+
 const app = express();
-const productRoutes = require('./routes/products');
 
 // CORS Configuration - More permissive for development
 app.use(cors());  // This enables CORS for all origins by default
@@ -33,4 +34,4 @@ app.listen(PORT, () => {
   console.log(`Test the API at http://localhost:${PORT}/api`);
 });
 
-module.exports = app;
+export default app;
