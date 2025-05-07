@@ -1,6 +1,18 @@
 // src/services/productService.js
 
-const API_URL = '/api';
+// Get the base URL dynamically
+const getBaseUrl = () => {
+  // Check if we're in production (Vercel)
+  if (window.location.hostname !== 'localhost') {
+    // Use the same origin for API calls in production
+    return '';
+  }
+  // In development, we're likely using the separate backend server
+  return 'http://localhost:5000';
+};
+
+const API_URL = `${getBaseUrl()}/api`;
+
 
 /**
  * Fetch all products for product listing
