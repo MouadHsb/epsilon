@@ -1,4 +1,4 @@
-import products from '../../data/product.js';
+import products from '../data/product.js';
 
 export default function handler(req, res) {
   if (req.method !== 'GET') {
