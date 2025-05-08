@@ -1,10 +1,13 @@
 {
-    "rewrites": [
-      { "source": "/api/(.*)", "destination": "/api/src/routes/$1" },
-      { "source": "/(.*)", "destination": "/index.html" }
-    ],
-    "buildCommand": "npm run build",
-    "outputDirectory": "dist",
-    "framework": "vite",
-    "regions": ["cdg1"]
-  }
+  "rewrites": [
+    { "source": "/api/products", "destination": "/api/products/index.js" },
+    { "source": "/api/products/:id", "destination": "/api/products/[id].js" },
+    { "source": "/api/products/category/:category", "destination": "/api/products/category/[category].js" },
+    { "source": "/api/products/featured/items", "destination": "/api/products/featured/items.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "regions": ["cdg1"]
+}
