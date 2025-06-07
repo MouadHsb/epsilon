@@ -6,10 +6,12 @@ import SkinScan from "./pages/SkinScan.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import Cart from "./pages/Cart.jsx";
 import About from "./pages/About.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/products" element={<Products />} />

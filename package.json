@@ -5,16 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "backend": "node api/src/index.js",
-    "dev:all": "concurrently \"npm run backend\" \"npm run dev\"",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "concurrently": "^8.2.0",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
     "lucide-react": "^0.508.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

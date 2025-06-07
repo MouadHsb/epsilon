@@ -1,18 +1,29 @@
 // src/services/productService.js
+import products from '../../api/data/product.js';
 
-// Get the base URL dynamically
-const getBaseUrl = () => {
-  // Check if we're in production (Vercel)
-  if (window.location.hostname !== 'localhost') {
-    // Use the same origin for API calls in production
-    return '';
-  }
-  // In development, we're likely using the separate backend server
-  return 'http://localhost:5000';
+// Simple environment detection - only check if we're in development mode
+const isDev = import.meta.env.DEV;
+
+/**
+ * Optional network delay simulation for development
+ * Helps test loading states and spinners
+ */
+const simulateDelay = (ms = 200) => {
+  return isDev ? new Promise(resolve => setTimeout(resolve, ms)) : Promise.resolve();
 };
 
-const API_URL = `${getBaseUrl()}/api`;
-
+/**
+ * Format product for listing (removes heavy data like full descriptions)
+ */
+const formatProductForListing = (product) => ({
+  id: product.id,
+  name: product.name,
+  description: product.description,
+  price: product.price,
+  category: product.category,
+  image: product.images[0],
+  featured: product.featured
+});
 
 /**
  * Fetch all products for product listing
@@ -20,16 +31,22 @@ const API_URL = `${getBaseUrl()}/api`;
  */
 export const fetchProducts = async () => {
   try {
-    const response = await fetch(`${API_URL}/products`);
-    
-    if (!response.ok) {
-      throw new Error(`Error fetching products: ${response.statusText}`);
+    if (isDev) {
+      // Local development - use static data
+      await simulateDelay();
+      const productsList = products.map(formatProductForListing);
+      console.log(`✅ Loaded ${productsList.length} products (local data)`);
+      return productsList;
+    } else {
+      // Production - use API
+      const response = await fetch('/api/products');
+      if (!response.ok) {
+        throw new Error(`Error fetching products: ${response.statusText}`);
+      }
+      return await response.json();
     }
-    
-    return await response.json();
   } catch (error) {
     console.error('Failed to fetch products:', error);
-    // Return empty array to prevent UI errors
     return [];
   }
 };
@@ -41,13 +58,23 @@ export const fetchProducts = async () => {
  */
 export const fetchProductById = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`);
-    
-    if (!response.ok) {
-      throw new Error(`Error fetching product: ${response.statusText}`);
+    if (isDev) {
+      // Local development - use static data
+      await simulateDelay();
+      const product = products.find(p => p.id === parseInt(id));
+      if (!product) {
+        throw new Error('Product not found');
+      }
+      console.log(`✅ Loaded product: ${product.name} (local data)`);
+      return product;
+    } else {
+      // Production - use API
+      const response = await fetch(`/api/products/${id}`);
+      if (!response.ok) {
+        throw new Error(`Error fetching product: ${response.statusText}`);
+      }
+      return await response.json();
     }
-    
-    return await response.json();
   } catch (error) {
     console.error(`Failed to fetch product #${id}:`, error);
     throw error;
@@ -61,16 +88,25 @@ export const fetchProductById = async (id) => {
  */
 export const fetchProductsByCategory = async (category) => {
   try {
-    const response = await fetch(`${API_URL}/products/category/${category}`);
-    
-    if (!response.ok) {
-      throw new Error(`Error fetching products in category: ${response.statusText}`);
+    if (isDev) {
+      // Local development - use static data
+      await simulateDelay();
+      const filteredProducts = products.filter(p => 
+        p.category.toLowerCase() === category.toLowerCase()
+      );
+      const productsList = filteredProducts.map(formatProductForListing);
+      console.log(`✅ Loaded ${productsList.length} products in category "${category}" (local data)`);
+      return productsList;
+    } else {
+      // Production - use API
+      const response = await fetch(`/api/products/category/${category}`);
+      if (!response.ok) {
+        throw new Error(`Error fetching products in category: ${response.statusText}`);
+      }
+      return await response.json();
     }
-    
-    return await response.json();
   } catch (error) {
     console.error(`Failed to fetch products in category ${category}:`, error);
-    // Return empty array to prevent UI errors
     return [];
   }
 };
@@ -81,16 +117,28 @@ export const fetchProductsByCategory = async (category) => {
  */
 export const fetchFeaturedProducts = async () => {
   try {
-    const response = await fetch(`${API_URL}/products/featured/items`);
-    
-    if (!response.ok) {
-      throw new Error(`Error fetching featured products: ${response.statusText}`);
+    if (isDev) {
+      // Local development - use static data
+      await simulateDelay();
+      const featuredProducts = products.filter(p => p.featured);
+      const productsList = featuredProducts.map(formatProductForListing);
+      console.log(`✅ Loaded ${productsList.length} featured products (local data)`);
+      return productsList;
+    } else {
+      // Production - use API
+      const response = await fetch('/api/products/featured/items');
+      if (!response.ok) {
+        throw new Error(`Error fetching featured products: ${response.statusText}`);
+      }
+      return await response.json();
     }
-    
-    return await response.json();
   } catch (error) {
     console.error('Failed to fetch featured products:', error);
-    // Return empty array to prevent UI errors
     return [];
   }
 };
+
+// Development info
+if (isDev) {
+  console.log('🔧 Product Service: Using local static data for development');
+}
