@@ -1,54 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { Camera, Upload, X, ArrowRight, Loader2, Info } from 'lucide-react';
+import { Camera, Upload, X, ArrowRight, Loader2, Info, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-// Dummy recommended products data
-const recommendedProducts = [
-  {
-    id: 4,
-    name: "Hemp Face Cream",
-    description: "Rich yet lightweight moisturizer packed with omega fatty acids from organic hemp seed oil. Ideal for sensitive skin.",
-    price: 45.99,
-    image: "/Tadefi.png"
-  },
-  {
-    id: 5,
-    name: "Night Repair Cream",
-    description: "Rich night moisturizer with moringa oil and blue tansy. Repairs and regenerates while you sleep.",
-    price: 49.99,
-    image: "/Tadefi.png"
-  },
-  {
-    id: 16,
-    name: "Rosehip Face Oil",
-    description: "Organic cold-pressed rosehip oil enriched with vitamin C and essential fatty acids. Perfect for reducing fine lines.",
-    price: 39.99,
-    image: "/Tadefi.png"
-  }
-];
-
-// Dummy skin analysis results
-const dummyAnalysisResult = {
-  skinType: "combination",
-  concerns: ["dehydration", "uneven texture"],
-  recommendations: {
-    morning: [
-      "Gentle cleanser with hydrating properties",
-      "Alcohol-free toner",
-      "Lightweight moisturizer with SPF"
-    ],
-    evening: [
-      "Double cleansing routine",
-      "Hydrating serum with hyaluronic acid",
-      "Night repair cream for barrier support"
-    ],
-    weekly: [
-      "Gentle exfoliation 1-2 times per week",
-      "Hydrating mask to restore moisture balance"
-    ]
-  }
-};
 
 const CameraModal = ({ onCapture, onClose }) => {
   const videoRef = useRef(null);
@@ -69,7 +22,6 @@ const CameraModal = ({ onCapture, onClose }) => {
     
     const startCamera = async () => {
       try {
-        // Try to get front camera on mobile, any camera on desktop
         const constraints = {
           video: isMobile 
             ? { facingMode: "user" }
@@ -78,7 +30,6 @@ const CameraModal = ({ onCapture, onClose }) => {
         
         const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
 
-        // Stop if component unmounted while waiting for stream
         if (!isMounted) {
           mediaStream.getTracks().forEach(track => track.stop());
           return;
@@ -124,9 +75,15 @@ const CameraModal = ({ onCapture, onClose }) => {
     const canvas = document.createElement('canvas');
     const video = videoRef.current;
     
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Set reasonable canvas dimensions (max 800px width to keep file size manageable)
+    const maxWidth = 800;
+    const aspectRatio = video.videoHeight / video.videoWidth;
+    
+    let canvasWidth = Math.min(video.videoWidth, maxWidth);
+    let canvasHeight = canvasWidth * aspectRatio;
+    
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     
     const context = canvas.getContext('2d');
     
@@ -138,7 +95,12 @@ const CameraModal = ({ onCapture, onClose }) => {
     
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    const photoData = canvas.toDataURL('image/png');
+    // Use higher quality JPEG compression (0.85 quality)
+    const photoData = canvas.toDataURL('image/jpeg', 0.85);
+    
+    console.log('Captured photo data length:', photoData.length);
+    console.log('Canvas dimensions:', canvas.width, 'x', canvas.height);
+    
     onCapture(photoData);
     stopCamera();
   };
@@ -228,18 +190,50 @@ const SkinScan = () => {
   const [showCamera, setShowCamera] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [analysis, setAnalysis] = useState(null);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState(null);
   const fileInputRef = useRef(null);
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
 
   const analyzeSkinPhoto = async (photoData) => {
     setIsAnalyzing(true);
+    setAnalysisError(null);
     
-    // Simulate API call with timeout
-    setTimeout(() => {
-      setAnalysis(dummyAnalysisResult);
+    try {
+      const response = await fetch('/api/skin-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageData: photoData })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Analysis failed');
+      }
+
+      if (data.success) {
+        setAnalysis(data.analysis);
+        setRecommendedProducts(data.recommendedProducts);
+        
+        // Show a warning if fallback was used
+        if (data.fallback) {
+          console.warn('Using fallback analysis due to API error:', data.error);
+          // You could show a toast notification here about using fallback
+        }
+      } else {
+        throw new Error(data.error || 'Analysis failed');
+      }
+      
+    } catch (error) {
+      console.error('Analysis failed:', error);
+      setAnalysisError(error.message);
+    } finally {
       setIsAnalyzing(false);
-    }, 2500);
+    }
   };
 
   const handleCapture = async (photoData) => {
@@ -251,20 +245,68 @@ const SkinScan = () => {
   const handleNewPhoto = () => {
     setPhoto(null);
     setAnalysis(null);
+    setRecommendedProducts([]);
+    setAnalysisError(null);
   };
 
   const handleUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      // Validate file size (max 10MB for processing)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Please select an image smaller than 10MB.');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const photoData = e.target.result;
+        let photoData = e.target.result;
+        
+        // If the image is very large, resize it
+        if (file.size > 2 * 1024 * 1024) { // If larger than 2MB
+          photoData = await resizeImage(photoData, 800); // Resize to max 800px width
+        }
+        
+        console.log('Uploaded photo data length:', photoData.length);
         setPhoto(photoData);
         await analyzeSkinPhoto(photoData);
       };
       reader.readAsDataURL(file);
     }
     event.target.value = '';
+  };
+
+  // Helper function to resize images
+  const resizeImage = (dataUrl, maxWidth) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Calculate new dimensions
+        const aspectRatio = img.height / img.width;
+        const newWidth = Math.min(img.width, maxWidth);
+        const newHeight = newWidth * aspectRatio;
+        
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        
+        // Draw and compress
+        ctx.drawImage(img, 0, 0, newWidth, newHeight);
+        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        
+        console.log('Resized image from', dataUrl.length, 'to', resizedDataUrl.length, 'characters');
+        resolve(resizedDataUrl);
+      };
+      img.src = dataUrl;
+    });
   };
 
   const addToCart = (product) => {
@@ -279,7 +321,6 @@ const SkinScan = () => {
           : item
       );
     } else {
-      // Only add essential data to cart
       const cartItem = {
         id: product.id,
         name: product.name,
@@ -292,8 +333,20 @@ const SkinScan = () => {
     
     localStorage.setItem('cart', JSON.stringify(newCart));
     
-    // Show confirmation (could be replaced with a toast notification)
+    // Trigger storage event for other components
+    window.dispatchEvent(new Event('storage'));
+    
     alert(`${product.name} added to cart`);
+  };
+
+  const getImageUrl = (path) => {
+    if (path?.startsWith('http')) {
+      return path;
+    }
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? window.location.origin 
+      : 'http://localhost:5000';
+    return `${baseUrl}${path}`;
   };
 
   return (
@@ -301,7 +354,7 @@ const SkinScan = () => {
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/jpg,image/png,image/webp"
         onChange={handleUpload}
         className="hidden"
       />
@@ -315,7 +368,7 @@ const SkinScan = () => {
             
             <div className="flex items-center justify-center mb-6 relative">
               <p className="text-lg text-[#2A462B]/80 leading-relaxed inline-flex items-center">
-                Your personalized skin analysis
+                AI-powered skin analysis for personalized recommendations
                 <button 
                   className="ml-2 text-[#3C6C3F] p-1 rounded-full hover:bg-[#3C6C3F]/10 transition-colors"
                   onClick={() => setShowInfoTooltip(!showInfoTooltip)}
@@ -329,7 +382,12 @@ const SkinScan = () => {
                 <div className="absolute top-full mt-2 bg-white p-4 rounded-xl shadow-lg text-left z-10 max-w-md">
                   <h3 className="font-medium text-[#2A462B] mb-2">How SkinScan Works</h3>
                   <p className="text-sm text-[#2A462B]/80 mb-3">
-                    SkinScan uses advanced computer vision to analyze your skin's condition and provide personalized recommendations based on your unique skin profile.
+                    SkinScan uses advanced AI computer vision to analyze your skin's condition and identify 
+                    various concerns like acne, dryness, pigmentation, and more. Based on the analysis, 
+                    we provide personalized Tadefi product recommendations.
+                  </p>
+                  <p className="text-xs text-[#2A462B]/60 mb-3">
+                    For best results, take a clear, well-lit photo of your face without makeup.
                   </p>
                   <button 
                     className="text-xs text-[#3C6C3F] font-medium hover:underline"
@@ -344,7 +402,8 @@ const SkinScan = () => {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-[#3C6C3F]/10 mb-10">
               <div className="max-w-md mx-auto">
                 <p className="text-[#2A462B]/80 mb-8">
-                  Take or upload a selfie and our advanced skin analysis technology will recommend personalized products for your skin type and concerns.
+                  Take or upload a clear photo of your face and our AI will analyze your skin condition 
+                  to recommend the best Tadefi products for your unique needs.
                 </p>
 
                 {!photo && !isAnalyzing && (
@@ -387,6 +446,24 @@ const SkinScan = () => {
                   </div>
                 )}
 
+                {analysisError && (
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                    <div className="mb-4">
+                      <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center">
+                        <AlertCircle className="w-8 h-8 text-red-500" />
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-medium text-red-800 mb-2">Analysis Failed</h3>
+                    <p className="text-sm text-red-600 mb-4">{analysisError}</p>
+                    <button 
+                      onClick={handleNewPhoto}
+                      className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                )}
+
                 {photo && analysis && !isAnalyzing && (
                   <div className="flex flex-col items-center">
                     <div className="bg-[#F4F7F4] p-2 rounded-xl border border-[#3C6C3F]/10 mb-6 max-w-xs mx-auto">
@@ -396,6 +473,11 @@ const SkinScan = () => {
                         className="w-full rounded-lg"
                       />
                     </div>
+                    {analysis.confidence && (
+                      <div className="text-sm text-[#2A462B]/70 mb-4">
+                        Analysis Confidence: {Math.round(analysis.confidence * 100)}%
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -412,14 +494,20 @@ const SkinScan = () => {
                       <div className="bg-[#F4F7F4] rounded-xl p-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center">
-                            <span className="text-[#3C6C3F] font-semibold">C</span>
+                            <span className="text-[#3C6C3F] font-semibold">
+                              {analysis.skinType.charAt(0).toUpperCase()}
+                            </span>
                           </div>
                           <div>
                             <p className="font-medium text-[#2A462B] capitalize">{analysis.skinType}</p>
                             <p className="text-sm text-[#2A462B]/70">
                               {analysis.skinType === 'combination' ? 
                                 'Oily in T-zone, normal to dry elsewhere' : 
-                                'Balanced with occasional oiliness'
+                                analysis.skinType === 'oily' ?
+                                'Produces excess sebum, prone to shine' :
+                                analysis.skinType === 'dry' ?
+                                'Lacks natural oils, may feel tight' :
+                                'Easily irritated, requires gentle care'
                               }
                             </p>
                           </div>
@@ -428,13 +516,20 @@ const SkinScan = () => {
                     </div>
                     
                     <div className="text-left">
-                      <h3 className="text-lg font-medium text-[#2A462B] mb-3">Primary Concerns</h3>
+                      <h3 className="text-lg font-medium text-[#2A462B] mb-3">Detected Concerns</h3>
                       <div className="bg-[#F4F7F4] rounded-xl p-4">
                         <ul className="space-y-2">
                           {analysis.concerns.map((concern, index) => (
-                            <li key={index} className="flex items-center space-x-2">
-                              <div className="w-2 h-2 rounded-full bg-[#3C6C3F]"></div>
-                              <span className="text-[#2A462B] capitalize">{concern}</span>
+                            <li key={index} className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 rounded-full bg-[#3C6C3F]"></div>
+                                <span className="text-[#2A462B] capitalize">{concern}</span>
+                              </div>
+                              {analysis.concernDetails && analysis.concernDetails[concern] && (
+                                <span className="text-xs text-[#2A462B]/60">
+                                  {Math.round(analysis.concernDetails[concern] * 100)}%
+                                </span>
+                              )}
                             </li>
                           ))}
                         </ul>
@@ -491,45 +586,59 @@ const SkinScan = () => {
                   </div>
                 </div>
                 
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-[#3C6C3F]/10">
-                  <h2 className="text-2xl font-semibold text-[#3C6C3F] mb-6">Recommended Products</h2>
-                  
-                  <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-                    {recommendedProducts.map((product) => (
-                      <div 
-                        key={product.id}
-                        className="bg-[#F4F7F4]/50 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 border border-[#3C6C3F]/10"
-                      >
-                        
-                        <div className="p-4">
-                          <h3 className="font-medium text-[#2A462B] mb-1">{product.name}</h3>
-                          <p className="text-sm text-[#2A462B]/70 line-clamp-2 mb-3 h-10">
-                            {product.description}
-                          </p>
-                          <div className="flex justify-between items-center">
-                            <span className="font-semibold text-[#2A462B]">${product.price.toFixed(2)}</span>
-                            <button
-                              onClick={() => addToCart(product)}
-                              className="bg-[#3C6C3F] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#2A462B] transition-colors"
-                            >
-                              Add to Cart
-                            </button>
+                {recommendedProducts.length > 0 && (
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-[#3C6C3F]/10">
+                    <h2 className="text-2xl font-semibold text-[#3C6C3F] mb-6">Recommended Products</h2>
+                    
+                    <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+                      {recommendedProducts.map((product) => (
+                        <div 
+                          key={product.id}
+                          className="bg-[#F4F7F4]/50 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 border border-[#3C6C3F]/10"
+                        >
+                          <div className="bg-[#F4F7F4] aspect-square relative overflow-hidden">
+                            <img
+                              src={getImageUrl(product.image)}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          
+                          <div className="p-4">
+                            <div className="mb-2">
+                              <span className="text-xs text-[#3C6C3F] font-medium bg-[#3C6C3F]/10 px-2 py-1 rounded-full">
+                                {product.category}
+                              </span>
+                            </div>
+                            <h3 className="font-medium text-[#2A462B] mb-1">{product.name}</h3>
+                            <p className="text-sm text-[#2A462B]/70 line-clamp-2 mb-3 h-10">
+                              {product.description}
+                            </p>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-[#2A462B]">${product.price.toFixed(2)}</span>
+                              <button
+                                onClick={() => addToCart(product)}
+                                className="bg-[#3C6C3F] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#2A462B] transition-colors"
+                              >
+                                Add to Cart
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    
+                    <div className="mt-6 text-center">
+                      <Link 
+                        to="/products"
+                        className="inline-flex items-center text-[#3C6C3F] font-medium hover:text-[#2A462B] transition-colors"
+                      >
+                        View all products
+                        <ArrowRight className="w-4 h-4 ml-1" />
+                      </Link>
+                    </div>
                   </div>
-                  
-                  <div className="mt-6 text-center">
-                    <Link 
-                      to="/products"
-                      className="inline-flex items-center text-[#3C6C3F] font-medium hover:text-[#2A462B] transition-colors"
-                    >
-                      View all recommended products
-                      <ArrowRight className="w-4 h-4 ml-1" />
-                    </Link>
-                  </div>
-                </div>
+                )}
                 
                 <div className="flex justify-center gap-4">
                   <button
