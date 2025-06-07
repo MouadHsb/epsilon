@@ -108,74 +108,193 @@ const generateRecommendations = (concerns, skinType) => {
 /**
  * Get recommended products based on analysis
  */
+/**
+ * Get recommended products based on analysis
+ */
 const getRecommendedProducts = (analysis) => {
   const { concerns, skinType } = analysis;
-  const recommendedProducts = [];
-
-  // Enhanced category mapping based on concerns
-  const categoryMap = {
-    'acne breakouts': ['Cleansers', 'Toners', 'Serums'],
-    'clogged pores': ['Cleansers', 'Masks', 'Serums'],
-    'dehydration': ['Moisturizers', 'Serums', 'Masks'],
-    'hyperpigmentation': ['Serums', 'Masks'],
-    'fine lines and wrinkles': ['Serums', 'Moisturizers', 'Face Oils', 'Eye Care'],
-    'excess oil production': ['Cleansers', 'Toners', 'Serums'],
-    'skin irritation': ['Moisturizers', 'Toners'],
-    'visible pores': ['Toners', 'Serums', 'Masks'],
-    'under-eye concerns': ['Eye Care', 'Serums'],
-    'general maintenance': ['Moisturizers', 'Serums']
-  };
-
-  // Skin type specific categories
-  const skinTypeCategories = {
-    'oily': ['Cleansers', 'Toners', 'Serums'],
-    'dry': ['Moisturizers', 'Face Oils', 'Serums'],
-    'combination': ['Cleansers', 'Toners', 'Moisturizers'],
-    'sensitive': ['Moisturizers', 'Toners'],
-    'normal': ['Cleansers', 'Moisturizers', 'Serums']
-  };
-
-  // Collect relevant categories
-  const relevantCategories = new Set();
   
-  // Add categories based on concerns
-  concerns.forEach(concern => {
-    const categories = categoryMap[concern] || [];
-    categories.forEach(cat => relevantCategories.add(cat));
+  // Enhanced scoring system for product recommendations
+  const productScores = new Map();
+
+  // Define concern-to-product mapping with specific product benefits
+  const concernProductMap = {
+    'acne breakouts': {
+      keywords: ['tea tree', 'salicylic', 'charcoal', 'clay', 'purifying'],
+      categories: ['Cleansers', 'Masks', 'Serums'],
+      priority: 3
+    },
+    'dehydration': {
+      keywords: ['hydrating', 'hyaluronic', 'moisture', 'water', 'hemp'],
+      categories: ['Moisturizers', 'Serums', 'Face Oils'],
+      priority: 3
+    },
+    'hyperpigmentation': {
+      keywords: ['brightening', 'vitamin c', 'dark spots', 'even tone'],
+      categories: ['Serums', 'Masks'],
+      priority: 2
+    },
+    'fine lines and wrinkles': {
+      keywords: ['anti-aging', 'peptide', 'retinol', 'repair', 'wrinkle'],
+      categories: ['Serums', 'Moisturizers', 'Eye Care', 'Face Oils'],
+      priority: 3
+    },
+    'excess oil production': {
+      keywords: ['oil-control', 'mattifying', 'balancing', 'lotus'],
+      categories: ['Cleansers', 'Toners', 'Serums'],
+      priority: 2
+    },
+    'skin irritation': {
+      keywords: ['soothing', 'calming', 'gentle', 'sensitive', 'chamomile'],
+      categories: ['Moisturizers', 'Toners'],
+      priority: 3
+    },
+    'visible pores': {
+      keywords: ['pore', 'refining', 'minimizing', 'tightening'],
+      categories: ['Toners', 'Serums', 'Masks'],
+      priority: 2
+    },
+    'under-eye concerns': {
+      keywords: ['eye', 'dark circles', 'puffiness', 'bags'],
+      categories: ['Eye Care'],
+      priority: 3
+    },
+    'clogged pores': {
+      keywords: ['unclogging', 'exfoliating', 'clay', 'charcoal'],
+      categories: ['Cleansers', 'Masks'],
+      priority: 2
+    },
+    'general maintenance': {
+      keywords: ['daily', 'essential', 'basic', 'routine'],
+      categories: ['Cleansers', 'Moisturizers', 'Serums'],
+      priority: 1
+    }
+  };
+
+  // Skin type preferences
+  const skinTypePreferences = {
+    'oily': {
+      preferred: ['gel', 'lightweight', 'oil-free', 'mattifying'],
+      avoid: ['heavy', 'rich', 'cream'],
+      categories: ['Cleansers', 'Toners', 'Serums']
+    },
+    'dry': {
+      preferred: ['rich', 'nourishing', 'hydrating', 'cream', 'oil'],
+      avoid: ['mattifying', 'oil-control'],
+      categories: ['Moisturizers', 'Face Oils', 'Serums']
+    },
+    'combination': {
+      preferred: ['balancing', 'lightweight', 'gel-cream'],
+      avoid: ['heavy', 'extreme'],
+      categories: ['Cleansers', 'Moisturizers', 'Serums']
+    },
+    'sensitive': {
+      preferred: ['gentle', 'soothing', 'fragrance-free', 'calming'],
+      avoid: ['acid', 'strong', 'potent'],
+      categories: ['Moisturizers', 'Cleansers']
+    },
+    'normal': {
+      preferred: ['maintaining', 'preventive', 'daily'],
+      avoid: [],
+      categories: ['Cleansers', 'Moisturizers', 'Serums']
+    }
+  };
+
+  // Score each product based on how well it matches concerns and skin type
+  products.forEach(product => {
+    let score = 0;
+    const productText = `${product.name} ${product.description} ${product.longDescription}`.toLowerCase();
+    
+    // Score based on concern matching
+    concerns.forEach(concern => {
+      const concernInfo = concernProductMap[concern];
+      if (concernInfo) {
+        // Category match
+        if (concernInfo.categories.includes(product.category)) {
+          score += concernInfo.priority * 2;
+        }
+        
+        // Keyword match
+        concernInfo.keywords.forEach(keyword => {
+          if (productText.includes(keyword)) {
+            score += concernInfo.priority;
+          }
+        });
+      }
+    });
+    
+    // Score based on skin type
+    const skinPrefs = skinTypePreferences[skinType];
+    if (skinPrefs) {
+      // Category preference
+      if (skinPrefs.categories.includes(product.category)) {
+        score += 2;
+      }
+      
+      // Keyword preferences
+      skinPrefs.preferred.forEach(keyword => {
+        if (productText.includes(keyword)) {
+          score += 1;
+        }
+      });
+      
+      // Avoid certain keywords
+      skinPrefs.avoid.forEach(keyword => {
+        if (productText.includes(keyword)) {
+          score -= 2;
+        }
+      });
+    }
+    
+    // Bonus for featured products
+    if (product.featured) {
+      score += 1;
+    }
+    
+    // Store score
+    if (score > 0) {
+      productScores.set(product.id, { product, score });
+    }
   });
 
-  // Add categories based on skin type
-  const skinCategories = skinTypeCategories[skinType] || [];
-  skinCategories.forEach(cat => relevantCategories.add(cat));
+  // Sort products by score and get top recommendations
+  const sortedProducts = Array.from(productScores.values())
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6); // Get top 6 for better selection
 
-  // If no specific concerns detected, ensure we have basic categories
-  if (relevantCategories.size === 0) {
-    ['Cleansers', 'Moisturizers', 'Serums'].forEach(cat => relevantCategories.add(cat));
+  // Ensure variety in categories (max 2 per category for top 3)
+  const categoryCount = new Map();
+  const finalRecommendations = [];
+  
+  for (const { product } of sortedProducts) {
+    const count = categoryCount.get(product.category) || 0;
+    if (count < 2) {
+      categoryCount.set(product.category, count + 1);
+      finalRecommendations.push(product);
+      if (finalRecommendations.length === 3) break; // Only need top 3
+    }
+  }
+  
+  // If we don't have 3 products yet, add more
+  if (finalRecommendations.length < 3) {
+    for (const { product } of sortedProducts) {
+      if (!finalRecommendations.find(p => p.id === product.id)) {
+        finalRecommendations.push(product);
+        if (finalRecommendations.length === 3) break;
+      }
+    }
   }
 
-  // Get products from relevant categories
-  Array.from(relevantCategories).forEach(category => {
-    const categoryProducts = products
-      .filter(product => product.category === category)
-      .slice(0, 2); // Limit to 2 products per category
-    
-    recommendedProducts.push(...categoryProducts);
-  });
-
-  // Remove duplicates and limit total recommendations
-  const uniqueProducts = recommendedProducts
-    .filter((product, index, self) => 
-      index === self.findIndex(p => p.id === product.id)
-    )
-    .slice(0, 6); // Limit to 6 total recommendations
-
-  // If no specific recommendations, return featured products
-  if (uniqueProducts.length === 0) {
-    return products.filter(p => p.featured).slice(0, 4);
+  // If still not enough, add featured products
+  if (finalRecommendations.length < 3) {
+    const featured = products
+      .filter(p => p.featured && !finalRecommendations.find(r => r.id === p.id))
+      .slice(0, 3 - finalRecommendations.length);
+    finalRecommendations.push(...featured);
   }
 
   // Format products for frontend
-  return uniqueProducts.map(product => ({
+  return finalRecommendations.map(product => ({
     id: product.id,
     name: product.name,
     description: product.description,

@@ -1,9 +1,23 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { Camera, Upload, X, ArrowRight, Loader2, Info, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Camera, Upload, X, ArrowRight, Loader2, Info, AlertCircle, Check, Sparkles, Shield, Sun, Droplets, Eye, ShoppingBag } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { analyzeSkinPhoto } from '../services/skinAnalysisService.js';
 
+// Instructions data
+const photoInstructions = [
+  { icon: <Droplets className="w-5 h-5" />, text: "Wash your face and let it air dry for 5-10 minutes" },
+  { icon: <Sun className="w-5 h-5" />, text: "Face a natural light source or bright indoor lighting" },
+  { icon: <Camera className="w-5 h-5" />, text: "Use the back camera for better quality if possible" },
+  { icon: <Eye className="w-5 h-5" />, text: "Keep a neutral expression and look directly at camera" }
+];
+
+// Confidence level mapping
+const getConfidenceLevel = (confidence) => {
+  if (confidence >= 0.85) return { level: "Very High", color: "text-green-600", bgColor: "bg-green-50", description: "Excellent image quality" };
+  if (confidence >= 0.7) return { level: "High", color: "text-blue-600", bgColor: "bg-blue-50", description: "Good analysis results" };
+  return { level: "Moderate", color: "text-amber-600", bgColor: "bg-amber-50", description: "Follow photo guidelines for better results" };
+};
 
 const CameraModal = ({ onCapture, onClose }) => {
   const videoRef = useRef(null);
@@ -11,8 +25,8 @@ const CameraModal = ({ onCapture, onClose }) => {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [cameraError, setCameraError] = useState(null);
+  const [facingMode, setFacingMode] = useState('user');
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
@@ -26,7 +40,7 @@ const CameraModal = ({ onCapture, onClose }) => {
       try {
         const constraints = {
           video: isMobile 
-            ? { facingMode: "user" }
+            ? { facingMode: facingMode }
             : true
         };
         
@@ -54,7 +68,7 @@ const CameraModal = ({ onCapture, onClose }) => {
       isMounted = false;
       stopCamera();
     };
-  }, [isMobile]);
+  }, [isMobile, facingMode]);
 
   const stopCamera = () => {
     if (stream) {
@@ -71,13 +85,17 @@ const CameraModal = ({ onCapture, onClose }) => {
     onClose();
   };
 
+  const switchCamera = () => {
+    stopCamera();
+    setFacingMode(prev => prev === 'user' ? 'environment' : 'user');
+  };
+
   const handleCaptureClick = () => {
     if (!isVideoReady) return;
 
     const canvas = document.createElement('canvas');
     const video = videoRef.current;
     
-    // Set reasonable canvas dimensions (max 800px width to keep file size manageable)
     const maxWidth = 800;
     const aspectRatio = video.videoHeight / video.videoWidth;
     
@@ -89,33 +107,30 @@ const CameraModal = ({ onCapture, onClose }) => {
     
     const context = canvas.getContext('2d');
     
-    // If selfie camera, flip the image horizontally
-    if (isMobile) {
+    if (facingMode === 'user') {
       context.translate(canvas.width, 0);
       context.scale(-1, 1);
     }
     
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Use higher quality JPEG compression (0.85 quality)
-    const photoData = canvas.toDataURL('image/jpeg', 0.85);
-    
-    console.log('Captured photo data length:', photoData.length);
-    console.log('Canvas dimensions:', canvas.width, 'x', canvas.height);
+    const photoData = canvas.toDataURL('image/jpeg', 0.9);
     
     onCapture(photoData);
     stopCamera();
   };
 
   return (
-    <div className="fixed inset-0 bg-[#2A462B]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl overflow-hidden w-full max-w-2xl shadow-2xl">
-        <div className="flex justify-between items-center p-4 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-[#2A462B]">Take a Photo</h2>
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl overflow-hidden w-full max-w-2xl shadow-2xl">
+        <div className="flex justify-between items-center p-5 bg-gradient-to-r from-[#F4F7F4] to-white">
+          <div>
+            <h2 className="text-2xl font-semibold text-[#2A462B]">Capture Your Photo</h2>
+            <p className="text-sm text-[#2A462B]/70 mt-1">Position your face in the center</p>
+          </div>
           <button 
             onClick={handleClose}
-            className="p-2 hover:bg-[#F4F7F4] rounded-full transition-all duration-300"
-            aria-label="Close"
+            className="p-2 hover:bg-white/50 rounded-full transition-all duration-300"
           >
             <X className="w-6 h-6 text-[#2A462B]" />
           </button>
@@ -125,58 +140,77 @@ const CameraModal = ({ onCapture, onClose }) => {
           {cameraError ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-white text-center">
               <div className="mb-4 p-4 rounded-full bg-red-500/20">
-                <Info className="w-8 h-8 text-red-400" />
+                <AlertCircle className="w-12 h-12 text-red-400" />
               </div>
-              <h3 className="text-lg font-medium mb-2">Camera Access Error</h3>
+              <h3 className="text-xl font-medium mb-2">Camera Access Required</h3>
               <p className="text-white/80 mb-4">{cameraError}</p>
-              <p className="text-white/80 text-sm mb-4">Please ensure your browser has permission to access your camera and try again.</p>
+              <p className="text-white/60 text-sm mb-6">Please enable camera permissions in your browser settings.</p>
               <button
                 onClick={handleClose}
-                className="px-4 py-2 bg-white text-[#2A462B] rounded-full font-medium"
+                className="px-6 py-3 bg-white text-[#2A462B] rounded-full font-medium hover:bg-gray-100 transition-colors"
               >
                 Close
               </button>
             </div>
           ) : (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover"
-              style={{ transform: isMobile ? 'scaleX(-1)' : 'none' }}
-              onLoadedData={() => setIsVideoReady(true)}
-            />
+            <>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover"
+                style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
+                onLoadedData={() => setIsVideoReady(true)}
+              />
+              
+              {/* Camera overlay guide */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                  w-64 h-80 border-2 border-white/50 rounded-3xl"></div>
+              </div>
+              
+              {isMobile && (
+                <button
+                  onClick={switchCamera}
+                  className="absolute top-4 right-4 p-3 bg-white/20 backdrop-blur-sm rounded-full
+                    text-white hover:bg-white/30 transition-all duration-300"
+                  aria-label="Switch camera"
+                >
+                  <Camera className="w-5 h-5" />
+                </button>
+              )}
+            </>
           )}
           
           {!isVideoReady && !cameraError && (
-            <div className="absolute inset-0 flex items-center justify-center text-white">
-              <div className="flex items-center space-x-3">
-                <Loader2 className="w-6 h-6 animate-spin" />
-                <span>Initializing camera...</span>
+            <div className="absolute inset-0 flex items-center justify-center text-white bg-black/50">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3" />
+                <span className="text-lg">Initializing camera...</span>
               </div>
             </div>
           )}
         </div>
         
-        <div className="p-4">
+        <div className="p-6 bg-gradient-to-r from-[#F4F7F4] to-white">
           <button
             onClick={handleCaptureClick}
             disabled={!isVideoReady || cameraError}
-            className={`w-full px-8 py-4 rounded-full transition-all duration-300 shadow-md font-medium flex items-center justify-center gap-2 ${
+            className={`w-full px-8 py-4 rounded-full transition-all duration-300 shadow-lg font-medium flex items-center justify-center gap-3 ${
               isVideoReady && !cameraError
-                ? 'bg-[#3C6C3F] text-white hover:bg-[#2A462B]' 
-                : 'bg-[#F4F7F4] text-[#2A462B]/50 cursor-not-allowed'
+                ? 'bg-[#3C6C3F] text-white hover:bg-[#2A462B] hover:shadow-xl transform hover:scale-[1.02]' 
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
             {isVideoReady && !cameraError ? (
               <>
-                Capture Photo
                 <Camera className="w-5 h-5" />
+                Capture Photo
               </>
             ) : (
               !cameraError && (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   Camera Loading...
                 </>
               )
@@ -189,6 +223,7 @@ const CameraModal = ({ onCapture, onClose }) => {
 };
 
 const SkinScan = () => {
+  const navigate = useNavigate();
   const [showCamera, setShowCamera] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [analysis, setAnalysis] = useState(null);
@@ -196,40 +231,36 @@ const SkinScan = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState(null);
   const fileInputRef = useRef(null);
-  const [showInfoTooltip, setShowInfoTooltip] = useState(false);
+  const [activeTab, setActiveTab] = useState('instructions');
 
   const handleAnalyzeSkinPhoto = async (photoData) => {
-  setIsAnalyzing(true);
-  setAnalysisError(null);
-  
-  try {
-    const result = await analyzeSkinPhoto(photoData);
+    setIsAnalyzing(true);
+    setAnalysisError(null);
     
-    if (result.success) {
-      setAnalysis(result.analysis);
-      setRecommendedProducts(result.recommendedProducts);
+    try {
+      const result = await analyzeSkinPhoto(photoData);
       
-      // Show a warning if fallback was used
-      if (result.fallback && !import.meta.env.DEV) {
-        console.warn('Using fallback analysis due to API error:', result.error);
-        // You could show a toast notification here about using fallback
+      if (result.success) {
+        setAnalysis(result.analysis);
+        // Only take top 3 products
+        setRecommendedProducts(result.recommendedProducts.slice(0, 3));
+        setActiveTab('results');
+      } else {
+        throw new Error(result.error || 'Analysis failed');
       }
-    } else {
-      throw new Error(result.error || 'Analysis failed');
+      
+    } catch (error) {
+      console.error('Analysis failed:', error);
+      setAnalysisError(error.message);
+    } finally {
+      setIsAnalyzing(false);
     }
-    
-  } catch (error) {
-    console.error('Analysis failed:', error);
-    setAnalysisError(error.message);
-  } finally {
-    setIsAnalyzing(false);
-  }
   };
 
   const handleCapture = async (photoData) => {
-  setPhoto(photoData);
-  setShowCamera(false);
-  await handleAnalyzeSkinPhoto(photoData);
+    setPhoto(photoData);
+    setShowCamera(false);
+    await handleAnalyzeSkinPhoto(photoData);
   };
 
   const handleNewPhoto = () => {
@@ -237,18 +268,17 @@ const SkinScan = () => {
     setAnalysis(null);
     setRecommendedProducts([]);
     setAnalysisError(null);
+    setActiveTab('instructions');
   };
 
   const handleUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file.');
         return;
       }
 
-      // Validate file size (max 10MB for processing)
       if (file.size > 10 * 1024 * 1024) {
         alert('Please select an image smaller than 10MB.');
         return;
@@ -258,12 +288,10 @@ const SkinScan = () => {
       reader.onload = async (e) => {
         let photoData = e.target.result;
         
-        // If the image is very large, resize it
-        if (file.size > 2 * 1024 * 1024) { // If larger than 2MB
-          photoData = await resizeImage(photoData, 800); // Resize to max 800px width
+        if (file.size > 2 * 1024 * 1024) {
+          photoData = await resizeImage(photoData, 800);
         }
         
-        console.log('Uploaded photo data length:', photoData.length);
         setPhoto(photoData);
         await handleAnalyzeSkinPhoto(photoData);
       };
@@ -272,7 +300,6 @@ const SkinScan = () => {
     event.target.value = '';
   };
 
-  // Helper function to resize images
   const resizeImage = (dataUrl, maxWidth) => {
     return new Promise((resolve) => {
       const img = new Image();
@@ -280,7 +307,6 @@ const SkinScan = () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
-        // Calculate new dimensions
         const aspectRatio = img.height / img.width;
         const newWidth = Math.min(img.width, maxWidth);
         const newHeight = newWidth * aspectRatio;
@@ -288,11 +314,9 @@ const SkinScan = () => {
         canvas.width = newWidth;
         canvas.height = newHeight;
         
-        // Draw and compress
         ctx.drawImage(img, 0, 0, newWidth, newHeight);
-        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
         
-        console.log('Resized image from', dataUrl.length, 'to', resizedDataUrl.length, 'characters');
         resolve(resizedDataUrl);
       };
       img.src = dataUrl;
@@ -322,21 +346,25 @@ const SkinScan = () => {
     }
     
     localStorage.setItem('cart', JSON.stringify(newCart));
-    
-    // Trigger storage event for other components
     window.dispatchEvent(new Event('storage'));
     
-    alert(`${product.name} added to cart`);
+    // Visual feedback
+    const button = event.target;
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added';
+    button.classList.add('bg-green-600');
+    
+    setTimeout(() => {
+      button.innerHTML = originalContent;
+      button.classList.remove('bg-green-600');
+    }, 2000);
   };
 
   const getImageUrl = (path) => {
     if (path?.startsWith('http')) {
       return path;
     }
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? window.location.origin 
-      : 'http://localhost:5000';
-    return `${baseUrl}${path}`;
+    return path?.startsWith('/') ? path : `/${path}`;
   };
 
   return (
@@ -349,307 +377,418 @@ const SkinScan = () => {
         className="hidden"
       />
       
-      <div className="bg-gradient-to-br from-[#F4F7F4] to-white min-h-screen">
-        <div className="container mx-auto px-4 md:px-8 py-10 md:py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-light text-[#2A462B] mb-4 md:mb-6 tracking-tight">
-              Skin<span className="text-[#3C6C3F] font-semibold">Scan™</span>
-            </h1>
-            
-            <div className="flex items-center justify-center mb-6 relative">
-              <p className="text-lg text-[#2A462B]/80 leading-relaxed inline-flex items-center">
-                AI-powered skin analysis for personalized recommendations
-                <button 
-                  className="ml-2 text-[#3C6C3F] p-1 rounded-full hover:bg-[#3C6C3F]/10 transition-colors"
-                  onClick={() => setShowInfoTooltip(!showInfoTooltip)}
-                  aria-label="More information about SkinScan"
-                >
-                  <Info className="w-5 h-5" />
-                </button>
-              </p>
+      <div className="bg-gradient-to-br from-[#F4F7F4] via-white to-[#F4F7F4] min-h-screen">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden bg-gradient-to-b from-white to-[#F4F7F4]/50 pb-8">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+          <div className="container mx-auto px-4 md:px-8 pt-10 md:pt-16 relative">
+            <div className="text-center max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 bg-[#3C6C3F]/10 px-4 py-2 rounded-full mb-6">
+                <Sparkles className="w-4 h-4 text-[#3C6C3F]" />
+                <span className="text-sm font-medium text-[#3C6C3F]">AI-Powered Skin Analysis</span>
+              </div>
               
-              {showInfoTooltip && (
-                <div className="absolute top-full mt-2 bg-white p-4 rounded-xl shadow-lg text-left z-10 max-w-md">
-                  <h3 className="font-medium text-[#2A462B] mb-2">How SkinScan Works</h3>
-                  <p className="text-sm text-[#2A462B]/80 mb-3">
-                    SkinScan uses advanced AI computer vision to analyze your skin's condition and identify 
-                    various concerns like acne, dryness, pigmentation, and more. Based on the analysis, 
-                    we provide personalized Tadefi product recommendations.
-                  </p>
-                  <p className="text-xs text-[#2A462B]/60 mb-3">
-                    For best results, take a clear, well-lit photo of your face without makeup.
-                  </p>
-                  <button 
-                    className="text-xs text-[#3C6C3F] font-medium hover:underline"
-                    onClick={() => setShowInfoTooltip(false)}
+              <h1 className="text-4xl md:text-6xl font-light text-[#2A462B] mb-4 tracking-tight">
+                Discover Your Skin's
+                <span className="block text-[#3C6C3F] font-semibold mt-2">Perfect Match</span>
+              </h1>
+              
+              <p className="text-lg md:text-xl text-[#2A462B]/80 mb-8 leading-relaxed">
+                Advanced AI technology analyzes your unique skin characteristics to recommend 
+                the ideal Tadefi products for your skincare journey.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 md:px-8 pb-20">
+          {!photo && !isAnalyzing && (
+            <div className="max-w-5xl mx-auto">
+              {/* Tabs */}
+              <div className="flex justify-center mb-8">
+                <div className="inline-flex bg-white rounded-full p-1 shadow-md">
+                  <button
+                    onClick={() => setActiveTab('instructions')}
+                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                      activeTab === 'instructions' 
+                        ? 'bg-[#3C6C3F] text-white shadow-lg' 
+                        : 'text-[#2A462B]/70 hover:text-[#2A462B]'
+                    }`}
                   >
-                    Close
+                    Instructions
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('upload')}
+                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                      activeTab === 'upload' 
+                        ? 'bg-[#3C6C3F] text-white shadow-lg' 
+                        : 'text-[#2A462B]/70 hover:text-[#2A462B]'
+                    }`}
+                  >
+                    Upload Photo
                   </button>
                 </div>
-              )}
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-[#3C6C3F]/10 mb-10">
-              <div className="max-w-md mx-auto">
-                <p className="text-[#2A462B]/80 mb-8">
-                  Take or upload a clear photo of your face and our AI will analyze your skin condition 
-                  to recommend the best Tadefi products for your unique needs.
-                </p>
-
-                {!photo && !isAnalyzing && (
-                  <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-                    <button
-                      onClick={() => setShowCamera(true)}
-                      className="flex flex-col items-center justify-center p-6 bg-[#F4F7F4] rounded-xl
-                        border border-[#3C6C3F]/10 hover:shadow-md transition-all duration-300 h-40
-                        hover:bg-white hover:border-[#3C6C3F]/20 group"
-                    >
-                      <Camera className="w-10 h-10 text-[#3C6C3F] mb-3 transform group-hover:scale-110 transition-transform duration-300" />
-                      <h3 className="text-lg font-medium text-[#2A462B] mb-1">Take Photo</h3>
-                      <p className="text-sm text-[#2A462B]/60">Use your camera</p>
-                    </button>
-                    
-                    <button 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex flex-col items-center justify-center p-6 bg-[#F4F7F4] rounded-xl
-                        border border-[#3C6C3F]/10 hover:shadow-md transition-all duration-300 h-40
-                        hover:bg-white hover:border-[#3C6C3F]/20 group"
-                    >
-                      <Upload className="w-10 h-10 text-[#3C6C3F] mb-3 transform group-hover:scale-110 transition-transform duration-300" />
-                      <h3 className="text-lg font-medium text-[#2A462B] mb-1">Upload Photo</h3>
-                      <p className="text-sm text-[#2A462B]/60">From your device</p>
-                    </button>
-                  </div>
-                )}
-
-                {isAnalyzing && (
-                  <div className="bg-[#F4F7F4]/50 rounded-xl p-8 text-center">
-                    <div className="mb-4">
-                      <div className="w-16 h-16 mx-auto rounded-full bg-[#3C6C3F]/10 flex items-center justify-center">
-                        <Loader2 className="w-8 h-8 text-[#3C6C3F] animate-spin" />
-                      </div>
-                    </div>
-                    <h3 className="text-lg font-medium text-[#2A462B] mb-2">Analyzing Your Skin</h3>
-                    <p className="text-sm text-[#2A462B]/70">
-                      Our AI is examining your skin characteristics to provide personalized recommendations...
-                    </p>
-                  </div>
-                )}
-
-                {analysisError && (
-                  <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-                    <div className="mb-4">
-                      <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center">
-                        <AlertCircle className="w-8 h-8 text-red-500" />
-                      </div>
-                    </div>
-                    <h3 className="text-lg font-medium text-red-800 mb-2">Analysis Failed</h3>
-                    <p className="text-sm text-red-600 mb-4">{analysisError}</p>
-                    <button 
-                      onClick={handleNewPhoto}
-                      className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors"
-                    >
-                      Try Again
-                    </button>
-                  </div>
-                )}
-
-                {photo && analysis && !isAnalyzing && (
-                  <div className="flex flex-col items-center">
-                    <div className="bg-[#F4F7F4] p-2 rounded-xl border border-[#3C6C3F]/10 mb-6 max-w-xs mx-auto">
-                      <img 
-                        src={photo} 
-                        alt="Your skin analysis" 
-                        className="w-full rounded-lg"
-                      />
-                    </div>
-                    {analysis.confidence && (
-                      <div className="text-sm text-[#2A462B]/70 mb-4">
-                        Analysis Confidence: {Math.round(analysis.confidence * 100)}%
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
-            </div>
 
-            {photo && analysis && !isAnalyzing && (
-              <div className="space-y-10">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-[#3C6C3F]/10">
-                  <h2 className="text-2xl font-semibold text-[#3C6C3F] mb-6">Your Skin Analysis</h2>
-                  
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="text-left">
-                      <h3 className="text-lg font-medium text-[#2A462B] mb-3">Skin Type</h3>
-                      <div className="bg-[#F4F7F4] rounded-xl p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center">
-                            <span className="text-[#3C6C3F] font-semibold">
-                              {analysis.skinType.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-[#2A462B] capitalize">{analysis.skinType}</p>
-                            <p className="text-sm text-[#2A462B]/70">
-                              {analysis.skinType === 'combination' ? 
-                                'Oily in T-zone, normal to dry elsewhere' : 
-                                analysis.skinType === 'oily' ?
-                                'Produces excess sebum, prone to shine' :
-                                analysis.skinType === 'dry' ?
-                                'Lacks natural oils, may feel tight' :
-                                'Easily irritated, requires gentle care'
-                              }
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              {/* Instructions Tab */}
+              {activeTab === 'instructions' && (
+                <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-[#3C6C3F]/10">
+                  <div className="max-w-3xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-semibold text-[#2A462B] mb-8 text-center">
+                      How to Take the Perfect Photo
+                    </h2>
                     
-                    <div className="text-left">
-                      <h3 className="text-lg font-medium text-[#2A462B] mb-3">Detected Concerns</h3>
-                      <div className="bg-[#F4F7F4] rounded-xl p-4">
-                        <ul className="space-y-2">
-                          {analysis.concerns.map((concern, index) => (
-                            <li key={index} className="flex items-center justify-between">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-2 h-2 rounded-full bg-[#3C6C3F]"></div>
-                                <span className="text-[#2A462B] capitalize">{concern}</span>
-                              </div>
-                              {analysis.concernDetails && analysis.concernDetails[concern] && (
-                                <span className="text-xs text-[#2A462B]/60">
-                                  {Math.round(analysis.concernDetails[concern] * 100)}%
-                                </span>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 text-left">
-                    <h3 className="text-lg font-medium text-[#2A462B] mb-3">Recommended Routine</h3>
-                    
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-[#F4F7F4] rounded-xl p-4">
-                        <h4 className="font-medium text-[#3C6C3F] mb-2">Morning</h4>
-                        <ul className="space-y-2 text-sm text-[#2A462B]/80">
-                          {analysis.recommendations.morning.map((item, index) => (
-                            <li key={index} className="flex items-start space-x-2">
-                              <span className="text-[#3C6C3F] font-medium flex-shrink-0 mt-0.5">
-                                {index + 1}.
-                              </span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div className="bg-[#F4F7F4] rounded-xl p-4">
-                        <h4 className="font-medium text-[#3C6C3F] mb-2">Evening</h4>
-                        <ul className="space-y-2 text-sm text-[#2A462B]/80">
-                          {analysis.recommendations.evening.map((item, index) => (
-                            <li key={index} className="flex items-start space-x-2">
-                              <span className="text-[#3C6C3F] font-medium flex-shrink-0 mt-0.5">
-                                {index + 1}.
-                              </span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div className="bg-[#F4F7F4] rounded-xl p-4">
-                        <h4 className="font-medium text-[#3C6C3F] mb-2">Weekly</h4>
-                        <ul className="space-y-2 text-sm text-[#2A462B]/80">
-                          {analysis.recommendations.weekly.map((item, index) => (
-                            <li key={index} className="flex items-start space-x-2">
-                              <span className="text-[#3C6C3F] font-medium flex-shrink-0 mt-0.5">
-                                {index + 1}.
-                              </span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {recommendedProducts.length > 0 && (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-[#3C6C3F]/10">
-                    <h2 className="text-2xl font-semibold text-[#3C6C3F] mb-6">Recommended Products</h2>
-                    
-                    <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-                      {recommendedProducts.map((product) => (
-                        <div 
-                          key={product.id}
-                          className="bg-[#F4F7F4]/50 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 border border-[#3C6C3F]/10"
-                        >
-                          <div className="bg-[#F4F7F4] aspect-square relative overflow-hidden">
-                            <img
-                              src={getImageUrl(product.image)}
-                              alt={product.name}
-                              className="w-full h-full object-cover"
-                            />
+                    <div className="grid md:grid-cols-2 gap-6 mb-10">
+                      {photoInstructions.map((instruction, index) => (
+                        <div key={index} className="flex items-start gap-4 p-4 bg-[#F4F7F4]/50 rounded-xl hover:bg-[#F4F7F4] transition-colors">
+                          <div className="flex-shrink-0 w-10 h-10 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center text-[#3C6C3F]">
+                            {instruction.icon}
                           </div>
-                          
-                          <div className="p-4">
-                            <div className="mb-2">
-                              <span className="text-xs text-[#3C6C3F] font-medium bg-[#3C6C3F]/10 px-2 py-1 rounded-full">
-                                {product.category}
-                              </span>
-                            </div>
-                            <h3 className="font-medium text-[#2A462B] mb-1">{product.name}</h3>
-                            <p className="text-sm text-[#2A462B]/70 line-clamp-2 mb-3 h-10">
-                              {product.description}
-                            </p>
-                            <div className="flex justify-between items-center">
-                              <span className="font-semibold text-[#2A462B]">${product.price.toFixed(2)}</span>
-                              <button
-                                onClick={() => addToCart(product)}
-                                className="bg-[#3C6C3F] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#2A462B] transition-colors"
-                              >
-                                Add to Cart
-                              </button>
-                            </div>
-                          </div>
+                          <p className="text-[#2A462B]/80 leading-relaxed">{instruction.text}</p>
                         </div>
                       ))}
                     </div>
-                    
-                    <div className="mt-6 text-center">
-                      <Link 
-                        to="/products"
-                        className="inline-flex items-center text-[#3C6C3F] font-medium hover:text-[#2A462B] transition-colors"
+
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-8">
+                      <div className="flex items-start gap-3">
+                        <Info className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h3 className="font-medium text-amber-900 mb-2">Important Note</h3>
+                          <p className="text-amber-800 text-sm leading-relaxed">
+                            The accuracy of your skin analysis is directly linked to photo quality. 
+                            Following these guidelines ensures the most precise recommendations for your skincare needs.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <button
+                        onClick={() => setActiveTab('upload')}
+                        className="inline-flex items-center gap-2 bg-[#3C6C3F] text-white px-8 py-4 rounded-full
+                          hover:bg-[#2A462B] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                       >
-                        View all products
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                      </Link>
+                        Continue to Upload
+                        <ArrowRight className="w-5 h-5" />
+                      </button>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
+
+              {/* Upload Tab */}
+              {activeTab === 'upload' && (
+                <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-[#3C6C3F]/10">
+                  <div className="max-w-2xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-semibold text-[#2A462B] mb-8 text-center">
+                      Choose Your Method
+                    </h2>
+
+                    <div className="grid md:grid-cols-2 gap-6 mb-8">
+                      <button
+                        onClick={() => setShowCamera(true)}
+                        className="group relative overflow-hidden bg-gradient-to-br from-[#F4F7F4] to-white p-8 rounded-2xl
+                          border-2 border-[#3C6C3F]/20 hover:border-[#3C6C3F] transition-all duration-300 hover:shadow-lg"
+                      >
+                        <div className="relative z-10">
+                          <div className="w-16 h-16 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mx-auto mb-4
+                            group-hover:bg-[#3C6C3F]/20 transition-colors">
+                            <Camera className="w-8 h-8 text-[#3C6C3F]" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-[#2A462B] mb-2">Take Photo</h3>
+                          <p className="text-[#2A462B]/70">Use your device camera</p>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#3C6C3F]/5 to-transparent opacity-0 
+                          group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </button>
+                      
+                      <button 
+                        onClick={() => fileInputRef.current?.click()}
+                        className="group relative overflow-hidden bg-gradient-to-br from-[#F4F7F4] to-white p-8 rounded-2xl
+                          border-2 border-[#3C6C3F]/20 hover:border-[#3C6C3F] transition-all duration-300 hover:shadow-lg"
+                      >
+                        <div className="relative z-10">
+                          <div className="w-16 h-16 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mx-auto mb-4
+                            group-hover:bg-[#3C6C3F]/20 transition-colors">
+                            <Upload className="w-8 h-8 text-[#3C6C3F]" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-[#2A462B] mb-2">Upload Photo</h3>
+                          <p className="text-[#2A462B]/70">From your gallery</p>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#3C6C3F]/5 to-transparent opacity-0 
+                          group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </button>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-2xl p-6 text-center">
+                      <div className="flex items-center justify-center gap-2 text-sm text-gray-600 mb-2">
+                        <Shield className="w-4 h-4" />
+                        <span className="font-medium">Privacy First</span>
+                      </div>
+                      <p className="text-xs text-gray-500 leading-relaxed">
+                        Your photos are processed securely and never stored. We respect your privacy and delete all images immediately after analysis.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Analyzing State */}
+          {isAnalyzing && (
+            <div className="max-w-xl mx-auto">
+              <div className="bg-white rounded-3xl shadow-xl p-12 text-center">
+                <div className="relative">
+                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-[#3C6C3F]/20 to-[#3C6C3F]/5 
+                    flex items-center justify-center mb-6 animate-pulse">
+                    <Sparkles className="w-12 h-12 text-[#3C6C3F] animate-spin-slow" />
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-32 h-32 rounded-full border-4 border-[#3C6C3F]/20 border-t-[#3C6C3F] animate-spin"></div>
+                  </div>
+                </div>
+                <h3 className="text-2xl font-semibold text-[#2A462B] mb-3">Analyzing Your Skin</h3>
+                <p className="text-[#2A462B]/70 leading-relaxed">
+                  Our AI is examining your unique skin characteristics to provide personalized recommendations...
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {analysisError && (
+            <div className="max-w-xl mx-auto">
+              <div className="bg-white rounded-3xl shadow-xl p-8 text-center border-2 border-red-100">
+                <div className="w-20 h-20 mx-auto rounded-full bg-red-50 flex items-center justify-center mb-6">
+                  <AlertCircle className="w-10 h-10 text-red-500" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Analysis Error</h3>
+                <p className="text-gray-600 mb-6">{analysisError}</p>
+                <button 
+                  onClick={handleNewPhoto}
+                  className="bg-[#3C6C3F] text-white px-8 py-3 rounded-full hover:bg-[#2A462B] 
+                    transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Results */}
+          {photo && analysis && !isAnalyzing && (
+            <div className="max-w-6xl mx-auto space-y-8">
+              {/* Analysis Summary Card */}
+              <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-[#3C6C3F] to-[#2A462B] p-8 text-white">
+                  <h2 className="text-3xl font-semibold mb-2">Your Skin Analysis Results</h2>
+                  <p className="text-white/80">Personalized insights based on your unique skin profile</p>
+                </div>
                 
-                <div className="flex justify-center gap-4">
-                  <button
-                    onClick={handleNewPhoto}
-                    className="bg-[#3C6C3F] text-white px-6 py-3 rounded-full
-                      hover:bg-[#2A462B] transition-all duration-300 shadow-md 
-                      hover:shadow-lg font-medium"
-                  >
-                    Take New Photo
-                  </button>
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="bg-[#F4F7F4] text-[#2A462B] px-6 py-3 rounded-full hover:bg-[#E8EEE8] 
-                      transition-all duration-300 shadow-md hover:shadow-lg font-medium"
-                  >
-                    Upload Different Photo
-                  </button>
+                <div className="p-8">
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {/* Photo Preview */}
+                    <div className="md:col-span-1">
+                      <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-3 rounded-2xl shadow-md">
+                        <img 
+                          src={photo} 
+                          alt="Your skin analysis" 
+                          className="w-full rounded-xl"
+                        />
+                      </div>
+                      {analysis.confidence && (
+                        <div className={`mt-4 text-center p-3 rounded-xl ${getConfidenceLevel(analysis.confidence).bgColor}`}>
+                          <p className={`font-medium ${getConfidenceLevel(analysis.confidence).color}`}>
+                            Analysis Quality: {getConfidenceLevel(analysis.confidence).level}
+                          </p>
+                          <p className={`text-xs mt-1 ${getConfidenceLevel(analysis.confidence).color} opacity-80`}>
+                            {getConfidenceLevel(analysis.confidence).description}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Analysis Details */}
+                    <div className="md:col-span-2 space-y-6">
+                      {/* Skin Type */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-[#2A462B] mb-3">Your Skin Type</h3>
+                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white rounded-2xl p-6 border border-[#3C6C3F]/10">
+                          <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center">
+                              <span className="text-2xl font-bold text-[#3C6C3F]">
+                                {analysis.skinType.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="text-xl font-semibold text-[#2A462B] capitalize">{analysis.skinType} Skin</p>
+                              <p className="text-[#2A462B]/70 mt-1">
+                                {analysis.skinType === 'combination' ? 
+                                  'Mixed oily and dry areas requiring balanced care' : 
+                                  analysis.skinType === 'oily' ?
+                                  'Excess sebum production needing oil control' :
+                                  analysis.skinType === 'dry' ?
+                                  'Low moisture levels requiring deep hydration' :
+                                  analysis.skinType === 'sensitive' ?
+                                  'Reactive skin needing gentle, soothing care' :
+                                  'Well-balanced skin with minimal concerns'
+                              }</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Detected Concerns */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-[#2A462B] mb-3">Detected Concerns</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {analysis.concerns.map((concern, index) => (
+                            <div key={index} className="bg-gradient-to-r from-[#F4F7F4] to-white rounded-xl p-4 
+                              border border-[#3C6C3F]/10 hover:shadow-md transition-all duration-300">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-2 h-2 rounded-full bg-[#3C6C3F] animate-pulse"></div>
+                                  <span className="text-[#2A462B] font-medium capitalize">{concern}</span>
+                                </div>
+                                {analysis.concernDetails && analysis.concernDetails[concern] && (
+                                  <span className="text-xs text-[#2A462B]/60 bg-[#3C6C3F]/5 px-2 py-1 rounded-full">
+                                    {Math.round(analysis.concernDetails[concern] * 100)}% match
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
+
+              {/* Recommended Products */}
+              {recommendedProducts.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-xl p-8">
+                  <div className="text-center mb-8">
+                    <h2 className="text-3xl font-semibold text-[#2A462B] mb-3">
+                      Your Personalized Product Matches
+                    </h2>
+                    <p className="text-[#2A462B]/70 max-w-2xl mx-auto">
+                      Based on your skin analysis, these are the top 3 Tadefi products specifically chosen to address your unique skin needs
+                    </p>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {recommendedProducts.map((product, index) => (
+                      <div 
+                        key={product.id}
+                        className="group bg-gradient-to-br from-[#F4F7F4]/50 to-white rounded-2xl overflow-hidden 
+                          border border-[#3C6C3F]/10 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                      >
+                        {/* Match Badge */}
+                        <div className="relative">
+                          <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-3 py-1.5 
+                            rounded-full text-xs font-semibold text-[#3C6C3F] shadow-md">
+                            #{index + 1} Best Match
+                          </div>
+                          <div className="aspect-square bg-gradient-to-br from-[#F4F7F4] to-white relative overflow-hidden">
+                            <img
+                              src={getImageUrl(product.image)}
+                              alt={product.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="p-6">
+                          <div className="mb-3">
+                            <span className="text-xs text-[#3C6C3F] font-medium bg-[#3C6C3F]/10 px-3 py-1 rounded-full">
+                              {product.category}
+                            </span>
+                          </div>
+                          <h3 className="font-semibold text-lg text-[#2A462B] mb-2 line-clamp-1">{product.name}</h3>
+                          <p className="text-sm text-[#2A462B]/70 line-clamp-2 mb-4 h-10">
+                            {product.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-between mb-4">
+                            <span className="text-2xl font-bold text-[#2A462B]">${product.price.toFixed(2)}</span>
+                            <div className="flex items-center gap-1">
+                              {[...Array(5)].map((_, i) => (
+                                <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                </svg>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart(product);
+                            }}
+                            className="w-full bg-[#3C6C3F] text-white px-4 py-3 rounded-xl font-medium
+                              hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
+                              flex items-center justify-center gap-2"
+                          >
+                            <ShoppingBag className="w-4 h-4" />
+                            Add to Cart
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-8 text-center">
+                    <Link 
+                      to="/products"
+                      className="inline-flex items-center gap-2 text-[#3C6C3F] font-medium 
+                        hover:text-[#2A462B] transition-colors group"
+                    >
+                      Explore all products
+                      <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Disclaimer */}
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <h4 className="font-medium text-blue-900 mb-1">Disclaimer</h4>
+                    <p className="text-blue-800 leading-relaxed">
+                      This AI-powered analysis provides general skincare recommendations based on visual assessment. 
+                      For specific skin conditions or concerns, please consult with a dermatologist or skincare professional. 
+                      Results accuracy depends on photo quality and lighting conditions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <button
+                  onClick={handleNewPhoto}
+                  className="bg-[#3C6C3F] text-white px-8 py-4 rounded-full
+                    hover:bg-[#2A462B] transition-all duration-300 shadow-lg 
+                    hover:shadow-xl font-medium flex items-center justify-center gap-2"
+                >
+                  <Camera className="w-5 h-5" />
+                  Take New Photo
+                </button>
+                <button
+                  onClick={() => navigate('/products')}
+                  className="bg-white text-[#3C6C3F] px-8 py-4 rounded-full 
+                    border-2 border-[#3C6C3F] hover:bg-[#F4F7F4] 
+                    transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+                >
+                  Browse All Products
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -659,6 +798,28 @@ const SkinScan = () => {
           onClose={() => setShowCamera(false)}
         />
       )}
+
+      <style jsx>{`
+        @keyframes spin-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        
+        .animate-spin-slow {
+          animation: spin-slow 3s linear infinite;
+        }
+        
+        .bg-grid-pattern {
+          background-image: 
+            linear-gradient(to right, #3C6C3F10 1px, transparent 1px),
+            linear-gradient(to bottom, #3C6C3F10 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+      `}</style>
     </Layout>
   );
 };
