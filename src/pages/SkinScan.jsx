@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { Camera, Upload, X, ArrowRight, Loader2, Info, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { analyzeSkinPhoto } from '../services/skinAnalysisService.js';
+
 
 const CameraModal = ({ onCapture, onClose }) => {
   const videoRef = useRef(null);
@@ -196,50 +198,38 @@ const SkinScan = () => {
   const fileInputRef = useRef(null);
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
 
-  const analyzeSkinPhoto = async (photoData) => {
-    setIsAnalyzing(true);
-    setAnalysisError(null);
+  const handleAnalyzeSkinPhoto = async (photoData) => {
+  setIsAnalyzing(true);
+  setAnalysisError(null);
+  
+  try {
+    const result = await analyzeSkinPhoto(photoData);
     
-    try {
-      const response = await fetch('/api/skin-analysis', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageData: photoData })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || data.error || 'Analysis failed');
-      }
-
-      if (data.success) {
-        setAnalysis(data.analysis);
-        setRecommendedProducts(data.recommendedProducts);
-        
-        // Show a warning if fallback was used
-        if (data.fallback) {
-          console.warn('Using fallback analysis due to API error:', data.error);
-          // You could show a toast notification here about using fallback
-        }
-      } else {
-        throw new Error(data.error || 'Analysis failed');
-      }
+    if (result.success) {
+      setAnalysis(result.analysis);
+      setRecommendedProducts(result.recommendedProducts);
       
-    } catch (error) {
-      console.error('Analysis failed:', error);
-      setAnalysisError(error.message);
-    } finally {
-      setIsAnalyzing(false);
+      // Show a warning if fallback was used
+      if (result.fallback && !import.meta.env.DEV) {
+        console.warn('Using fallback analysis due to API error:', result.error);
+        // You could show a toast notification here about using fallback
+      }
+    } else {
+      throw new Error(result.error || 'Analysis failed');
     }
+    
+  } catch (error) {
+    console.error('Analysis failed:', error);
+    setAnalysisError(error.message);
+  } finally {
+    setIsAnalyzing(false);
+  }
   };
 
   const handleCapture = async (photoData) => {
-    setPhoto(photoData);
-    setShowCamera(false);
-    await analyzeSkinPhoto(photoData);
+  setPhoto(photoData);
+  setShowCamera(false);
+  await handleAnalyzeSkinPhoto(photoData);
   };
 
   const handleNewPhoto = () => {
@@ -275,7 +265,7 @@ const SkinScan = () => {
         
         console.log('Uploaded photo data length:', photoData.length);
         setPhoto(photoData);
-        await analyzeSkinPhoto(photoData);
+        await handleAnalyzeSkinPhoto(photoData);
       };
       reader.readAsDataURL(file);
     }
