@@ -253,8 +253,41 @@ const ProductVerification = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState(false);
 
+  // Refs for scroll targeting
+  const methodSelectionRef = useRef(null);
+  const manualEntryRef = useRef(null);
+  const verifyingRef = useRef(null);
+  const resultsRef = useRef(null);
+
+  // Smooth scroll function with offset for header
+  const scrollToElement = (elementRef, offset = -100) => {
+    if (elementRef.current) {
+      const elementPosition = elementRef.current.offsetTop + offset;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Enhanced method selection with scroll
+  const handleMethodSelection = (method) => {
+    setVerificationMethod(method);
+    // Small delay to ensure the DOM is updated before scrolling
+    setTimeout(() => {
+      if (method === 'manual') {
+        scrollToElement(manualEntryRef);
+      }
+    }, 100);
+  };
+
   const handleVerification = async (code) => {
     setIsVerifying(true);
+    
+    // Scroll to verification loading area
+    setTimeout(() => {
+      scrollToElement(verifyingRef, -150);
+    }, 100);
     
     // Simulate verification delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -266,19 +299,23 @@ const ProductVerification = () => {
     if (result.isValid) {
       setSerialCode(code);
     }
+
+    // Scroll to results after verification completes
+    setTimeout(() => {
+      scrollToElement(resultsRef, -150);
+    }, 200);
   };
 
   const handleQRScan = (scannedCode) => {
     setSerialCode(scannedCode);
-    handleVerification(scannedCode);
     setVerificationMethod('qr');
+    handleVerification(scannedCode);
   };
 
   const handleManualSubmit = (e) => {
     e.preventDefault();
     if (serialCode.trim()) {
       handleVerification(serialCode.trim());
-      setVerificationMethod('manual');
     }
   };
 
@@ -286,6 +323,19 @@ const ProductVerification = () => {
     setVerificationMethod('select');
     setSerialCode('');
     setVerificationResult(null);
+    
+    // Scroll back to method selection
+    setTimeout(() => {
+      scrollToElement(methodSelectionRef, -100);
+    }, 100);
+  };
+
+  const handleBackToSelection = () => {
+    setVerificationMethod('select');
+    // Scroll back to method selection
+    setTimeout(() => {
+      scrollToElement(methodSelectionRef, -100);
+    }, 100);
   };
 
   return (
@@ -317,7 +367,7 @@ const ProductVerification = () => {
         <div className="container mx-auto px-4 md:px-8 pb-20">
           {/* Method Selection */}
           {verificationMethod === 'select' && !verificationResult && (
-            <div className="max-w-5xl mx-auto">
+            <div ref={methodSelectionRef} className="max-w-5xl mx-auto">
               <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-[#3C6C3F]/10">
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-semibold text-[#2A462B] mb-4">
@@ -347,7 +397,7 @@ const ProductVerification = () => {
                   </button>
                   
                   <button 
-                    onClick={() => setVerificationMethod('manual')}
+                    onClick={() => handleMethodSelection('manual')}
                     className="group relative overflow-hidden bg-gradient-to-br from-[#F4F7F4] to-white p-8 rounded-2xl
                       border-2 border-[#3C6C3F]/20 hover:border-[#3C6C3F] transition-all duration-300 hover:shadow-lg"
                   >
@@ -365,7 +415,7 @@ const ProductVerification = () => {
                 </div>
 
                 {/* The Tadefi Authenticity Promise */}
-                <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+                <div className="bg-gradient-to-br from-[#F4F7F4]/50 to-white rounded-3xl p-8 md:p-12 border border-[#3C6C3F]/5">
                   <div className="text-center mb-10">
                     <h2 className="text-3xl font-semibold text-[#2A462B] mb-4">
                       The Tadefi Authenticity Promise
@@ -377,7 +427,7 @@ const ProductVerification = () => {
                   </div>
 
                   <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center">
+                    <div className="bg-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center shadow-md hover:shadow-lg transition-all duration-300">
                       <div className="w-14 h-14 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Globe className="w-7 h-7 text-[#3C6C3F]" />
                       </div>
@@ -385,7 +435,7 @@ const ProductVerification = () => {
                       <p className="text-sm text-[#2A462B]/70">Track your product back to specific argan regions in Morocco</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center">
+                    <div className="bg-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center shadow-md hover:shadow-lg transition-all duration-300">
                       <div className="w-14 h-14 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Users className="w-7 h-7 text-[#3C6C3F]" />
                       </div>
@@ -393,7 +443,7 @@ const ProductVerification = () => {
                       <p className="text-sm text-[#2A462B]/70">Know exactly which cooperative produced your item</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center">
+                    <div className="bg-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center shadow-md hover:shadow-lg transition-all duration-300">
                       <div className="w-14 h-14 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Leaf className="w-7 h-7 text-[#3C6C3F]" />
                       </div>
@@ -401,7 +451,7 @@ const ProductVerification = () => {
                       <p className="text-sm text-[#2A462B]/70">Verify ethical sourcing and environmental practices</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center">
+                    <div className="bg-white p-6 rounded-2xl border border-[#3C6C3F]/10 text-center shadow-md hover:shadow-lg transition-all duration-300">
                       <div className="w-14 h-14 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Heart className="w-7 h-7 text-[#3C6C3F]" />
                       </div>
@@ -416,7 +466,7 @@ const ProductVerification = () => {
 
           {/* Manual Entry Form */}
           {verificationMethod === 'manual' && !verificationResult && (
-            <div className="max-w-2xl mx-auto">
+            <div ref={manualEntryRef} className="max-w-2xl mx-auto">
               <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-[#3C6C3F]/10">
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-semibold text-[#2A462B] mb-4">
@@ -440,6 +490,7 @@ const ProductVerification = () => {
                       className="w-full px-6 py-4 rounded-xl border border-[#3C6C3F]/20 text-center
                         focus:outline-none focus:ring-2 focus:ring-[#3C6C3F]/40 focus:border-[#3C6C3F]
                         text-lg font-mono tracking-wider shadow-sm bg-[#F4F7F4]/30"
+                      autoFocus
                     />
                     <p className="text-xs text-[#2A462B]/60 mt-2 text-center">
                       Format: XXX#-####-YYMMDD (Example: SKC1-3762-240828)
@@ -449,7 +500,7 @@ const ProductVerification = () => {
                   <div className="flex gap-4">
                     <button
                       type="button"
-                      onClick={() => setVerificationMethod('select')}
+                      onClick={handleBackToSelection}
                       className="flex-1 bg-white text-[#3C6C3F] px-6 py-4 rounded-xl border-2 border-[#3C6C3F]
                         hover:bg-[#F4F7F4] transition-all duration-300 font-medium"
                     >
@@ -466,13 +517,32 @@ const ProductVerification = () => {
                     </button>
                   </div>
                 </form>
+
+                {/* Sample Code Helper */}
+                {/* <div className="mt-8 p-4 bg-blue-50 rounded-2xl border border-blue-200">
+                  <div className="text-center">
+                    <p className="text-sm text-blue-900 mb-2 font-medium">
+                      Need a sample code to test?
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const sampleCode = generateValidCode();
+                        setSerialCode(sampleCode);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 underline text-sm font-medium transition-colors"
+                    >
+                      Generate sample code for testing
+                    </button>
+                  </div>
+                </div> */}
               </div>
             </div>
           )}
 
           {/* Verification Loading */}
           {isVerifying && (
-            <div className="max-w-xl mx-auto">
+            <div ref={verifyingRef} className="max-w-xl mx-auto">
               <div className="bg-white rounded-3xl shadow-xl p-12 text-center">
                 <div className="relative">
                   <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-[#3C6C3F]/20 to-[#3C6C3F]/5 
@@ -493,7 +563,7 @@ const ProductVerification = () => {
 
           {/* Verification Results */}
           {verificationResult && !isVerifying && (
-            <div className="max-w-5xl mx-auto">
+            <div ref={resultsRef} className="max-w-5xl mx-auto">
               {verificationResult.isValid ? (
                 <div className="space-y-8">
                   {/* Success Header */}
@@ -623,6 +693,23 @@ const ProductVerification = () => {
                         <li>• Keep your product and packaging for verification</li>
                       </ul>
                     </div>
+                    
+                    {/* Try again with sample code */}
+                    <div className="bg-blue-50 rounded-2xl p-4 mb-6">
+                      <p className="text-sm text-blue-900 mb-2">
+                        Want to try with a valid sample code?
+                      </p>
+                      <button
+                        onClick={() => {
+                          const sampleCode = generateValidCode();
+                          setSerialCode(sampleCode);
+                          handleVerification(sampleCode);
+                        }}
+                        className="text-blue-600 hover:text-blue-800 underline text-sm font-medium transition-colors"
+                      >
+                        Test with sample code
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -640,7 +727,10 @@ const ProductVerification = () => {
                 </button>
                 {verificationResult.isValid && (
                   <button
-                    onClick={() => window.location.href = '/products'}
+                    onClick={() => {
+                      // Navigate to products page (in real app, use navigate('/products'))
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                     className="bg-white text-[#3C6C3F] px-8 py-4 rounded-full 
                       border-2 border-[#3C6C3F] hover:bg-[#F4F7F4] 
                       transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center gap-2"
