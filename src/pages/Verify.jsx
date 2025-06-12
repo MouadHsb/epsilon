@@ -113,7 +113,7 @@ const verifySerialCode = (code) => {
     data: {
       serialCode: cleanCode,
       category: PRODUCT_CATEGORIES[categoryCode],
-      productName: "Rosehip Face Oil", // Always show the same product name as requested
+      productName: "Argan Face Cleanser", // Always show the same product name as requested
       productNumber,
       region: ARGAN_REGIONS[regionCode],
       productionDate,
