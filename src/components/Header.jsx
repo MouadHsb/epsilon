@@ -147,6 +147,7 @@ const Header = () => {
               <NavLink to="/" isActive={location.pathname === '/'}>Home</NavLink>
               <NavLink to="/products" isActive={location.pathname === '/products'}>Products</NavLink>
               <NavLink to="/skin-scan" isActive={location.pathname === '/skin-scan'}>SkinScan</NavLink>
+              <NavLink to="/verify" isActive={location.pathname === '/verify'}>Verify</NavLink>
               <NavLink to="/about" isActive={location.pathname === '/about'}>About Us</NavLink>
               {/* <NavLink to="/blogs" isActive={location.pathname === '/blogs'}>Blogs</NavLink> */}
             </div>
@@ -288,8 +289,9 @@ const Header = () => {
           <div className="py-4 space-y-3">
             <MobileNavLink to="/">Home</MobileNavLink>
             <MobileNavLink to="/products">Products</MobileNavLink>
+            <MobileNavLink to="/verify">Verify</MobileNavLink>
             <MobileNavLink to="/skin-scan">SkinScan</MobileNavLink>
-            <NavLink to="/about" isActive={location.pathname === '/about'}>About Us</NavLink>
+            <MobileNavLink to="/about">About Us</MobileNavLink>
             {/* <MobileNavLink to="/blogs">Blogs</MobileNavLink> */}
           </div>
         </div>

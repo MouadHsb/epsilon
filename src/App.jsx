@@ -7,6 +7,7 @@ import Blogs from "./pages/Blogs.jsx";
 import Cart from "./pages/Cart.jsx";
 import About from "./pages/About.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import Verify from "./pages/Verify.jsx"
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<About />} />
+
+        <Route path="/verify" element={<Verify />} />
       </Routes>
     </BrowserRouter>
   );
