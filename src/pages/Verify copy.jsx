@@ -246,80 +246,12 @@ const QRScannerModal = ({ onScan, onClose }) => {
   );
 };
 
-// NEW: EarthViewModal Component
-const EarthViewModal = ({ regionName, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-lg flex items-center justify-center z-50 p-4 transition-opacity duration-300">
-      <div className="bg-gradient-to-br from-[#F4F7F4] to-white rounded-3xl overflow-hidden w-full max-w-3xl shadow-2xl border border-white/10 transform transition-all duration-300 scale-95 animate-scale-in">
-        <div className="flex justify-between items-center p-6 bg-white/50">
-          <div>
-            <h2 className="text-2xl font-semibold text-[#2A462B]">
-              <Globe className="inline-block w-6 h-6 mr-2 -mt-1" />
-              Exploring the Origin: <span className="text-[#3C6C3F]">{regionName}</span>
-            </h2>
-            <p className="text-sm text-[#2A462B]/70 mt-1">A virtual journey to the source of your product.</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-black/10 rounded-full transition-all duration-300"
-          >
-            <X className="w-6 h-6 text-[#2A462B]" />
-          </button>
-        </div>
-
-        <div className="relative aspect-video w-full bg-black">
-          {/* Placeholder video. 
-            Ensure you have a video file at this path in your `public` folder.
-            For example: `public/videos/earth-zoom.mp4`
-          */}
-          <video
-            src="/google-earth-placeholder.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        </div>
-
-        <div className="p-8 bg-white">
-          <div className="bg-[#3C6C3F]/10 border-l-4 border-[#3C6C3F] p-4 rounded-r-lg">
-            <div className="flex">
-              <div className="py-1">
-                <Sparkles className="w-6 h-6 text-[#3C6C3F] mr-4" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-[#2A462B]">A Hint of Green Karma</h4>
-                <p className="text-[#2A462B]/80 text-sm mt-1 leading-relaxed">
-                  By choosing this product, you've contributed to sustaining the ancient argan forests. While we can't quantify it precisely, somewhere a happy little goat is probably giving you a thumbs-up. Thanks for being awesome!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <style jsx>{`
-        @keyframes scale-in {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        .animate-scale-in {
-          animation: scale-in 0.3s ease-out forwards;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-
 const ProductVerification = () => {
   const [verificationMethod, setVerificationMethod] = useState('select'); // 'select', 'qr', 'manual'
   const [serialCode, setSerialCode] = useState('');
   const [verificationResult, setVerificationResult] = useState(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState(false);
-  const [showEarthView, setShowEarthView] = useState(false); // NEW: State for Earth View modal
 
   // Refs for scroll targeting
   const methodSelectionRef = useRef(null);
@@ -585,6 +517,25 @@ const ProductVerification = () => {
                     </button>
                   </div>
                 </form>
+
+                {/* Sample Code Helper */}
+                {/* <div className="mt-8 p-4 bg-blue-50 rounded-2xl border border-blue-200">
+                  <div className="text-center">
+                    <p className="text-sm text-blue-900 mb-2 font-medium">
+                      Need a sample code to test?
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const sampleCode = generateValidCode();
+                        setSerialCode(sampleCode);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 underline text-sm font-medium transition-colors"
+                    >
+                      Generate sample code for testing
+                    </button>
+                  </div>
+                </div> */}
               </div>
             </div>
           )}
@@ -637,54 +588,39 @@ const ProductVerification = () => {
                     <div className="p-8">
                       <div className="grid md:grid-cols-3 gap-6">
                         {/* Product Details */}
-                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 flex flex-col">
-                          <div className="flex-grow">
-                            <div className="w-12 h-12 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mb-4">
-                              <Award className="w-6 h-6 text-[#3C6C3F]" />
-                            </div>
-                            <h3 className="font-semibold text-[#2A462B] mb-2">Product Details</h3>
-                            <p className="text-[#3C6C3F] font-medium">{verificationResult.data.productName}</p>
-                            <p className="text-sm text-[#2A462B]/70 mt-1">{verificationResult.data.category.name} Category</p>
+                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10">
+                          <div className="w-12 h-12 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mb-4">
+                            <Award className="w-6 h-6 text-[#3C6C3F]" />
                           </div>
+                          <h3 className="font-semibold text-[#2A462B] mb-2">Product Details</h3>
+                          <p className="text-[#3C6C3F] font-medium">{verificationResult.data.productName}</p>
+                          <p className="text-sm text-[#2A462B]/70 mt-1">{verificationResult.data.category.name} Category</p>
                         </div>
 
                         {/* Origin Region */}
-                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 flex flex-col">
-                          <div className="flex-grow">
-                            <div className="w-12 h-12 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mb-4">
-                              <MapPin className="w-6 h-6 text-[#3C6C3F]" />
-                            </div>
-                            <h3 className="font-semibold text-[#2A462B] mb-2">Origin Region</h3>
-                            <p className="text-[#3C6C3F] font-medium">{verificationResult.data.region.name}</p>
-                            <p className="text-sm text-[#2A462B]/70 mt-1">{verificationResult.data.region.description}</p>
+                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10">
+                          <div className="w-12 h-12 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mb-4">
+                            <MapPin className="w-6 h-6 text-[#3C6C3F]" />
                           </div>
-                          <button
-                            onClick={() => setShowEarthView(true)}
-                            className="mt-6 w-full bg-[#3C6C3F] text-white px-4 py-3 rounded-xl
-                              hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg font-semibold
-                              flex items-center justify-center gap-2"
-                          >
-                            <Globe className="w-5 h-5" />
-                            Explore Origin in 3D
-                          </button>
+                          <h3 className="font-semibold text-[#2A462B] mb-2">Origin Region</h3>
+                          <p className="text-[#3C6C3F] font-medium">{verificationResult.data.region.name}</p>
+                          <p className="text-sm text-[#2A462B]/70 mt-1">{verificationResult.data.region.description}</p>
                         </div>
 
                         {/* Production Info */}
-                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10 flex flex-col">
-                          <div className="flex-grow">
-                            <div className="w-12 h-12 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mb-4">
-                              <Calendar className="w-6 h-6 text-[#3C6C3F]" />
-                            </div>
-                            <h3 className="font-semibold text-[#2A462B] mb-2">Production Date</h3>
-                            <p className="text-[#3C6C3F] font-medium">
-                              {verificationResult.data.productionDate.toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                              })}
-                            </p>
-                            <p className="text-sm text-[#2A462B]/70 mt-1">Batch: {verificationResult.data.batchNumber}</p>
+                        <div className="bg-gradient-to-br from-[#F4F7F4] to-white p-6 rounded-2xl border border-[#3C6C3F]/10">
+                          <div className="w-12 h-12 bg-[#3C6C3F]/10 rounded-full flex items-center justify-center mb-4">
+                            <Calendar className="w-6 h-6 text-[#3C6C3F]" />
                           </div>
+                          <h3 className="font-semibold text-[#2A462B] mb-2">Production Date</h3>
+                          <p className="text-[#3C6C3F] font-medium">
+                            {verificationResult.data.productionDate.toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </p>
+                          <p className="text-sm text-[#2A462B]/70 mt-1">Batch: {verificationResult.data.batchNumber}</p>
                         </div>
                       </div>
                     </div>
@@ -815,15 +751,6 @@ const ProductVerification = () => {
           onClose={() => setShowQRScanner(false)}
         />
       )}
-
-      {/* NEW: Conditionally render the Earth View Modal */}
-      {showEarthView && verificationResult?.isValid && (
-        <EarthViewModal
-          regionName={verificationResult.data.region.name}
-          onClose={() => setShowEarthView(false)}
-        />
-      )}
-
 
       <style jsx>{`
         @keyframes spin-slow {
