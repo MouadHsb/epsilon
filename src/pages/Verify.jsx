@@ -267,7 +267,7 @@ const EarthViewModal = ({ regionName, onClose }) => {
           </button>
         </div>
 
-        <div className="relative aspect-video w-full bg-black">
+        <div className="relative aspect-[11/9] w-full bg-black">
           {/* Placeholder video. 
             Ensure you have a video file at this path in your `public` folder.
             For example: `public/videos/earth-zoom.mp4`
