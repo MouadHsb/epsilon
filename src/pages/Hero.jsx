@@ -81,8 +81,8 @@ const HomePage = () => {
                 <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
               </h1>
               <p className="text-lg text-[#2A462B]/80 mb-8 leading-relaxed max-w-xl">
-                Discover skincare that honors both your skin and the Earth.
-                Tadefi brings you carefully crafted formulations using sustainable,
+                Discover products that honors both your body and the Earth.
+                Sirdy brings you carefully crafted formulations using sustainable,
                 natural ingredients from Morocco that nurture your skin's natural balance.
               </p>
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -134,7 +134,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4 sm:px-8">
           <div className="max-w-lg mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-[#2A462B] mb-4">
-              Why Choose <span className="text-[#3C6C3F] font-semibold">Tadefi</span>
+              Why Choose <span className="text-[#3C6C3F] font-semibold">Sirdy</span>
             </h2>
             <p className="text-[#2A462B]/70 leading-relaxed">
               Our products combine traditional Moroccan beauty wisdom with modern formulation 
@@ -212,7 +212,7 @@ const HomePage = () => {
                     />
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm
                       px-3 py-1 rounded-full text-[#2A462B] font-semibold text-sm">
-                      ${product.price.toFixed(2)}
+                      {product.price.toFixed(2)} DH
                     </div>
                   </div>
                   <div className="p-6 space-y-4">
@@ -263,20 +263,20 @@ const HomePage = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="bg-[#F4F7F4] py-16">
+      {/* <section className="bg-[#F4F7F4] py-16">
         <div className="container mx-auto px-4 sm:px-8">
+          
           <div className="max-w-lg mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-[#2A462B] mb-4">
               Customer <span className="text-[#3C6C3F] font-semibold">Stories</span>
             </h2>
             <p className="text-[#2A462B]/70 leading-relaxed">
-              See what our customers have to say about their Tadefi experience
+              See what our customers have to say about their Sirdy experience
             </p>
           </div>
-          
           <div className="grid md:grid-cols-3 gap-8">
             <TestimonialCard
-              quote="I've tried countless natural skincare brands, but Tadefi's products are truly exceptional. My skin has never looked better!"
+              quote="I've tried countless natural skincare brands, but Sirdy's products are truly exceptional. My skin has never looked better!"
               name="Amina K."
               location="Casablanca"
               rating={5}
@@ -294,11 +294,14 @@ const HomePage = () => {
               rating={4}
             />
           </div>
+
+
+
         </div>
-      </section>
+      </section> */}
 
       {/* About & Social Impact */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-[#F4F7F4]">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -306,7 +309,7 @@ const HomePage = () => {
                 Beauty with <span className="text-[#3C6C3F] font-semibold">Purpose</span>
               </h2>
               <p className="text-lg text-[#2A462B]/80 leading-relaxed">
-                Tadefi is more than skincare — it's a movement to preserve traditional Moroccan beauty 
+                Sirdy is more than skincare — it's a movement to preserve traditional Moroccan beauty 
                 practices while creating sustainable livelihoods for local communities.
               </p>
               <p className="text-lg text-[#2A462B]/80 leading-relaxed">
@@ -361,7 +364,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4 sm:px-8">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-light mb-6">
-              Join the Tadefi <span className="font-semibold">Community</span>
+              Join the Sirdy <span className="font-semibold">Community</span>
             </h2>
             <p className="text-white/90 mb-8 leading-relaxed">
               Subscribe to receive natural skincare tips, exclusive offers, and early access to new products

@@ -138,7 +138,7 @@ const Header = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="text-3xl font-semibold tracking-tight text-[#2A462B]">
-            <span className="text-[#3C6C3F]">Tad</span>efi
+            <span className="text-[#3C6C3F]">Sir</span>dy
           </Link>
 
           {/* Desktop Navigation */}
@@ -223,7 +223,7 @@ const Header = () => {
                             </div>
                             <div>
                               <p className="text-sm font-medium text-gray-800">
-                                ${(item.price * item.quantity).toFixed(2)}
+                                {(item.price * item.quantity).toFixed(2)} DH
                               </p>
                               <button 
                                 onClick={() => removeFromCart(item.id)}
@@ -239,7 +239,7 @@ const Header = () => {
                           <div className="flex justify-between items-center mb-3">
                             <p className="text-sm font-medium text-gray-800">Total</p>
                             <p className="text-sm font-bold text-gray-800">
-                              ${totalPrice.toFixed(2)}
+                              {totalPrice.toFixed(2)} DH
                             </p>
                           </div>
                           

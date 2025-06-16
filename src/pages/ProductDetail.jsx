@@ -397,7 +397,7 @@ const ProductDetail = () => {
                 </div>
                 
                 <div className="text-2xl md:text-3xl font-bold text-[#2A462B] mb-6">
-                  ${product.price.toFixed(2)}
+                  {product.price.toFixed(2)} DH
                 </div>
                 
                 <p className="text-[#2A462B]/80 mb-8 leading-relaxed">
@@ -429,7 +429,7 @@ const ProductDetail = () => {
                     </div>
                     
                     <div className="text-[#2A462B]/70 text-sm">
-                      ${(product.price * quantity).toFixed(2)}
+                      {(product.price * quantity).toFixed(2)} DH
                     </div>
                   </div>
                   
@@ -468,7 +468,7 @@ const ProductDetail = () => {
                     <Truck className="w-5 h-5 text-[#3C6C3F]" />
                     <div>
                       <h3 className="font-medium text-[#2A462B]">Free Shipping</h3>
-                      <p className="text-sm text-[#2A462B]/70">Free standard shipping on orders over $50</p>
+                      <p className="text-sm text-[#2A462B]/70">Free standard shipping on orders over 500 DH</p>
                     </div>
                   </div>
                   
@@ -587,7 +587,7 @@ const ProductDetail = () => {
                       {relProduct.name}
                     </h3>
                     <p className="text-[#3C6C3F] font-semibold text-sm mt-1">
-                      ${relProduct.price.toFixed(2)}
+                      {relProduct.price.toFixed(2)} DH
                     </p>
                   </div>
                 ))}

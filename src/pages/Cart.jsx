@@ -116,7 +116,7 @@ const CartPage = () => {
     setIsSubmitting(true);
 
     const orderDetails = cartItems.map(item => 
-      `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`
+      `${item.quantity}x ${item.name} - ${(item.price * item.quantity).toFixed(2)} DH`
     ).join('\n');
 
     const templateParams = {
@@ -237,7 +237,7 @@ const CartPage = () => {
                             <Link to={`/product/${item.id}`} className="font-medium text-[#2A462B] hover:text-[#3C6C3F] transition-colors">
                               {item.name}
                             </Link>
-                            <p className="text-sm text-[#2A462B]/70">${item.price.toFixed(2)}</p>
+                            <p className="text-sm text-[#2A462B]/70">{item.price.toFixed(2)} DH</p>
                             <div className="flex items-center gap-2 mt-2">
                               <button 
                                 onClick={() => updateQuantity(item.id, -1)}
@@ -259,7 +259,7 @@ const CartPage = () => {
                         </div>
                         <div className="text-right">
                           <p className="font-medium text-[#2A462B]">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {(item.price * item.quantity).toFixed(2)} DH
                           </p>
                           <button 
                             onClick={() => removeFromCart(item.id)}
@@ -276,26 +276,26 @@ const CartPage = () => {
                   <div className="pt-4 border-t border-[#3C6C3F]/10">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-[#2A462B]/70">Subtotal</span>
-                      <span className="text-[#2A462B] font-medium">${getTotalPrice().toFixed(2)}</span>
+                      <span className="text-[#2A462B] font-medium">{getTotalPrice().toFixed(2)} DH</span>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-[#2A462B]/70">Shipping</span>
                       <span className="text-[#2A462B] font-medium">
-                        {getTotalPrice() >= 50 ? (
+                        {getTotalPrice() >= 500 ? (
                           <span className="text-green-600">Free</span>
                         ) : (
-                          '$5.00'
+                          '20.00 DH'
                         )}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-lg font-semibold text-[#2A462B] mt-4 pt-4 border-t border-[#3C6C3F]/10">
                       <span>Total</span>
-                      <span>${(getTotalPrice() >= 50 ? getTotalPrice() : getTotalPrice() + 5).toFixed(2)}</span>
+                      <span>{(getTotalPrice() >= 50 ? getTotalPrice() : getTotalPrice() + 5).toFixed(2)} DH</span>
                     </div>
                     
-                    {getTotalPrice() < 50 && (
+                    {getTotalPrice() < 500 && (
                       <div className="mt-4 bg-[#3C6C3F]/5 rounded-lg p-3 text-sm text-[#2A462B]">
-                        Add <span className="font-semibold">${(50 - getTotalPrice()).toFixed(2)}</span> more to qualify for free shipping!
+                        Add <span className="font-semibold">{(50 - getTotalPrice()).toFixed(2)} DH</span> more to qualify for free shipping!
                       </div>
                     )}
                   </div>
@@ -307,7 +307,7 @@ const CartPage = () => {
                   <div className="space-y-4 text-sm text-[#2A462B]/70">
                     <div className="flex items-start gap-3">
                       <Truck className="w-5 h-5 text-[#3C6C3F] flex-shrink-0 mt-0.5" />
-                      <p>Free shipping on all orders over $50. Standard delivery takes 3-5 business days.</p>
+                      <p>Free shipping on all orders over 500 DH. Standard delivery takes 3-5 business days.</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <RefreshCw className="w-5 h-5 text-[#3C6C3F] flex-shrink-0 mt-0.5" />

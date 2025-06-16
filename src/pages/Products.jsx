@@ -40,7 +40,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         <div className="absolute top-3 right-3 z-20">
           <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[#2A462B] 
             font-semibold text-sm shadow-sm">
-            ${product.price.toFixed(2)}
+            {product.price.toFixed(2)} DH
           </span>
         </div>
       </div>
@@ -133,8 +133,8 @@ const FilterSidebar = ({ categories, activeCategory, onCategoryChange, sortOptio
         <h4 className="text-md font-medium text-[#2A462B] mb-3">Price Range</h4>
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-[#2A462B]/70 mb-1">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}</span>
+            <span>{priceRange[0]} DH</span>
+            <span>{priceRange[1]} DH</span>
           </div>
           <input 
             type="range" 
@@ -328,7 +328,7 @@ const Products = () => {
             <div className="flex items-center justify-center pt-10 pb-20">
               <div className="flex flex-col items-center">
                 <Loader className="w-12 h-12 text-[#3C6C3F] animate-spin mb-4" />
-                <p className="text-[#2A462B]/70 text-lg">Loading our natural skincare collection...</p>
+                <p className="text-[#2A462B]/70 text-lg">Loading our natural collection...</p>
               </div>
             </div>
           </div>
@@ -448,7 +448,7 @@ const Products = () => {
               
               {(priceRange[0] !== 0 || priceRange[1] !== maxPrice) && (
                 <div className="bg-[#3C6C3F]/10 text-[#3C6C3F] py-1 px-3 rounded-full text-sm font-medium flex items-center">
-                  Price: ${priceRange[0]} - ${priceRange[1]}
+                  Price: {priceRange[0]} DH - {priceRange[1]} DH
                   <button 
                     onClick={() => setPriceRange([0, maxPrice])}
                     className="ml-2 hover:text-[#2A462B]"
