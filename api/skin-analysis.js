@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Add a debug GET endpoint
+  // Debug GET endpoint
   if (req.method === 'GET') {
     const apiKey = process.env.ROBOFLOW_API_KEY;
     
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Roboflow API key not configured' });
     }
 
-    // Convert data URL to base64 (remove the data:image/xxx;base64, prefix)
+    // Convert data URL to base64
     let base64Image;
     if (imageData.startsWith('data:')) {
       base64Image = imageData.split(',')[1];
@@ -74,7 +74,6 @@ export default async function handler(req, res) {
     );
 
     console.log('Roboflow response status:', roboflowResponse.status);
-    console.log('Roboflow response headers:', Object.fromEntries(roboflowResponse.headers.entries()));
 
     if (!roboflowResponse.ok) {
       const errorText = await roboflowResponse.text();
@@ -100,7 +99,7 @@ export default async function handler(req, res) {
     console.log('Processing Roboflow result:', roboflowResult);
     const analysis = interpretResults(roboflowResult);
     
-    // Get recommended products based on analysis
+    // Get recommended products based on analysis (with fixed products)
     const recommendedProducts = getRecommendedProducts(analysis);
 
     console.log('Analysis complete:', analysis);
@@ -115,7 +114,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Skin analysis error:', error);
     
-    // Provide fallback analysis for development/testing
+    // Provide fallback analysis
     const fallbackAnalysis = {
       skinType: "combination",
       concerns: ["general maintenance"],
@@ -140,14 +139,7 @@ export default async function handler(req, res) {
       fallback: true
     };
     
-    const fallbackProducts = products.filter(p => p.featured).slice(0, 4).map(product => ({
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      image: product.images[0],
-      category: product.category
-    }));
+    const fallbackProducts = getRecommendedProducts(fallbackAnalysis);
 
     return res.status(200).json({
       success: true,
@@ -190,55 +182,38 @@ function interpretResults(roboflowResult) {
     concerns: detectedConcerns.length > 0 ? detectedConcerns : ['general maintenance'],
     concernDetails,
     recommendations,
-    confidence: calculateOverallConfidence(predictions),
-    rawResults: roboflowResult
+    confidence: calculateOverallConfidence(predictions)
   };
 }
 
-function mapRoboflowToConcern(roboflowClass) {
+function mapRoboflowToConcern(roboflowLabel) {
   const mapping = {
-    'Acne': 'acne breakouts',
-    'Blackheads': 'clogged pores',
-    'Dark Spots': 'hyperpigmentation',
-    'Dry Skin': 'dehydration',
-    'Eye bags': 'under-eye concerns',
-    'Normal Skin': 'healthy skin',
-    'Oily Skin': 'excess oil production',
-    'Pores': 'visible pores',
-    'Skin Redness': 'skin irritation',
-    'Wrinkles': 'fine lines and wrinkles'
+    'acne': 'acne breakouts',
+    'blackheads': 'clogged pores',
+    'whiteheads': 'clogged pores',
+    'dark_spots': 'hyperpigmentation',
+    'wrinkles': 'fine lines and wrinkles',
+    'dryness': 'dehydration',
+    'oiliness': 'excess oil production',
+    'redness': 'skin irritation',
+    'pores': 'visible pores',
+    'dark_circles': 'under-eye concerns'
   };
   
-  return mapping[roboflowClass] || null;
+  return mapping[roboflowLabel] || null;
 }
 
 function determineSkinType(concerns) {
-  // Check for specific skin type indicators
-  const hasOily = concerns.includes('excess oil production');
-  const hasDry = concerns.includes('dehydration');
-  const hasNormal = concerns.includes('healthy skin');
-  const hasAcne = concerns.includes('acne breakouts');
-  const hasPores = concerns.includes('visible pores') || concerns.includes('clogged pores');
-  const hasIrritation = concerns.includes('skin irritation');
-
-  // Determine skin type based on detected concerns
-  if (hasIrritation) {
-    return 'sensitive';
-  } else if (hasNormal && !hasOily && !hasDry) {
-    return 'normal';
-  } else if (hasOily || (hasAcne && hasPores)) {
+  if (concerns.includes('excess oil production') && concerns.includes('acne breakouts')) {
     return 'oily';
-  } else if (hasDry) {
+  } else if (concerns.includes('dehydration') && concerns.includes('skin irritation')) {
     return 'dry';
-  } else if (hasOily && hasDry) {
+  } else if (concerns.includes('skin irritation')) {
+    return 'sensitive';
+  } else if (concerns.includes('excess oil production') || concerns.includes('dehydration')) {
     return 'combination';
   } else {
-    // Default fallback based on most common concerns
-    if (hasAcne || hasPores) {
-      return 'combination';
-    } else {
-      return 'normal';
-    }
+    return 'normal';
   }
 }
 
@@ -298,79 +273,163 @@ function calculateOverallConfidence(predictions) {
   return confidences.reduce((sum, conf) => sum + conf, 0) / confidences.length;
 }
 
+// MODIFIED: Product recommendation function with fixed products
 function getRecommendedProducts(analysis) {
   const { concerns, skinType } = analysis;
-  const recommendedProducts = [];
-
-  // Enhanced category mapping based on your model's predictions
-  const categoryMap = {
-    'acne breakouts': ['Cleansers', 'Toners', 'Serums'],
-    'clogged pores': ['Cleansers', 'Masks', 'Serums'],
-    'dehydration': ['Moisturizers', 'Serums', 'Masks'],
-    'hyperpigmentation': ['Serums', 'Masks'],
-    'fine lines and wrinkles': ['Serums', 'Moisturizers', 'Face Oils', 'Eye Care'],
-    'excess oil production': ['Cleansers', 'Toners', 'Serums'],
-    'skin irritation': ['Moisturizers', 'Toners'],
-    'visible pores': ['Toners', 'Serums', 'Masks'],
-    'under-eye concerns': ['Eye Care', 'Serums'],
-    'healthy skin': ['Moisturizers', 'Serums'] // For maintenance
-  };
-
-  // Skin type specific categories
-  const skinTypeCategories = {
-    'oily': ['Cleansers', 'Toners', 'Serums'],
-    'dry': ['Moisturizers', 'Face Oils', 'Serums'],
-    'combination': ['Cleansers', 'Toners', 'Moisturizers'],
-    'sensitive': ['Moisturizers', 'Toners'],
-    'normal': ['Cleansers', 'Moisturizers', 'Serums']
-  };
-
-  // Collect relevant categories
-  const relevantCategories = new Set();
   
-  // Add categories based on concerns
-  concerns.forEach(concern => {
-    const categories = categoryMap[concern] || [];
-    categories.forEach(cat => relevantCategories.add(cat));
-  });
+  // Define your two fixed products by ID
+  const FIXED_PRODUCTS = [
+    { id: 1 }, // Replace with your actual product IDs
+    { id: 2 }  // Replace with your actual product IDs
+  ];
+  
+  // Get the fixed products from your products array
+  const fixedRecommendations = FIXED_PRODUCTS.map(fixedProd => {
+    const product = products.find(p => p.id === fixedProd.id);
+    if (product) {
+      return {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        image: product.images[0],
+        category: product.category
+      };
+    }
+    return null;
+  }).filter(Boolean);
 
-  // Add categories based on skin type
-  const skinCategories = skinTypeCategories[skinType] || [];
-  skinCategories.forEach(cat => relevantCategories.add(cat));
+  // Enhanced scoring system for the third product recommendation
+  const productScores = new Map();
 
-  // If no specific concerns detected, ensure we have basic categories
-  if (relevantCategories.size === 0) {
-    ['Cleansers', 'Moisturizers', 'Serums'].forEach(cat => relevantCategories.add(cat));
-  }
+  // Define concern-to-product mapping
+  const concernProductMap = {
+    'acne breakouts': {
+      keywords: ['tea tree', 'salicylic', 'charcoal', 'clay', 'purifying'],
+      categories: ['Cleansers', 'Masks', 'Serums'],
+      priority: 3
+    },
+    'dehydration': {
+      keywords: ['hydrating', 'hyaluronic', 'moisture', 'water', 'hemp'],
+      categories: ['Moisturizers', 'Serums', 'Face Oils'],
+      priority: 3
+    },
+    'hyperpigmentation': {
+      keywords: ['brightening', 'vitamin c', 'dark spots', 'even tone'],
+      categories: ['Serums', 'Masks'],
+      priority: 2
+    },
+    'fine lines and wrinkles': {
+      keywords: ['anti-aging', 'peptide', 'retinol', 'repair', 'wrinkle'],
+      categories: ['Serums', 'Moisturizers', 'Eye Care', 'Face Oils'],
+      priority: 3
+    },
+    'excess oil production': {
+      keywords: ['oil-control', 'mattifying', 'balancing', 'lotus'],
+      categories: ['Cleansers', 'Toners', 'Serums'],
+      priority: 2
+    },
+    'skin irritation': {
+      keywords: ['soothing', 'calming', 'gentle', 'sensitive', 'chamomile'],
+      categories: ['Moisturizers', 'Toners'],
+      priority: 3
+    },
+    'visible pores': {
+      keywords: ['pore', 'refining', 'minimizing', 'tightening'],
+      categories: ['Toners', 'Serums', 'Masks'],
+      priority: 2
+    },
+    'under-eye concerns': {
+      keywords: ['eye', 'dark circles', 'puffiness', 'bags'],
+      categories: ['Eye Care'],
+      priority: 3
+    },
+    'clogged pores': {
+      keywords: ['unclogging', 'exfoliating', 'clay', 'charcoal'],
+      categories: ['Cleansers', 'Masks'],
+      priority: 2
+    },
+    'general maintenance': {
+      keywords: ['daily', 'essential', 'basic', 'routine'],
+      categories: ['Cleansers', 'Moisturizers'],
+      priority: 1
+    }
+  };
 
-  // Get products from relevant categories
-  Array.from(relevantCategories).forEach(category => {
-    const categoryProducts = products
-      .filter(product => product.category === category)
-      .slice(0, 2); // Limit to 2 products per category
+  // Score products for third recommendation (excluding fixed products)
+  const fixedProductIds = FIXED_PRODUCTS.map(p => p.id);
+  const availableProducts = products.filter(product => !fixedProductIds.includes(product.id));
+
+  availableProducts.forEach(product => {
+    let score = 0;
+    const productText = `${product.name} ${product.description}`.toLowerCase();
     
-    recommendedProducts.push(...categoryProducts);
+    // Calculate score based on concerns
+    concerns.forEach(concern => {
+      const concernData = concernProductMap[concern];
+      if (concernData) {
+        // Keyword matching
+        concernData.keywords.forEach(keyword => {
+          if (productText.includes(keyword)) {
+            score += concernData.priority;
+          }
+        });
+        
+        // Category matching
+        if (concernData.categories.includes(product.category)) {
+          score += 1;
+        }
+      }
+    });
+    
+    // Bonus for featured products
+    if (product.featured) {
+      score += 1;
+    }
+    
+    // Store score only if > 0
+    if (score > 0) {
+      productScores.set(product.id, { product, score });
+    }
   });
 
-  // Remove duplicates and limit total recommendations
-  const uniqueProducts = recommendedProducts
-    .filter((product, index, self) => 
-      index === self.findIndex(p => p.id === product.id)
-    )
-    .slice(0, 6); // Limit to 6 total recommendations
-
-  // If no specific recommendations, return featured products
-  if (uniqueProducts.length === 0) {
-    return products.filter(p => p.featured).slice(0, 4);
+  // Get the best third product
+  let thirdProduct = null;
+  if (productScores.size > 0) {
+    const sortedProducts = Array.from(productScores.values())
+      .sort((a, b) => b.score - a.score);
+    
+    thirdProduct = {
+      id: sortedProducts[0].product.id,
+      name: sortedProducts[0].product.name,
+      description: sortedProducts[0].product.description,
+      price: sortedProducts[0].product.price,
+      image: sortedProducts[0].product.images[0],
+      category: sortedProducts[0].product.category
+    };
+  } else {
+    // Fallback: get first featured product that's not in fixed products
+    const fallbackProduct = products.find(p => 
+      p.featured && !fixedProductIds.includes(p.id)
+    );
+    
+    if (fallbackProduct) {
+      thirdProduct = {
+        id: fallbackProduct.id,
+        name: fallbackProduct.name,
+        description: fallbackProduct.description,
+        price: fallbackProduct.price,
+        image: fallbackProduct.images[0],
+        category: fallbackProduct.category
+      };
+    }
   }
 
-  // Format products for frontend
-  return uniqueProducts.map(product => ({
-    id: product.id,
-    name: product.name,
-    description: product.description,
-    price: product.price,
-    image: product.images[0],
-    category: product.category
-  }));
+  // Combine fixed products with the third recommendation
+  const finalRecommendations = [...fixedRecommendations];
+  if (thirdProduct) {
+    finalRecommendations.push(thirdProduct);
+  }
+
+  return finalRecommendations;
 }
