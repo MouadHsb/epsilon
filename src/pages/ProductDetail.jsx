@@ -279,7 +279,12 @@ const ProductDetail = () => {
                 {product.category}
               </button>
               <span className="mx-2">/</span>
-              <span className="font-medium text-[#2A462B]">{product.name}</span>
+              <button 
+                className="hover:text-[#3C6C3F] transition-colors"
+              >
+                {product.name}
+              </button>
+
             </nav>
           </div>
 
@@ -327,7 +332,7 @@ const ProductDetail = () => {
               </div>
               
               {/* Thumbnail Images */}
-              {product.images.length > 1 && (
+              {/* {product.images.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                   {product.images.map((image, index) => (
                     <button
@@ -344,7 +349,7 @@ const ProductDetail = () => {
                     </button>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* Product Info */}
@@ -384,19 +389,9 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map(star => (
-                      <Star 
-                        key={star}
-                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm text-[#2A462B]/70">86 reviews</span>
-                </div>
+
                 
-                <div className="text-2xl md:text-3xl font-bold text-[#2A462B] mb-6">
+                <div className="text-2xl md:text-3xl font-bold text-[#2A462B] mb-6 pt-6">
                   {product.price.toFixed(2)} DH
                 </div>
                 
@@ -408,19 +403,22 @@ const ProductDetail = () => {
                 <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-8 border border-[#3C6C3F]/10">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
                     <div className="flex items-center">
-                      <span className="text-sm font-medium text-[#2A462B] mr-3">Quantity</span>
-                      <div className="flex items-center border border-gray-200 rounded-full">
+                      <span className="text-sm font-semibold text-[#2A462B] mr-4">Quantity</span>
+                      <div className="flex items-center bg-gray-50 border border-gray-200 rounded-full shadow-sm transition-all duration-200 hover:shadow-md">
                         <button 
                           onClick={() => handleQuantityChange(-1)}
-                          className="w-10 h-10 flex items-center justify-center text-[#3C6C3F] hover:bg-[#F4F7F4] rounded-l-full"
+                          disabled={quantity <= 1}
+                          className="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-[#2A462B] hover:bg-[#E8F5E8] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent rounded-l-full transition-colors duration-150"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="w-12 text-center font-medium">{quantity}</span>
+                        <div className="w-14 text-center font-semibold text-[#2A462B] py-2">
+                          {quantity}
+                        </div>
                         <button 
                           onClick={() => handleQuantityChange(1)}
-                          className="w-10 h-10 flex items-center justify-center text-[#3C6C3F] hover:bg-[#F4F7F4] rounded-r-full"
+                          className="w-10 h-10 flex items-center justify-center text-[#3C6C3F] hover:bg-[#E8F5E8] rounded-r-full transition-colors duration-150"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-4 h-4" />
@@ -494,22 +492,6 @@ const ProductDetail = () => {
 
           {/* Product Details Tabs Section */}
           <div className="mt-16">
-            <div className="border-b border-gray-200">
-              <div className="flex overflow-x-auto scrollbar-hide">
-                <button className="px-6 py-3 border-b-2 border-[#3C6C3F] text-[#3C6C3F] font-medium">
-                  Details
-                </button>
-                <button className="px-6 py-3 text-[#2A462B]/70 hover:text-[#2A462B]">
-                  How to Use
-                </button>
-                <button className="px-6 py-3 text-[#2A462B]/70 hover:text-[#2A462B]">
-                  Ingredients
-                </button>
-                <button className="px-6 py-3 text-[#2A462B]/70 hover:text-[#2A462B]">
-                  Reviews
-                </button>
-              </div>
-            </div>
 
             <div className="py-8">
               <div className="grid md:grid-cols-2 gap-8">
@@ -529,13 +511,11 @@ const ProductDetail = () => {
                 
                 <div>
                   <h2 className="text-2xl font-semibold text-[#2A462B] mb-6">How to Use</h2>
+                  <div className="grid grid-cols-1 gap-y-2 border-t border-gray-200 pt-6">
                   <p className="text-[#2A462B]/80 leading-relaxed mb-6">
                     {product.usage}
                   </p>
-                  <h3 className="font-medium text-[#2A462B] mb-3">Ingredients</h3>
-                  <p className="text-[#2A462B]/80 leading-relaxed">
-                    {product.ingredients}
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
