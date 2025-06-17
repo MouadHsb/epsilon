@@ -491,7 +491,7 @@ const ProductDetail = () => {
           </div>
 
           {/* Product Details Tabs Section */}
-          <div className="mt-16">
+          <div className="mt-4">
 
             <div className="py-8">
               <div className="grid md:grid-cols-2 gap-8">
