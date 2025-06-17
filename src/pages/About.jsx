@@ -23,7 +23,7 @@ const AboutUs = () => {
                 Our <span className="text-[#3C6C3F] font-semibold">Story</span>
               </h1>
               <p className="text-xl text-[#2A462B]/80 leading-relaxed mb-8 opacity-0 animate-fade-in-delay-1">
-                At Tadefi, we're reimagining skincare through the fusion of Morocco's natural treasures 
+                At Sirdy, we're reimagining skincare through the fusion of Morocco's natural treasures 
                 and sustainable innovation. Born from a deep commitment to both skin health and environmental responsibility,
                 our journey celebrates the harmony between tradition and modern science.
               </p>
@@ -67,7 +67,7 @@ const AboutUs = () => {
                 Created by <span className="text-[#3C6C3F] font-semibold">Enactus EMI</span>
               </h2>
               <p className="text-lg text-[#2A462B]/80 leading-relaxed">
-                Tadefi was born from the innovative minds of students at École Mohammadia d'Ingénieurs (EMI), 
+                Sirdy was born from the innovative minds of students at École Mohammadia d'Ingénieurs (EMI), 
                 Morocco's premier engineering institution, through their award-winning Enactus chapter. 
                 This initiative bridges academic excellence with social entrepreneurship, creating a brand that's 
                 as much about positive impact as it is about exceptional skincare.
@@ -156,12 +156,12 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* The Tadefi Story Section */}
+        {/* The Sirdy Story Section */}
         <section className="py-16">
           <div className="container mx-auto px-8">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl font-light text-[#2A462B] mb-8 text-center">
-                The <span className="text-[#3C6C3F] font-semibold">Tadefi</span> Philosophy
+                The <span className="text-[#3C6C3F] font-semibold">Sirdy</span> Philosophy
               </h2>
               
               <div className="space-y-10">
@@ -196,7 +196,7 @@ const AboutUs = () => {
               </h2>
               <p className="text-lg text-[#2A462B]/80 leading-relaxed mb-8">
                 Experience the fusion of traditional Moroccan beauty secrets with modern 
-                skincare innovation. Every Tadefi product tells a story of sustainability, 
+                skincare innovation. Every Sirdy product tells a story of sustainability, 
                 empowerment, and natural beauty. Discover our collection and become part of 
                 a movement that nourishes your skin while nurturing the planet.
               </p>
@@ -290,7 +290,7 @@ const storyPoints = [
   {
     icon: <Leaf className="w-8 h-8 text-[#3C6C3F]" />,
     title: "Natural Heritage",
-    description: "Tadefi harnesses the power of Moroccan Argan oil, often called 'liquid gold,' renowned worldwide for its exceptional skincare properties. This precious ingredient, native to Morocco's Souss Valley, has been used for centuries by Berber women to protect their skin from the harsh desert climate. Our formulations honor this rich tradition while embracing modern scientific advancements to create products that deliver profound results."
+    description: "Sirdy harnesses the power of Moroccan Argan oil, often called 'liquid gold,' renowned worldwide for its exceptional skincare properties. This precious ingredient, native to Morocco's Souss Valley, has been used for centuries by Berber women to protect their skin from the harsh desert climate. Our formulations honor this rich tradition while embracing modern scientific advancements to create products that deliver profound results."
   },
   {
     icon: <Globe2 className="w-8 h-8 text-[#3C6C3F]" />,
@@ -300,7 +300,7 @@ const storyPoints = [
   {
     icon: <Users className="w-8 h-8 text-[#3C6C3F]" />,
     title: "Community Empowerment",
-    description: "At the heart of Tadefi is our commitment to the women of rural Morocco. Through our partnership with local women's cooperatives, we create sustainable employment opportunities that provide financial independence, education, and social empowerment. These cooperatives are custodians of traditional Argan extraction methods passed down through generations. By honoring their expertise and ensuring fair compensation, we help preserve cultural heritage while advancing gender equality."
+    description: "At the heart of Sirdy is our commitment to the women of rural Morocco. Through our partnership with local women's cooperatives, we create sustainable employment opportunities that provide financial independence, education, and social empowerment. These cooperatives are custodians of traditional Argan extraction methods passed down through generations. By honoring their expertise and ensuring fair compensation, we help preserve cultural heritage while advancing gender equality."
   },
   {
     icon: <Star className="w-8 h-8 text-[#3C6C3F]" />,

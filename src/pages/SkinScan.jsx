@@ -395,7 +395,7 @@ const SkinScan = () => {
               
               <p className="text-lg md:text-xl text-[#2A462B]/80 mb-8 leading-relaxed">
                 Advanced AI technology analyzes your unique skin characteristics to recommend 
-                the ideal Tadefi products for your skincare journey.
+                the ideal Sirdy products for your skincare journey.
               </p>
             </div>
           </div>
@@ -666,6 +666,21 @@ const SkinScan = () => {
                 </div>
               </div>
 
+                            {/* Disclaimer */}
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <h4 className="font-medium text-blue-900 mb-1">Disclaimer</h4>
+                    <p className="text-blue-800 leading-relaxed">
+                      This AI-powered analysis provides general skincare recommendations based on visual assessment. 
+                      For specific skin conditions or concerns, please consult with a dermatologist or skincare professional. 
+                      Results accuracy depends on photo quality and lighting conditions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* Recommended Products */}
               {recommendedProducts.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-xl p-8">
@@ -674,7 +689,7 @@ const SkinScan = () => {
                       Your Personalized Product Matches
                     </h2>
                     <p className="text-[#2A462B]/70 max-w-2xl mx-auto">
-                      Based on your skin analysis, these are the top 3 Tadefi products specifically chosen to address your unique skin needs
+                      Based on your skin analysis, these are the top 3 Sirdy products specifically chosen to address your unique skin needs
                     </p>
                   </div>
                   
@@ -712,14 +727,7 @@ const SkinScan = () => {
                           </p>
                           
                           <div className="flex items-center justify-between mb-4">
-                            <span className="text-2xl font-bold text-[#2A462B]">${product.price.toFixed(2)}</span>
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                                </svg>
-                              ))}
-                            </div>
+                            <span className="text-2xl font-bold text-[#2A462B]">{product.price.toFixed(2)} DH</span>
                           </div>
                           
                           <button
@@ -752,20 +760,7 @@ const SkinScan = () => {
                 </div>
               )}
 
-              {/* Disclaimer */}
-              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
-                <div className="flex items-start gap-3">
-                  <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm">
-                    <h4 className="font-medium text-blue-900 mb-1">Disclaimer</h4>
-                    <p className="text-blue-800 leading-relaxed">
-                      This AI-powered analysis provides general skincare recommendations based on visual assessment. 
-                      For specific skin conditions or concerns, please consult with a dermatologist or skincare professional. 
-                      Results accuracy depends on photo quality and lighting conditions.
-                    </p>
-                  </div>
-                </div>
-              </div>
+
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row justify-center gap-4">

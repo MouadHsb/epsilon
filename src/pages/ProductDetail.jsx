@@ -522,7 +522,7 @@ const ProductDetail = () => {
           </div>
 
           {/* Benefits Section */}
-          <div className="mt-12 bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-8 border border-[#3C6C3F]/10">
+          <div className="mt-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-8 border border-[#3C6C3F]/10">
             <h2 className="text-2xl font-semibold text-[#2A462B] mb-8 text-center">Key Benefits</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {product.benefits.map((benefit, index) => (

@@ -421,11 +421,11 @@ const ProductVerification = () => {
               
               <h1 className="text-4xl md:text-6xl font-light text-[#2A462B] mb-4 tracking-tight">
                 Verify Your
-                <span className="block text-[#3C6C3F] font-semibold mt-2">Authentic Tadefi</span>
+                <span className="block text-[#3C6C3F] font-semibold mt-2">Authentic Sirdy</span>
               </h1>
               
               <p className="text-lg md:text-xl text-[#2A462B]/80 mb-8 leading-relaxed">
-                Ensure the authenticity of your Tadefi products and trace their journey from 
+                Ensure the authenticity of your Sirdy products and trace their journey from 
                 Morocco's argan forests to your skincare routine.
               </p>
             </div>
@@ -442,7 +442,7 @@ const ProductVerification = () => {
                     Choose Verification Method
                   </h2>
                   <p className="text-[#2A462B]/70 max-w-2xl mx-auto">
-                    Select how you'd like to verify your product. Each Tadefi product comes with a unique serial code for authenticity verification.
+                    Select how you'd like to verify your product. Each Sirdy product comes with a unique serial code for authenticity verification.
                   </p>
                 </div>
 
@@ -482,14 +482,14 @@ const ProductVerification = () => {
                   </button>
                 </div>
 
-                {/* The Tadefi Authenticity Promise */}
+                {/* The Sirdy Authenticity Promise */}
                 <div className="bg-gradient-to-br from-[#F4F7F4]/50 to-white rounded-3xl p-8 md:p-12 border border-[#3C6C3F]/5">
                   <div className="text-center mb-10">
                     <h2 className="text-3xl font-semibold text-[#2A462B] mb-4">
-                      The Tadefi Authenticity Promise
+                      The Sirdy Authenticity Promise
                     </h2>
                     <p className="text-[#2A462B]/70 max-w-3xl mx-auto leading-relaxed">
-                      Every genuine Tadefi product carries a unique serial code that connects you to its authentic origins 
+                      Every genuine Sirdy product carries a unique serial code that connects you to its authentic origins 
                       in Morocco's sustainable argan cooperatives. Here's what makes our verification system special.
                     </p>
                   </div>
@@ -623,7 +623,7 @@ const ProductVerification = () => {
                           <CheckCircle className="w-10 h-10" />
                         </div>
                         <div>
-                          <h2 className="text-3xl font-semibold">Authentic Tadefi Product</h2>
+                          <h2 className="text-3xl font-semibold">Authentic Sirdy Product</h2>
                           <p className="text-green-100">Verification completed successfully</p>
                         </div>
                       </div>
@@ -703,7 +703,7 @@ const ProductVerification = () => {
                         </div>
                         <h4 className="font-semibold text-[#2A462B] mb-2">Authentic Quality</h4>
                         <p className="text-[#2A462B]/70 text-sm leading-relaxed">
-                          Guaranteed genuine Tadefi formulation with premium Moroccan argan oil and natural ingredients
+                          Guaranteed genuine Sirdy formulation with premium Moroccan argan oil and natural ingredients
                         </p>
                       </div>
                       
@@ -743,9 +743,9 @@ const ProductVerification = () => {
                   <div className="p-8 text-center">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">What This Means</h3>
                     <p className="text-gray-600 mb-6 leading-relaxed">
-                      This serial code doesn't match our authentic Tadefi products. This could indicate a counterfeit product 
+                      This serial code doesn't match our authentic Sirdy products. This could indicate a counterfeit product 
                       or an incorrectly entered code. For your safety and the best skincare results, we recommend purchasing 
-                      only from authorized Tadefi retailers.
+                      only from authorized Sirdy retailers.
                     </p>
                     
                     <div className="bg-gray-50 rounded-2xl p-6 mb-6">

@@ -44,14 +44,14 @@ const Footer = () => {
       
       {/* Main Footer Content */}
       <div className="container mx-auto px-6 pt-16 pb-8 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
           {/* Column 1: About */}
           <div>
             <h3 className="text-xl font-semibold text-[#2A462B] mb-6">
-              About <span className="text-[#3C6C3F]">Tadefi</span>
+              About <span className="text-[#3C6C3F]">Sirdy</span>
             </h3>
             <p className="text-[#2A462B]/80 mb-6 leading-relaxed">
-              Tadefi brings Morocco's natural treasures to modern skincare through sustainable practices and social impact. We create products that honor both your skin and the Earth.
+              Sirdy brings Morocco's natural treasures to modern products through sustainable practices and social impact. We create products that honor both your health and the Earth.
             </p>
             <div className="flex space-x-4">
               <SocialLink href="https://instagram.com" icon={<Instagram size={18} />} />
@@ -60,29 +60,7 @@ const Footer = () => {
             </div>
           </div>
           
-          {/* Column 2: Quick Links */}
-          <div>
-            <h3 className="text-xl font-semibold text-[#2A462B] mb-6">Quick Links</h3>
-            <ul className="space-y-3">
-              <FooterLink to="/">Home</FooterLink>
-              <FooterLink to="/products">Shop All</FooterLink>
-              <FooterLink to="/skin-scan">SkinScan™</FooterLink>
-              <FooterLink to="/about">Our Story</FooterLink>
-              <FooterLink to="/blogs">Blog</FooterLink>
-            </ul>
-          </div>
-          
-          {/* Column 3: Categories */}
-          <div>
-            <h3 className="text-xl font-semibold text-[#2A462B] mb-6">Categories</h3>
-            <ul className="space-y-3">
-              <FooterLink to="/products?category=cleansers">Cleansers</FooterLink>
-              <FooterLink to="/products?category=moisturizers">Moisturizers</FooterLink>
-              <FooterLink to="/products?category=serums">Serums</FooterLink>
-              <FooterLink to="/products?category=masks">Face Masks</FooterLink>
-              <FooterLink to="/products?category=lip-care">Lip Care</FooterLink>
-            </ul>
-          </div>
+
           
           {/* Column 4: Contact & Subscribe */}
           <div>
@@ -118,7 +96,7 @@ const Footer = () => {
               )}
             </form>
             
-            <div className="space-y-3">
+            <div className="flex space-x-3">
               <ContactItem 
                 icon={<MapPin size={16} />} 
                 text="Rabat, Morocco" 
@@ -130,8 +108,8 @@ const Footer = () => {
               />
               <ContactItem 
                 icon={<Mail size={16} />} 
-                text="contact@tadefi.com" 
-                href="mailto:contact@tadefi.com"
+                text="contact@sirdy.com" 
+                href="mailto:contact@sirdy.com"
               />
             </div>
           </div>
@@ -141,7 +119,7 @@ const Footer = () => {
         <div className="border-t border-[#3C6C3F]/10 pt-6 mt-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-[#2A462B]/70 mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} Tadefi. All rights reserved.
+              &copy; {new Date().getFullYear()} Sirdy. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm">
               <Link to="/privacy-policy" className="text-[#2A462B]/70 hover:text-[#3C6C3F] transition-colors">

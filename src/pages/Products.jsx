@@ -46,15 +46,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       </div>
       
       <div className="p-5">
-        <div className="flex items-center gap-1 mb-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              className="w-3 h-3 text-yellow-400 fill-yellow-400"
-            />
-          ))}
-          <span className="text-xs text-[#2A462B]/60 ml-1">4.8</span>
-        </div>
+
         
         <h3 
           onClick={() => navigate(`/product/${product.id}`)}
