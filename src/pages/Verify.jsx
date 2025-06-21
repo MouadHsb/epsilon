@@ -784,24 +784,7 @@ const ProductVerification = () => {
                       </div>
                     )}
                     
-                    {/* Try again with sample code - only for manual entry */}
-                    {verificationMethod !== 'qr' && (
-                      <div className="bg-blue-50 rounded-2xl p-4 mb-6">
-                        <p className="text-sm text-blue-900 mb-2">
-                          Want to try with a valid sample code?
-                        </p>
-                        <button
-                          onClick={() => {
-                            const sampleCode = generateValidCode();
-                            setSerialCode(sampleCode);
-                            handleVerification(sampleCode, false);
-                          }}
-                          className="text-blue-600 hover:text-blue-800 underline text-sm font-medium transition-colors"
-                        >
-                          Test with sample code
-                        </button>
-                      </div>
-                    )}
+
                     
 
                   </div>
