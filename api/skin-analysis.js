@@ -273,19 +273,14 @@ function calculateOverallConfidence(predictions) {
   return confidences.reduce((sum, conf) => sum + conf, 0) / confidences.length;
 }
 
-// MODIFIED: Product recommendation function with fixed products
+// MODIFIED: Product recommendation function with FIXED products
 function getRecommendedProducts(analysis) {
-  const { concerns, skinType } = analysis;
-  
-  // Define your two fixed products by ID
-  const FIXED_PRODUCTS = [
-    { id: 1 }, // Replace with your actual product IDs
-    { id: 2 }  // Replace with your actual product IDs
-  ];
+  // FIXED: Always recommend these two specific products by ID
+  const FIXED_PRODUCT_IDS = [3, 5]; // IDs for "Face and Body Moisturizing Cream" and "Face Cleansing Gel with Rose Water and Argan Cake"
   
   // Get the fixed products from your products array
-  const fixedRecommendations = FIXED_PRODUCTS.map(fixedProd => {
-    const product = products.find(p => p.id === fixedProd.id);
+  const fixedRecommendations = FIXED_PRODUCT_IDS.map(productId => {
+    const product = products.find(p => p.id === productId);
     if (product) {
       return {
         id: product.id,
@@ -297,139 +292,9 @@ function getRecommendedProducts(analysis) {
       };
     }
     return null;
-  }).filter(Boolean);
+  }).filter(Boolean); // Remove any null entries if product not found
 
-  // Enhanced scoring system for the third product recommendation
-  const productScores = new Map();
-
-  // Define concern-to-product mapping
-  const concernProductMap = {
-    'acne breakouts': {
-      keywords: ['tea tree', 'salicylic', 'charcoal', 'clay', 'purifying'],
-      categories: ['Cleansers', 'Masks', 'Serums'],
-      priority: 3
-    },
-    'dehydration': {
-      keywords: ['hydrating', 'hyaluronic', 'moisture', 'water', 'hemp'],
-      categories: ['Moisturizers', 'Serums', 'Face Oils'],
-      priority: 3
-    },
-    'hyperpigmentation': {
-      keywords: ['brightening', 'vitamin c', 'dark spots', 'even tone'],
-      categories: ['Serums', 'Masks'],
-      priority: 2
-    },
-    'fine lines and wrinkles': {
-      keywords: ['anti-aging', 'peptide', 'retinol', 'repair', 'wrinkle'],
-      categories: ['Serums', 'Moisturizers', 'Eye Care', 'Face Oils'],
-      priority: 3
-    },
-    'excess oil production': {
-      keywords: ['oil-control', 'mattifying', 'balancing', 'lotus'],
-      categories: ['Cleansers', 'Toners', 'Serums'],
-      priority: 2
-    },
-    'skin irritation': {
-      keywords: ['soothing', 'calming', 'gentle', 'sensitive', 'chamomile'],
-      categories: ['Moisturizers', 'Toners'],
-      priority: 3
-    },
-    'visible pores': {
-      keywords: ['pore', 'refining', 'minimizing', 'tightening'],
-      categories: ['Toners', 'Serums', 'Masks'],
-      priority: 2
-    },
-    'under-eye concerns': {
-      keywords: ['eye', 'dark circles', 'puffiness', 'bags'],
-      categories: ['Eye Care'],
-      priority: 3
-    },
-    'clogged pores': {
-      keywords: ['unclogging', 'exfoliating', 'clay', 'charcoal'],
-      categories: ['Cleansers', 'Masks'],
-      priority: 2
-    },
-    'general maintenance': {
-      keywords: ['daily', 'essential', 'basic', 'routine'],
-      categories: ['Cleansers', 'Moisturizers'],
-      priority: 1
-    }
-  };
-
-  // Score products for third recommendation (excluding fixed products)
-  const fixedProductIds = FIXED_PRODUCTS.map(p => p.id);
-  const availableProducts = products.filter(product => !fixedProductIds.includes(product.id));
-
-  availableProducts.forEach(product => {
-    let score = 0;
-    const productText = `${product.name} ${product.description}`.toLowerCase();
-    
-    // Calculate score based on concerns
-    concerns.forEach(concern => {
-      const concernData = concernProductMap[concern];
-      if (concernData) {
-        // Keyword matching
-        concernData.keywords.forEach(keyword => {
-          if (productText.includes(keyword)) {
-            score += concernData.priority;
-          }
-        });
-        
-        // Category matching
-        if (concernData.categories.includes(product.category)) {
-          score += 1;
-        }
-      }
-    });
-    
-    // Bonus for featured products
-    if (product.featured) {
-      score += 1;
-    }
-    
-    // Store score only if > 0
-    if (score > 0) {
-      productScores.set(product.id, { product, score });
-    }
-  });
-
-  // Get the best third product
-  let thirdProduct = null;
-  if (productScores.size > 0) {
-    const sortedProducts = Array.from(productScores.values())
-      .sort((a, b) => b.score - a.score);
-    
-    thirdProduct = {
-      id: sortedProducts[0].product.id,
-      name: sortedProducts[0].product.name,
-      description: sortedProducts[0].product.description,
-      price: sortedProducts[0].product.price,
-      image: sortedProducts[0].product.images[0],
-      category: sortedProducts[0].product.category
-    };
-  } else {
-    // Fallback: get first featured product that's not in fixed products
-    const fallbackProduct = products.find(p => 
-      p.featured && !fixedProductIds.includes(p.id)
-    );
-    
-    if (fallbackProduct) {
-      thirdProduct = {
-        id: fallbackProduct.id,
-        name: fallbackProduct.name,
-        description: fallbackProduct.description,
-        price: fallbackProduct.price,
-        image: fallbackProduct.images[0],
-        category: fallbackProduct.category
-      };
-    }
-  }
-
-  // Combine fixed products with the third recommendation
-  const finalRecommendations = [...fixedRecommendations];
-  if (thirdProduct) {
-    finalRecommendations.push(thirdProduct);
-  }
-
-  return finalRecommendations;
+  console.log(`✅ Returning ${fixedRecommendations.length} fixed product recommendations`);
+  
+  return fixedRecommendations;
 }
