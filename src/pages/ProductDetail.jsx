@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star, ChevronLeft, ChevronRight, Minus, Plus, Truck, ShieldCheck, RefreshCw, Heart, Share, Check } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 import Layout from '../components/Layout';
-import { fetchProductById } from '../services/productService';
+import { fetchProductById, fetchProducts } from '../services/productService';
+import { getImageUrl } from '../utils/imageUtils'; // Import the same function used in Products.jsx
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -241,22 +242,6 @@ const ProductDetail = () => {
     );
   }
 
-  // Format for image URL 
-  const getImageUrl = (path) => {
-    // Check if the path is a full URL
-    if (path.startsWith('http')) {
-      return path;
-    }
-    
-    // Otherwise assume it's a local path and prefix with base URL 
-    // If in production, use the dynamic base URL, otherwise use development URL
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? window.location.origin 
-      : 'http://localhost:5000';
-      
-    return `${baseUrl}${path}`;
-  };
-
   return (
     <Layout>
       <Toaster richColors position="bottom-right" />
@@ -396,7 +381,7 @@ const ProductDetail = () => {
                 </div>
                 
                 <p className="text-[#2A462B]/80 mb-8 leading-relaxed">
-                  {product.longDescription}
+                  {product.longDescription || product.description}
                 </p>
                 
                 {/* Quantity Selector and Add to Cart */}
@@ -498,7 +483,7 @@ const ProductDetail = () => {
                 <div>
                   <h2 className="text-2xl font-semibold text-[#2A462B] mb-6">Product Details</h2>
                   <p className="text-[#2A462B]/80 leading-relaxed mb-6">
-                    {product.longDescription}
+                    {product.longDescription || product.description}
                   </p>
                   <div className="grid grid-cols-2 gap-y-2 border-t border-gray-200 pt-6">
                     <div className="text-sm text-[#2A462B]/70">Size</div>
@@ -525,7 +510,7 @@ const ProductDetail = () => {
           <div className="mt-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-8 border border-[#3C6C3F]/10">
             <h2 className="text-2xl font-semibold text-[#2A462B] mb-8 text-center">Key Benefits</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {product.benefits.map((benefit, index) => (
+              {product.benefits && product.benefits.map((benefit, index) => (
                 <div 
                   key={index}
                   className="bg-[#F4F7F4]/50 rounded-xl p-6
