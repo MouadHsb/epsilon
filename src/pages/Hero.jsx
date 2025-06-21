@@ -132,13 +132,12 @@ const HomePage = () => {
     {/* Mobile Layout */}
     <div className="md:hidden flex flex-col relative z-10">
       <div className="text-center mb-8 relative z-20">
-        <h1 className="text-3xl font-light text-[#2A462B] mb-4 tracking-tight leading-tight">
-          Natural skincare<br />
-          <span className="text-[#3C6C3F] font-semibold">from Morocco</span>
+        <h1 className="text-5xl font-light text-[#2A462B] mb-4 tracking-tight leading-tight">
+          Nature's wisdom,<br />
+          <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
         </h1>
         <p className="text-base text-[#2A462B] leading-relaxed px-4 opacity-90">
-          Authentic Moroccan beauty secrets crafted with sustainable argan oil
-          for healthy, radiant skin.
+          Authentic, natural and carefully crafted formulations that honors both your body and the Earth.
         </p>
       </div>
       
