@@ -108,7 +108,7 @@ const HomePage = () => {
             <div className="md:w-1/2 relative mt-8 md:mt-0">
               <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8] rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/hp2.webp" 
+                  src="/hero.jpg" 
                   alt="Natural skincare products"
                   className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 />
@@ -117,7 +117,7 @@ const HomePage = () => {
                   100% Natural
                 </div>
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-[#3C6C3F] text-white p-4 rounded-full shadow-lg
+              <div className="absolute top-16 left-8 bg-[#3C6C3F] text-white p-4 rounded-full shadow-lg
                 hidden md:flex items-center justify-center w-24 h-24 text-center leading-tight">
                 <div>
                   <div className="font-bold text-lg">20%</div>

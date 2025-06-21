@@ -148,7 +148,7 @@ const products = [
     price: 42.00,
     category: "Home Cleaning",
     size: "1 L",
-    featured: false,
+    featured: true,
     images: [
       "pd66.jpg"
     ],
@@ -195,7 +195,7 @@ const products = [
     price: 44.00,
     category: "Home Cleaning",
     size: "25 Capsules",
-    featured: false,
+    featured: true,
     images: [
       "pd8.jpg"
     ],

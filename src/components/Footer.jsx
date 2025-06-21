@@ -50,14 +50,14 @@ const Footer = () => {
             <h3 className="text-xl font-semibold text-[#2A462B] mb-6">
               About <span className="text-[#3C6C3F]">Sirdy</span>
             </h3>
-            <p className="text-[#2A462B]/80 mb-6 leading-relaxed">
+            <h4 className="text-[#2A462B]/80 mb-6 leading-relaxed">
               Sirdy brings Morocco's natural treasures to modern products through sustainable practices and social impact. We create products that honor both your health and the Earth.
-            </p>
-            <div className="flex space-x-4">
+            </h4>
+            {/* <div className="flex space-x-4">
               <SocialLink href="https://instagram.com" icon={<Instagram size={18} />} />
               <SocialLink href="https://facebook.com" icon={<Facebook size={18} />} />
               <SocialLink href="https://twitter.com" icon={<Twitter size={18} />} />
-            </div>
+            </div> */}
           </div>
           
 
@@ -103,8 +103,8 @@ const Footer = () => {
               />
               <ContactItem 
                 icon={<Phone size={16} />} 
-                text="+212 5XX-XXXXXX" 
-                href="tel:+2125XXXXXXX"
+                text="+212 682-297812" 
+                href="tel:+212682297812"
               />
               <ContactItem 
                 icon={<Mail size={16} />} 
@@ -122,23 +122,11 @@ const Footer = () => {
               &copy; {new Date().getFullYear()} Sirdy. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm">
-              <Link to="/privacy-policy" className="text-[#2A462B]/70 hover:text-[#3C6C3F] transition-colors">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="text-[#2A462B]/70 hover:text-[#3C6C3F] transition-colors">
-                Terms of Service
-              </Link>
-              <Link to="/shipping" className="text-[#2A462B]/70 hover:text-[#3C6C3F] transition-colors">
-                Shipping Policy
-              </Link>
+              Made with 💚 by Enactus EMI
             </div>
           </div>
         </div>
         
-        {/* Made By */}
-        <div className="text-center text-xs text-[#2A462B]/60 mt-6">
-          Made with 💚 by Enactus EMI
-        </div>
       </div>
     </footer>
   );

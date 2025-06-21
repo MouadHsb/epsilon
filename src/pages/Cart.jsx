@@ -4,6 +4,7 @@ import { toast, Toaster } from 'sonner';
 import Layout from '../components/Layout';
 import emailjs from '@emailjs/browser';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../utils/imageUtils'; // Import the same function used elsewhere
 
 // Initialize EmailJS with your public key
 emailjs.init("cMenK54GAq1TC2xL0");
@@ -87,6 +88,25 @@ const CartPage = () => {
     return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
+  // Calculate shipping cost
+  const getShippingCost = () => {
+    const subtotal = getTotalPrice();
+    const FREE_SHIPPING_THRESHOLD = 500;
+    return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 20;
+  };
+
+  // Calculate final total (subtotal + shipping)
+  const getFinalTotal = () => {
+    return getTotalPrice() + getShippingCost();
+  };
+
+  // Calculate amount needed for free shipping
+  const getAmountForFreeShipping = () => {
+    const FREE_SHIPPING_THRESHOLD = 500;
+    const subtotal = getTotalPrice();
+    return Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  };
+
   // Handle input changes in form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -127,7 +147,9 @@ const CartPage = () => {
       customer_address: formData.address,
       customer_city: formData.city,
       order_details: orderDetails,
-      total_price: getTotalPrice().toFixed(2),
+      subtotal: getTotalPrice().toFixed(2),
+      shipping_cost: getShippingCost().toFixed(2),
+      total_price: getFinalTotal().toFixed(2),
       payment_method: formData.paymentMethod,
       note: formData.note || 'No note provided',
       reply_to: formData.email
@@ -169,22 +191,6 @@ const CartPage = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // Get image URL, handling both relative and absolute paths
-  const getImageUrl = (path) => {
-    // Check if the path is a full URL
-    if (path.startsWith('http')) {
-      return path;
-    }
-    
-    // Otherwise assume it's a local path and prefix with base URL 
-    // If in production, use the dynamic base URL, otherwise use development URL
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? window.location.origin 
-      : 'http://localhost:5000';
-      
-    return `${baseUrl}${path}`;
   };
 
   return (
@@ -237,7 +243,7 @@ const CartPage = () => {
                             <Link to={`/product/${item.id}`} className="font-medium text-[#2A462B] hover:text-[#3C6C3F] transition-colors">
                               {item.name}
                             </Link>
-                            <p className="text-sm text-[#2A462B]/70">{item.price.toFixed(2)} DH</p>
+                            <p className="text-sm text-[#2A462B]/70">{item.price.toFixed(2)} DH each</p>
                             <div className="flex items-center gap-2 mt-2">
                               <button 
                                 onClick={() => updateQuantity(item.id, -1)}
@@ -281,21 +287,21 @@ const CartPage = () => {
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-[#2A462B]/70">Shipping</span>
                       <span className="text-[#2A462B] font-medium">
-                        {getTotalPrice() >= 500 ? (
+                        {getShippingCost() === 0 ? (
                           <span className="text-green-600">Free</span>
                         ) : (
-                          '20.00 DH'
+                          `${getShippingCost().toFixed(2)} DH`
                         )}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-lg font-semibold text-[#2A462B] mt-4 pt-4 border-t border-[#3C6C3F]/10">
                       <span>Total</span>
-                      <span>{(getTotalPrice() >= 50 ? getTotalPrice() : getTotalPrice() + 5).toFixed(2)} DH</span>
+                      <span>{getFinalTotal().toFixed(2)} DH</span>
                     </div>
                     
-                    {getTotalPrice() < 500 && (
+                    {getAmountForFreeShipping() > 0 && (
                       <div className="mt-4 bg-[#3C6C3F]/5 rounded-lg p-3 text-sm text-[#2A462B]">
-                        Add <span className="font-semibold">{(50 - getTotalPrice()).toFixed(2)} DH</span> more to qualify for free shipping!
+                        Add <span className="font-semibold">{getAmountForFreeShipping().toFixed(2)} DH</span> more to qualify for free shipping!
                       </div>
                     )}
                   </div>
@@ -311,7 +317,7 @@ const CartPage = () => {
                     </div>
                     <div className="flex items-start gap-3">
                       <RefreshCw className="w-5 h-5 text-[#3C6C3F] flex-shrink-0 mt-0.5" />
-                      <p>Easy returns within 30 days of delivery. See our <Link to="/returns" className="text-[#3C6C3F] hover:underline">return policy</Link> for more details.</p>
+                      <p>Easy returns within 30 days of delivery. See our return policy for more details.</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <ShieldCheck className="w-5 h-5 text-[#3C6C3F] flex-shrink-0 mt-0.5" />
