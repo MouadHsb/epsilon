@@ -23,30 +23,30 @@ const products = [
     concerns: ["dryness", "daily cleansing"],
     keyIngredients: ["Argan cake", "Natural moisturizers"]
   },
-  // {
-  //   id: 2,
-  //   name: "Hydrating Shower Gel with Sweet Almond Oil or Beeswax",
-  //   description: "Gentle and hydrating shower gel enriched with sweet almond oil or beeswax for soft and nourished skin after every shower.",
-  //   price: 37.00,
-  //   category: "Cleansers",
-  //   size: "150 ML",
-  //   featured: false,
-  //   images: [
-  //     "/Tadefi.png",
-  //     "/Tadefi.png"
-  //   ],
-  //   ingredients: "All natural ingredients",
-  //   usage: "Apply to wet skin, lather gently all over the body, then rinse thoroughly. Avoid the eye area.",
-  //   benefits: [
-  //     "Intense hydration",
-  //     "Softens skin",
-  //     "Delicate fragrance",
-  //     "Natural formula"
-  //   ],
-  //   skinType: ["dry", "sensitive", "normal"],
-  //   concerns: ["dryness", "daily cleansing", "sensitivity"],
-  //   keyIngredients: ["Sweet almond oil", "Beeswax"]
-  // },
+  {
+    id: 2,
+    name: "Hydrating Shower Gel with Sweet Almond Oil or Beeswax",
+    description: "Gentle and hydrating shower gel enriched with sweet almond oil or beeswax for soft and nourished skin after every shower.",
+    price: 37.00,
+    category: "Cleansers",
+    size: "150 ML",
+    featured: false,
+    images: [
+      "/Tadefi.png",
+      "/Tadefi.png"
+    ],
+    ingredients: "All natural ingredients",
+    usage: "Apply to wet skin, lather gently all over the body, then rinse thoroughly. Avoid the eye area.",
+    benefits: [
+      "Intense hydration",
+      "Softens skin",
+      "Delicate fragrance",
+      "Natural formula"
+    ],
+    skinType: ["dry", "sensitive", "normal"],
+    concerns: ["dryness", "daily cleansing", "sensitivity"],
+    keyIngredients: ["Sweet almond oil", "Beeswax"]
+  },
   {
     id: 3,
     name: "Face and Body Moisturizing Cream",
@@ -101,7 +101,7 @@ const products = [
     price: 40.00,
     category: "Cleansers",
     size: "150 ML",
-    featured: true,
+    featured: false,
     images: [
       "/Tadefi.png",
       "/Tadefi.png"
@@ -171,7 +171,7 @@ const products = [
     price: 38.00,
     category: "Home Cleaning",
     size: "20 Capsules",
-    featured: true,
+    featured: false,
     images: [
       "/Tadefi.png",
       "/Tadefi.png"
