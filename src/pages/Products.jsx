@@ -367,7 +367,7 @@ const Products = () => {
           </h2>
           
           <p className="text-lg text-[#2A462B]/70 mb-10 max-w-3xl">
-            Discover our collection of sustainable, natural skincare products that harness 
+            Discover our collection of sustainable, natural products that harness 
             the power of Moroccan botanicals to nurture your skin's natural beauty.
           </p>
           
