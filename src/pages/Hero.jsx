@@ -137,7 +137,7 @@ const HomePage = () => {
           <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
         </h1>
         <p className="text-base text-[#2A462B] leading-relaxed px-4 opacity-90">
-          Authentic, natural and carefully crafted formulations that honors both your body and the Earth.
+          Authentic carefully crafted formulations that honors both your body and the Earth.
         </p>
       </div>
       
