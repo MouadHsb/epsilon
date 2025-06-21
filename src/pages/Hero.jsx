@@ -184,7 +184,7 @@ const HomePage = () => {
 </section>
 
       {/* Features Section */}
-      <section className="bg-[#F4F7F4]/60 py-16">
+      {/* <section className="bg-[#F4F7F4]/60 py-16">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="max-w-lg mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-[#2A462B] mb-4">
@@ -213,7 +213,7 @@ const HomePage = () => {
             />
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Featured Products */}
       <section className="py-16 bg-white">
