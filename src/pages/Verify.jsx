@@ -70,7 +70,15 @@ const parseDateFromCode = (dateCode) => {
 };
 
 // Verify serial code format and extract information
-const verifySerialCode = (code) => {
+const verifySerialCode = (code, isFromQR = false) => {
+  // NEW: If the code is from QR scanning, always return invalid
+  if (isFromQR) {
+    return { 
+      isValid: false, 
+      error: 'QR code verification failed. The scanned code does not match our authentic Sirdy products.' 
+    };
+  }
+
   if (!code || typeof code !== 'string') {
     return { isValid: false, error: 'Invalid code format' };
   }
@@ -230,9 +238,9 @@ const QRScannerModal = ({ onScan, onClose }) => {
         <div className="p-6 bg-gradient-to-r from-[#F4F7F4] to-white">
           <button
             onClick={() => {
-              // Simulate QR scan with a valid code for demo
+              // MODIFIED: Generate a valid code but mark it as from QR
               const demoCode = generateValidCode();
-              onScan(demoCode);
+              onScan(demoCode, true); // Pass true to indicate this is from QR
               handleClose();
             }}
             className="w-full bg-[#3C6C3F] text-white px-8 py-4 rounded-full
@@ -349,7 +357,8 @@ const ProductVerification = () => {
     }, 100);
   };
 
-  const handleVerification = async (code) => {
+  // MODIFIED: Updated to handle QR vs manual verification differently
+  const handleVerification = async (code, isFromQR = false) => {
     setIsVerifying(true);
     
     // Scroll to verification loading area
@@ -360,7 +369,8 @@ const ProductVerification = () => {
     // Simulate verification delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    const result = verifySerialCode(code);
+    // MODIFIED: Pass the isFromQR flag to the verification function
+    const result = verifySerialCode(code, isFromQR);
     setVerificationResult(result);
     setIsVerifying(false);
     
@@ -374,16 +384,17 @@ const ProductVerification = () => {
     }, 200);
   };
 
-  const handleQRScan = (scannedCode) => {
+  // MODIFIED: Updated to handle QR scan with the isFromQR flag
+  const handleQRScan = (scannedCode, isFromQR = true) => {
     setSerialCode(scannedCode);
     setVerificationMethod('qr');
-    handleVerification(scannedCode);
+    handleVerification(scannedCode, isFromQR); // Always pass true for QR scans
   };
 
   const handleManualSubmit = (e) => {
     e.preventDefault();
     if (serialCode.trim()) {
-      handleVerification(serialCode.trim());
+      handleVerification(serialCode.trim(), false); // Pass false for manual entry
     }
   };
 
@@ -730,7 +741,7 @@ const ProductVerification = () => {
                   </div>
                 </div>
               ) : (
-                // Invalid Product
+                // Invalid Product - MODIFIED: Enhanced message for QR failures
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-red-100">
                   <div className="bg-gradient-to-r from-red-500 to-red-600 p-8 text-white text-center">
                     <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -742,38 +753,57 @@ const ProductVerification = () => {
                   
                   <div className="p-8 text-center">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">What This Means</h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      This serial code doesn't match our authentic Sirdy products. This could indicate a counterfeit product 
-                      or an incorrectly entered code. For your safety and the best skincare results, we recommend purchasing 
-                      only from authorized Sirdy retailers.
-                    </p>
                     
-                    <div className="bg-gray-50 rounded-2xl p-6 mb-6">
-                      <h4 className="font-medium text-gray-900 mb-3">If you believe this is an error:</h4>
-                      <ul className="text-sm text-gray-600 space-y-2 text-left max-w-md mx-auto">
-                        <li>• Double-check the serial code for any typos</li>
-                        <li>• Ensure you're entering the complete code including dashes</li>
-                        <li>• Contact our customer service team for assistance</li>
-                        <li>• Keep your product and packaging for verification</li>
-                      </ul>
-                    </div>
+                    {/* MODIFIED: Different message based on verification method */}
+                    {verificationMethod === 'qr' ? (
+                      <div>
+                        <p className="text-gray-600 mb-6 leading-relaxed">
+                          The QR code scan indicates this may not be an authentic Sirdy product, or the camera did not properly capture the qr code. For your safety and the best 
+                          skincare results, we recommend purchasing only from authorized Sirdy retailers. Or try capturing the qr code in better lighting conditions and angle and try again later.
+                        </p>
+                        
+
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-gray-600 mb-6 leading-relaxed">
+                          This serial code doesn't match our authentic Sirdy products. This could indicate a counterfeit product 
+                          or an incorrectly entered code. For your safety and the best skincare results, we recommend purchasing 
+                          only from authorized Sirdy retailers.
+                        </p>
+                        
+                        <div className="bg-gray-50 rounded-2xl p-6 mb-6">
+                          <h4 className="font-medium text-gray-900 mb-3">If you believe this is an error:</h4>
+                          <ul className="text-sm text-gray-600 space-y-2 text-left max-w-md mx-auto">
+                            <li>• Double-check the serial code for any typos</li>
+                            <li>• Ensure you're entering the complete code including dashes</li>
+                            <li>• Contact our customer service team for assistance</li>
+                            <li>• Keep your product and packaging for verification</li>
+                          </ul>
+                        </div>
+                      </div>
+                    )}
                     
-                    {/* Try again with sample code */}
-                    <div className="bg-blue-50 rounded-2xl p-4 mb-6">
-                      <p className="text-sm text-blue-900 mb-2">
-                        Want to try with a valid sample code?
-                      </p>
-                      <button
-                        onClick={() => {
-                          const sampleCode = generateValidCode();
-                          setSerialCode(sampleCode);
-                          handleVerification(sampleCode);
-                        }}
-                        className="text-blue-600 hover:text-blue-800 underline text-sm font-medium transition-colors"
-                      >
-                        Test with sample code
-                      </button>
-                    </div>
+                    {/* Try again with sample code - only for manual entry */}
+                    {verificationMethod !== 'qr' && (
+                      <div className="bg-blue-50 rounded-2xl p-4 mb-6">
+                        <p className="text-sm text-blue-900 mb-2">
+                          Want to try with a valid sample code?
+                        </p>
+                        <button
+                          onClick={() => {
+                            const sampleCode = generateValidCode();
+                            setSerialCode(sampleCode);
+                            handleVerification(sampleCode, false);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 underline text-sm font-medium transition-colors"
+                        >
+                          Test with sample code
+                        </button>
+                      </div>
+                    )}
+                    
+
                   </div>
                 </div>
               )}
@@ -823,7 +853,6 @@ const ProductVerification = () => {
           onClose={() => setShowEarthView(false)}
         />
       )}
-
 
       <style jsx>{`
         @keyframes spin-slow {
