@@ -70,64 +70,119 @@ const HomePage = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#F4F7F4] to-white" />
-        
-        <div className="container mx-auto px-4 sm:px-8 py-12 sm:py-20">
-          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            <div className="md:w-1/2 z-10 text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#2A462B] mb-6 tracking-tight leading-tight">
-                Nature's wisdom,<br />
-                <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
-              </h1>
-              <p className="text-lg text-[#2A462B]/80 mb-8 leading-relaxed max-w-xl">
-                Discover products that honors both your body and the Earth.
-                Sirdy brings you carefully crafted formulations using sustainable,
-                natural ingredients from Morocco that nurture your skin's natural balance.
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <button 
-                  onClick={() => navigate('/products')}
-                  className="bg-[#3C6C3F] text-white px-8 py-4 rounded-full
-                    hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
-                    font-medium flex items-center gap-2"
-                >
-                  <span>Shop Collection</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => navigate('/skin-scan')}
-                  className="bg-white text-[#3C6C3F] px-8 py-4 rounded-full border border-[#3C6C3F]
-                    hover:bg-[#F4F7F4] transition-all duration-300 shadow-md hover:shadow-lg
-                    font-medium"
-                >
-                  Try SkinScan™
-                </button>
-              </div>
-            </div>
-            <div className="md:w-1/2 relative mt-8 md:mt-0">
-              <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8] rounded-2xl overflow-hidden shadow-xl">
-                <img
-                  src="/hero.jpg" 
-                  alt="Natural skincare products"
-                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full
-                  text-[#3C6C3F] font-semibold text-sm shadow-md">
-                  100% Natural
-                </div>
-              </div>
-              <div className="absolute top-16 left-8 bg-[#3C6C3F] text-white p-4 rounded-full shadow-lg
-                hidden md:flex items-center justify-center w-24 h-24 text-center leading-tight">
-                <div>
-                  <div className="font-bold text-lg">20%</div>
-                  <div className="text-xs">First Order</div>
-                </div>
-              </div>
-            </div>
+{/* Hero Section */}
+<section className="relative overflow-hidden">
+  <div className="absolute inset-0 bg-gradient-to-br from-[#F4F7F4] to-white" />
+  
+  <div className="container mx-auto px-4 sm:px-8 py-12 sm:py-20">
+    {/* Desktop Layout */}
+    <div className="hidden md:flex flex-row items-center gap-16">
+      <div className="md:w-1/2 z-10">
+        <h1 className="text-5xl lg:text-6xl font-light text-[#2A462B] mb-6 tracking-tight leading-tight">
+          Nature's wisdom,<br />
+          <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
+        </h1>
+        <p className="text-lg text-[#2A462B]/80 mb-8 leading-relaxed max-w-xl">
+          Discover products that honors both your body and the Earth.
+          Sirdy brings you carefully crafted formulations using sustainable,
+          natural ingredients from Morocco that nurture your skin's natural balance.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <button 
+            onClick={() => navigate('/products')}
+            className="bg-[#3C6C3F] text-white px-8 py-4 rounded-full
+              hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
+              font-medium flex items-center gap-2"
+          >
+            <span>Shop Collection</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => navigate('/skin-scan')}
+            className="bg-white text-[#3C6C3F] px-8 py-4 rounded-full border border-[#3C6C3F]
+              hover:bg-[#F4F7F4] transition-all duration-300 shadow-md hover:shadow-lg
+              font-medium"
+          >
+            Try SkinScan™
+          </button>
+        </div>
+      </div>
+      <div className="md:w-1/2 relative">
+        <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8] rounded-2xl overflow-hidden shadow-xl">
+          <img
+            src="/hero.jpg" 
+            alt="Natural skincare products"
+            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full
+            text-[#3C6C3F] font-semibold text-sm shadow-md">
+            100% Natural
           </div>
         </div>
-      </section>
+        <div className="absolute top-16 left-8 bg-[#3C6C3F] text-white p-4 rounded-full shadow-lg
+          flex items-center justify-center w-24 h-24 text-center leading-tight">
+          <div>
+            <div className="font-bold text-lg">20%</div>
+            <div className="text-xs">First Order</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Mobile Layout */}
+    <div className="md:hidden flex flex-col relative z-10">
+      <div className="text-center mb-8 relative z-20">
+        <h1 className="text-3xl font-light text-[#2A462B] mb-4 tracking-tight leading-tight">
+          Natural skincare<br />
+          <span className="text-[#3C6C3F] font-semibold">from Morocco</span>
+        </h1>
+        <p className="text-base text-[#2A462B] leading-relaxed px-4 opacity-90">
+          Authentic Moroccan beauty secrets crafted with sustainable argan oil
+          for healthy, radiant skin.
+        </p>
+      </div>
+      
+      <div className="relative mb-8">
+        <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8] rounded-2xl overflow-hidden shadow-xl mx-4">
+          <img
+            src="/hero.jpg" 
+            alt="Natural skincare products"
+            className="w-full h-64 object-cover"
+          />
+          <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full
+            text-[#3C6C3F] font-semibold text-xs shadow-md">
+            100% Natural
+          </div>
+          <div className="absolute top-3 right-3 bg-[#3C6C3F] text-white p-2 rounded-full shadow-lg
+            text-center leading-tight text-xs min-w-[2.5rem]">
+            <div className="font-bold">20%</div>
+            <div className="text-xs">OFF</div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex flex-col gap-3 px-4 relative z-20">
+        <button 
+          onClick={() => navigate('/products')}
+          className="w-full bg-[#3C6C3F] text-white px-6 py-4 rounded-full
+            hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
+            font-medium flex items-center justify-center gap-2"
+        >
+          <span>Shop Collection</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => navigate('/skin-scan')}
+          className="w-full bg-white text-[#3C6C3F] px-6 py-4 rounded-full border border-[#3C6C3F]
+            hover:bg-[#F4F7F4] transition-all duration-300 shadow-md hover:shadow-lg
+            font-medium"
+        >
+          Try SkinScan™
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Features Section */}
       <section className="bg-[#F4F7F4]/60 py-16">
