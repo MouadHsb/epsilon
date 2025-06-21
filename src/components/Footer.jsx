@@ -33,10 +33,7 @@ const Footer = () => {
               <span className="text-[#3C6C3F]">Awards</span> & Recognition:
             </h4>
             <div className="flex flex-wrap justify-center gap-6 items-center">
-              <AwardBadge name="Enactus World Cup 2024" place="Vice Champion" />
-              <AwardBadge name="Sustainable Beauty Awards" place="Finalist 2023" />
-              <AwardBadge name="Social Impact Awards" place="Winner 2022" />
-              <AwardBadge name="Morocco Green Initiative" place="Excellence Award" />
+              <AwardBadge name="Enactus World Cup 2024" place="Vice-world champion" />
             </div>
           </div>
         </div>
