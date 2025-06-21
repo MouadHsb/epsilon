@@ -9,8 +9,7 @@ const products = [
     size: "150 ML",
     featured: true,
     images: [
-      "/Tadefi.png",
-      "/Tadefi.png"
+      "pd1.jpg"
     ],
     ingredients: "All natural ingredients",
     usage: "Apply a small amount to wet hands. Lather gently then rinse thoroughly with clean water. Use as often as needed.",
@@ -50,15 +49,14 @@ const products = [
   },
   {
     id: 3,
-    name: "Face and Body Moisturizing Cream with Argan Cake",
-    description: "Multi-purpose cream enriched with argan cake to intensely hydrate and nourish face and body skin. Rich and creamy texture.",
+    name: "Face and Body Moisturizing Cream",
+    description: "Multi-purpose cream enriched with argan to intensely hydrate and nourish face and body skin. Rich and creamy texture.",
     price: 45.00,
     category: "Moisturizers",
     size: "150 ML",
     featured: true,
     images: [
-      "/Tadefi.png",
-      "/Tadefi.png"
+      "pd3.jpeg"
     ],
     ingredients: "All natural ingredients",
     usage: "Apply morning and/or evening to clean, dry skin. Massage gently until completely absorbed. Suitable for face and body.",
@@ -122,15 +120,37 @@ const products = [
   },
   {
     id: 6,
-    name: "Liquid Detergent",
+    name: "Liquid Detergent - Lemon",
     description: "Powerful liquid detergent for all your laundry needs. Effectively removes stains and dirt while being gentle on fabrics. Suitable for both hand washing and machine washing.",
     price: 42.00,
     category: "Home Cleaning",
     size: "1 L",
     featured: false,
     images: [
-      "/Tadefi.png",
-      "/Tadefi.png"
+      "pd6.jpg"
+    ],
+    ingredients: "All natural ingredients",
+    usage: "For machine washing: Use 30-50ml per load depending on soil level. For hand washing: Mix 15ml with water. Always check garment care labels before use.",
+    benefits: [
+      "Deep cleaning power",
+      "Gentle on fabrics",
+      "Fresh scent",
+      "Multi-purpose use"
+    ],
+    skinType: ["all"],
+    concerns: ["cleaning", "fabric care"],
+    keyIngredients: ["Natural surfactants", "Plant-based enzymes"]
+  },
+  {
+    id: 66,
+    name: "Liquid Detergen - Lavender",
+    description: "Powerful liquid detergent for all your laundry needs. Effectively removes stains and dirt while being gentle on fabrics. Suitable for both hand washing and machine washing.",
+    price: 42.00,
+    category: "Home Cleaning",
+    size: "1 L",
+    featured: false,
+    images: [
+      "pd66.jpg"
     ],
     ingredients: "All natural ingredients",
     usage: "For machine washing: Use 30-50ml per load depending on soil level. For hand washing: Mix 15ml with water. Always check garment care labels before use.",
@@ -170,15 +190,14 @@ const products = [
   },
   {
     id: 8,
-    name: "Solid Detergent Capsule",
+    name: "Solid Detergent Capsule - Rose",
     description: "Eco-friendly solid detergent capsules that provide powerful cleaning while reducing plastic waste. Compact and travel-friendly design perfect for sustainable living.",
     price: 44.00,
     category: "Home Cleaning",
     size: "25 Capsules",
     featured: false,
     images: [
-      "/Tadefi.png",
-      "/Tadefi.png"
+      "pd8.jpg"
     ],
     ingredients: "All natural ingredients",
     usage: "Place one solid capsule in the detergent compartment or directly in the drum. The capsule will dissolve during the wash cycle. Use warm or hot water for best results.",
