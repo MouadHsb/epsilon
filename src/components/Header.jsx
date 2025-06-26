@@ -113,8 +113,8 @@ const Header = () => {
         onClick={handleClick}
         className={`p-2 relative select-none ${
           isMobile 
-            ? 'text-[#3C6C3F] hover:bg-[#F4F7F4] rounded-lg'  // Match mobile menu button style
-            : 'rounded-full bg-[#F4F7F4] hover:bg-[#E8EEE8]'
+            ? 'text-primary hover:bg-timber-50 rounded-lg'
+            : 'rounded-full bg-timber-50 hover:bg-timber-100'
         } transition-colors duration-200 active:scale-95 transform`}
         aria-label="Shopping Cart"
       >
@@ -133,12 +133,12 @@ const Header = () => {
   });
 
   return (
-    <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#3C6C3F]/10">
+    <header className="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-primary/10 shadow-sm">
       <div className="mx-auto max-w-7xl px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="text-3xl font-semibold tracking-tight text-[#2A462B]">
-            <span className="text-[#3C6C3F]">Sir</span>dy
+          <Link to="/" className="text-3xl font-bold tracking-tight text-timber-700 hover:text-primary transition-colors">
+            <span className="text-primary">Epsilon </span>Woods
           </Link>
 
           {/* Desktop Navigation */}
@@ -147,23 +147,22 @@ const Header = () => {
               <NavLink to="/" isActive={location.pathname === '/'}>Home</NavLink>
               <NavLink to="/products" isActive={location.pathname === '/products'}>Products</NavLink>
               <NavLink to="/about" isActive={location.pathname === '/about'}>About Us</NavLink>
-              {/* <NavLink to="/blogs" isActive={location.pathname === '/blogs'}>Blogs</NavLink> */}
             </div>
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center space-x-5">
+          <div className="hidden lg:flex items-center space-x-4">
             {/* Search Bar */}
             <div className="relative" ref={searchInputRef}>
               <div
                 className={`flex items-center transition-all duration-300 ease-in-out
                   ${isSearchOpen ? 'w-64' : 'w-10'}
-                  ${isSearchOpen ? 'bg-[#F4F7F4]' : 'hover:bg-[#F4F7F4]'}
-                  rounded-full`}
+                  ${isSearchOpen ? 'bg-timber-50' : 'hover:bg-timber-50'}
+                  rounded-full border border-primary/10`}
               >
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="p-2 text-[#3C6C3F] bg-[#F4F7F4] flex items-center justify-center"
+                  className="p-2 text-primary bg-timber-50 rounded-full flex items-center justify-center hover:bg-timber-100 transition-colors"
                 >
                   <Search className="w-5 h-5" strokeWidth={2} />
                 </button>
@@ -172,16 +171,16 @@ const Header = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="w-full bg-transparent border-none focus:ring-0 text-sm text-[#2A462B] placeholder-[#3C6C3F]/60"
+                    placeholder="Search furniture & decor..."
+                    className="w-full bg-transparent border-none focus:ring-0 text-sm text-timber-700 placeholder-timber-500 px-3"
                   />
                 </form>
                 {isSearchOpen && (
                   <button
                     onClick={() => setIsSearchOpen(false)}
-                    className="p-2 bg-[#F4F7F4] text-[#3C6C3F]"
+                    className="p-2 bg-timber-50 text-primary rounded-full mr-1 hover:bg-timber-100 transition-colors"
                   >
-                    <X className="w-5 h-5" strokeWidth={2} />
+                    <X className="w-4 h-4" strokeWidth={2} />
                   </button>
                 )}
               </div>
@@ -191,62 +190,80 @@ const Header = () => {
             <div className="relative" ref={cartRef}>
               <CartButton />
               {isCartMenuOpen && (
-                <div className="absolute right-0 mt-2 w-80 rounded-xl border border-[#3C6C3F]/10 bg-white shadow-lg">
+                <div className="absolute right-0 mt-2 w-80 rounded-xl border border-primary/10 bg-white shadow-xl">
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold text-[#3C6C3F] mb-3">Shopping Cart</h3>
+                    <h3 className="text-lg font-semibold text-primary mb-3">Shopping Cart</h3>
                     
                     {cartItems.length === 0 ? (
-                      <p className="text-gray-500 text-sm">Your cart is empty</p>
+                      <div className="text-center py-8">
+                        <ShoppingCart className="w-12 h-12 text-timber-300 mx-auto mb-3" />
+                        <p className="text-timber-500 text-sm">Your cart is empty</p>
+                        <p className="text-timber-400 text-xs mt-1">Add some beautiful pieces to get started</p>
+                      </div>
                     ) : (
-                      <div className="space-y-3">
-                        {cartItems.map((item) => (
-                          <div key={item.id} className="flex justify-between items-center">
-                            <div>
-                              <p className="text-sm font-medium text-gray-800">{item.name}</p>
-                              <div className="flex items-center gap-2 mt-1">
+                      <div className="space-y-4">
+                        <div className="max-h-60 overflow-y-auto space-y-3">
+                          {cartItems.map((item) => (
+                            <div key={item.id} className="flex justify-between items-start bg-timber-50/50 rounded-lg p-3">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-timber-700 line-clamp-1">{item.name}</p>
+                                <p className="text-xs text-timber-500 mt-1">${item.price.toFixed(2)} each</p>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, -1)}
+                                    className="bg-white border border-timber-200 p-1 text-primary hover:bg-timber-50 rounded transition-colors"
+                                  >
+                                    <Minus className="w-3 h-3" />
+                                  </button>
+                                  <span className="text-sm font-medium text-timber-700 min-w-[2rem] text-center">
+                                    {item.quantity}
+                                  </span>
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, 1)}
+                                    className="bg-white border border-timber-200 p-1 text-primary hover:bg-timber-50 rounded transition-colors"
+                                  >
+                                    <Plus className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="ml-3 text-right">
+                                <p className="text-sm font-semibold text-timber-700">
+                                  ${(item.price * item.quantity).toFixed(2)}
+                                </p>
                                 <button 
-                                  onClick={() => updateQuantity(item.id, -1)}
-                                  className="bg-[#3C6C3F]/5 p-1 text-[#3C6C3F] hover:bg-white rounded-full"
+                                  onClick={() => removeFromCart(item.id)}
+                                  className="text-xs text-red-500 hover:text-red-700 mt-1 transition-colors"
                                 >
-                                  <Minus className="w-3 h-3" />
-                                </button>
-                                <span className="text-sm font-medium text-gray-800">{item.quantity}</span>
-                                <button 
-                                  onClick={() => updateQuantity(item.id, 1)}
-                                  className="bg-[#3C6C3F]/5 p-1 text-[#3C6C3F] hover:bg-white rounded-full"
-                                >
-                                  <Plus className="w-3 h-3" />
+                                  Remove
                                 </button>
                               </div>
                             </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-800">
-                                {(item.price * item.quantity).toFixed(2)} DH
-                              </p>
-                              <button 
-                                onClick={() => removeFromCart(item.id)}
-                                className="bg-[#3C6C3F]/5 border border-[#3C6C3F] text-xs text-red-600 hover:bg-white text-red-500 mt-1"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                         
-                        <div className="pt-3 border-t border-gray-200">
-                          <div className="flex justify-between items-center mb-3">
-                            <p className="text-sm font-medium text-gray-800">Total</p>
-                            <p className="text-sm font-bold text-gray-800">
-                              {totalPrice.toFixed(2)} DH
+                        <div className="pt-4 border-t border-timber-200">
+                          <div className="flex justify-between items-center mb-4">
+                            <p className="text-base font-semibold text-timber-700">Total</p>
+                            <p className="text-lg font-bold text-primary">
+                              ${totalPrice.toFixed(2)}
                             </p>
                           </div>
                           
-                          <Link 
-                            to="/cart"
-                            className="block w-full text-center bg-[#3C6C3F] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#2A4B2C] transition-colors"
-                          >
-                            Checkout
-                          </Link>
+                          <div className="space-y-2">
+                            <Link 
+                              to="/cart"
+                              onClick={() => setIsCartMenuOpen(false)}
+                              className="block w-full text-center bg-primary text-white rounded-lg px-4 py-3 text-sm font-medium hover:bg-primary-dark transition-colors"
+                            >
+                              View Cart & Checkout
+                            </Link>
+                            <button
+                              onClick={() => setIsCartMenuOpen(false)}
+                              className="block w-full text-center text-timber-600 text-sm hover:text-timber-700 transition-colors"
+                            >
+                              Continue Shopping
+                            </button>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -257,7 +274,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Actions */}
-          <div className="lg:hidden flex items-center gap-1">
+          <div className="lg:hidden flex items-center gap-2">
             {/* Mobile Cart Button - Only show if items exist */}
             {cartItems.length > 0 && (
               <CartButton isMobile={true} />
@@ -265,7 +282,7 @@ const Header = () => {
             
             {/* Mobile Menu Button */}
             <button
-              className="p-2 text-[#3C6C3F] hover:bg-[#F4F7F4] rounded-lg transition-colors 
+              className="p-2 text-primary hover:bg-timber-50 rounded-lg transition-colors 
                 active:scale-95 transform select-none"
               onClick={() => setIsMobileMenuOpen(prev => !prev)}
             >
@@ -273,9 +290,9 @@ const Header = () => {
                 <X className="w-6 h-6" strokeWidth={2} />
               ) : (
                 <div className="space-y-1.5">
-                  <div className="w-6 h-0.5 bg-current"></div>
-                  <div className="w-6 h-0.5 bg-current"></div>
-                  <div className="w-6 h-0.5 bg-current"></div>
+                  <div className="w-6 h-0.5 bg-current rounded-full"></div>
+                  <div className="w-6 h-0.5 bg-current rounded-full"></div>
+                  <div className="w-6 h-0.5 bg-current rounded-full"></div>
                 </div>
               )}
             </button>
@@ -283,12 +300,30 @@ const Header = () => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} lg:hidden`}>
-          <div className="py-4 space-y-3">
-            <MobileNavLink to="/">Home</MobileNavLink>
-            <MobileNavLink to="/products">Products</MobileNavLink>
-            <MobileNavLink to="/about">About Us</MobileNavLink>
-            {/* <MobileNavLink to="/blogs">Blogs</MobileNavLink> */}
+        <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} lg:hidden mt-4`}>
+          <div className="py-4 space-y-3 border-t border-primary/10">
+            <MobileNavLink to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</MobileNavLink>
+            <MobileNavLink to="/products" onClick={() => setIsMobileMenuOpen(false)}>Products</MobileNavLink>
+            <MobileNavLink to="/about" onClick={() => setIsMobileMenuOpen(false)}>About Us</MobileNavLink>
+            
+            {/* Mobile Search */}
+            <div className="pt-3 border-t border-primary/10">
+              <form onSubmit={handleSearch} className="flex gap-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="flex-1 px-4 py-3 rounded-lg border border-primary/20 text-sm text-timber-700 placeholder-timber-500 bg-timber-50/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <button 
+                  type="submit"
+                  className="bg-primary text-white px-4 py-3 rounded-lg font-medium text-sm hover:bg-primary-dark transition-colors"
+                >
+                  Search
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -301,8 +336,8 @@ const NavLink = ({ to, children, isActive }) => {
     <Link
       to={to}
       className={`
-        transition-colors duration-200 font-medium tracking-wide text-sm
-        ${isActive ? 'text-[#3C6C3F]' : 'text-[#2A462B] hover:text-[#3C6C3F]'}
+        transition-colors duration-200 font-medium tracking-wide text-sm hover:text-primary
+        ${isActive ? 'text-primary font-semibold' : 'text-timber-600'}
       `}
     >
       {children}
@@ -310,16 +345,17 @@ const NavLink = ({ to, children, isActive }) => {
   );
 };
 
-const MobileNavLink = ({ to, children }) => {
+const MobileNavLink = ({ to, children, onClick }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
   
   return (
     <Link
       to={to}
+      onClick={onClick}
       className={`
-        block py-2 text-sm transition-colors duration-200 font-medium 
-        ${isActive ? 'text-[#3C6C3F]' : 'text-[#2A462B] hover:text-[#3C6C3F]'}
+        block py-3 px-4 text-sm transition-colors duration-200 font-medium rounded-lg
+        ${isActive ? 'text-primary bg-primary/10 font-semibold' : 'text-timber-600 hover:text-primary hover:bg-timber-50'}
       `}
     >
       {children}

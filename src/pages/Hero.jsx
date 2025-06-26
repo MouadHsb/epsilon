@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Droplet, ShieldCheck, ArrowRight, Star, ShoppingCart } from 'lucide-react';
+import { TreePine, Hammer, ShieldCheck, ArrowRight, Star, ShoppingCart, Palette } from 'lucide-react';
 import Layout from '../components/Layout';
 import { fetchProducts } from '../services/productService';
 import { getImageUrl } from '../utils/imageUtils';
@@ -70,161 +70,153 @@ const HomePage = () => {
   return (
     <Layout>
       {/* Hero Section */}
-{/* Hero Section */}
-<section className="relative overflow-hidden">
-  <div className="absolute inset-0 bg-gradient-to-br from-[#F4F7F4] to-white" />
-  
-  <div className="container mx-auto px-4 sm:px-8 py-12 sm:py-20">
-    {/* Desktop Layout */}
-    <div className="hidden md:flex flex-row items-center gap-16">
-      <div className="md:w-1/2 z-10">
-        <h1 className="text-5xl lg:text-6xl font-light text-[#2A462B] mb-6 tracking-tight leading-tight">
-          Nature's wisdom,<br />
-          <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
-        </h1>
-        <p className="text-lg text-[#2A462B]/80 mb-8 leading-relaxed max-w-xl">
-          Discover products that honors both your body and the Earth.
-          Sirdy brings you carefully crafted formulations using sustainable,
-          natural ingredients from Morocco that nurture your skin's natural balance.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <button 
-            onClick={() => navigate('/products')}
-            className="bg-[#3C6C3F] text-white px-8 py-4 rounded-full
-              hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
-              font-medium flex items-center gap-2"
-          >
-            <span>Shop Collection</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => navigate('/skin-scan')}
-            className="bg-white text-[#3C6C3F] px-8 py-4 rounded-full border border-[#3C6C3F]
-              hover:bg-[#F4F7F4] transition-all duration-300 shadow-md hover:shadow-lg
-              font-medium"
-          >
-            Try SkinScan™
-          </button>
-        </div>
-      </div>
-      <div className="md:w-1/2 relative">
-        <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8] rounded-2xl overflow-hidden shadow-xl">
-          <img
-            src="/hero.jpg" 
-            alt="Natural skincare products"
-            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full
-            text-[#3C6C3F] font-semibold text-sm shadow-md">
-            100% Natural
-          </div>
-        </div>
-        <div className="absolute top-16 left-8 bg-[#3C6C3F] text-white p-4 rounded-full shadow-lg
-          flex items-center justify-center w-24 h-24 text-center leading-tight">
-          <div>
-            <div className="font-bold text-lg">20%</div>
-            <div className="text-xs">First Order</div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-timber-50 to-timber-100" />
+        
+        <div className="container mx-auto px-4 sm:px-8 py-12 sm:py-20">
+          {/* Desktop Layout */}
+          <div className="hidden md:flex flex-row items-center gap-16">
+            <div className="md:w-1/2 z-10">
+              <h1 className="text-5xl lg:text-6xl font-light text-timber-700 mb-6 tracking-tight leading-tight">
+                Handcrafted wood,<br />
+                <span className="text-primary font-semibold">enhanced by resin</span>
+              </h1>
+              <p className="text-lg text-timber-600 mb-8 leading-relaxed max-w-xl">
+                Discover artisan furniture and decor that combines the natural beauty of sustainable wood 
+                with the modern appeal of colorful epoxy resin. Each piece tells a unique story through grain and flow.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button 
+                  onClick={() => navigate('/products')}
+                  className="bg-primary text-white px-8 py-4 rounded-full
+                    hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
+                    font-medium flex items-center gap-2"
+                >
+                  <span>Shop Collection</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => navigate('/about')}
+                  className="bg-white text-primary px-8 py-4 rounded-full border border-primary
+                    hover:bg-timber-50 transition-all duration-300 shadow-md hover:shadow-lg
+                    font-medium"
+                >
+                  Our Craftsmanship
+                </button>
+              </div>
+            </div>
+            <div className="md:w-1/2 relative">
+              <div className="bg-gradient-to-br from-timber-100 to-timber-200 rounded-2xl overflow-hidden shadow-xl">
+                <img
+                  src="/hero.png" 
+                  alt="Handcrafted wood and resin furniture"
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full
+                  text-primary font-semibold text-sm shadow-md">
+                  Handcrafted
+                </div>
+              </div>
 
-    {/* Mobile Layout */}
-    <div className="md:hidden flex flex-col relative z-10">
-      <div className="text-center mb-8 relative z-20">
-        <h1 className="text-5xl font-light text-[#2A462B] mb-4 tracking-tight leading-tight">
-          Nature's wisdom,<br />
-          <span className="text-[#3C6C3F] font-semibold">bottled with care</span>
-        </h1>
-        <p className="text-base text-[#2A462B] leading-relaxed px-4 opacity-90">
-          Authentic carefully crafted formulations that honors both your body and the Earth.
-        </p>
-      </div>
-      
-      <div className="relative mb-8">
-        <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8] rounded-2xl overflow-hidden shadow-xl mx-4">
-          <img
-            src="/hero.jpg" 
-            alt="Natural skincare products"
-            className="w-full h-64 object-cover"
-          />
-          <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full
-            text-[#3C6C3F] font-semibold text-xs shadow-md">
-            100% Natural
+            </div>
           </div>
-          <div className="absolute top-3 right-3 bg-[#3C6C3F] text-white p-2 rounded-full shadow-lg
-            text-center leading-tight text-xs min-w-[2.5rem]">
-            <div className="font-bold">20%</div>
-            <div className="text-xs">OFF</div>
+
+          {/* Mobile Layout */}
+          <div className="md:hidden flex flex-col relative z-10">
+            <div className="text-center mb-8 relative z-20">
+              <h1 className="text-5xl font-light text-timber-700 mb-4 tracking-tight leading-tight">
+                Handcrafted wood,<br />
+                <span className="text-primary font-semibold">enhanced by resin</span>
+              </h1>
+              <p className="text-base text-timber-600 leading-relaxed px-4 opacity-90">
+                Artisan furniture that combines natural wood beauty with modern resin artistry.
+              </p>
+            </div>
+            
+            <div className="relative mb-8">
+              <div className="bg-gradient-to-br from-timber-100 to-timber-200 rounded-2xl overflow-hidden shadow-xl mx-4">
+                <img
+                  src="/hero.png" 
+                  alt="Handcrafted wood and resin furniture"
+                  className="w-full h-64 object-cover"
+                />
+                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full
+                  text-primary font-semibold text-xs shadow-md">
+                  Handcrafted
+                </div>
+                <div className="absolute top-3 right-3 bg-primary text-white p-2 rounded-full shadow-lg
+                  text-center leading-tight text-xs min-w-[2.5rem]">
+                  <div className="font-bold">Custom</div>
+                  <div className="text-xs">Made</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-3 px-4 relative z-20">
+              <button 
+                onClick={() => navigate('/products')}
+                className="w-full bg-primary text-white px-6 py-4 rounded-full
+                  hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
+                  font-medium flex items-center justify-center gap-2"
+              >
+                <span>Shop Collection</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/about')}
+                className="w-full bg-white text-primary px-6 py-4 rounded-full border border-primary
+                  hover:bg-timber-50 transition-all duration-300 shadow-md hover:shadow-lg
+                  font-medium"
+              >
+                Our Craftsmanship
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="flex flex-col gap-3 px-4 relative z-20">
-        <button 
-          onClick={() => navigate('/products')}
-          className="w-full bg-[#3C6C3F] text-white px-6 py-4 rounded-full
-            hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
-            font-medium flex items-center justify-center gap-2"
-        >
-          <span>Shop Collection</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-        <button
-          onClick={() => navigate('/skin-scan')}
-          className="w-full bg-white text-[#3C6C3F] px-6 py-4 rounded-full border border-[#3C6C3F]
-            hover:bg-[#F4F7F4] transition-all duration-300 shadow-md hover:shadow-lg
-            font-medium"
-        >
-          Try SkinScan™
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Features Section */}
-      {/* <section className="bg-[#F4F7F4]/60 py-16">
+      <section className="bg-timber-100/60 py-16">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="max-w-lg mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-light text-[#2A462B] mb-4">
-              Why Choose <span className="text-[#3C6C3F] font-semibold">Sirdy</span>
+            <h2 className="text-3xl md:text-4xl font-light text-timber-700 mb-4">
+              Why Choose <span className="text-primary font-semibold">WoodFlow</span>
             </h2>
-            <p className="text-[#2A462B]/70 leading-relaxed">
-              Our products combine traditional Moroccan beauty wisdom with modern formulation 
-              techniques for exceptional results you can feel and see.
+            <p className="text-timber-600 leading-relaxed">
+              Our craftsmen combine traditional woodworking techniques with modern resin artistry 
+              to create furniture and decor that's both functional and breathtaking.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<Leaf className="w-12 h-12 text-[#3C6C3F]" strokeWidth={1.5} />}
-              title="100% Natural"
-              description="Ethically sourced ingredients from nature's finest offerings, harvested sustainably in Morocco"
+              icon={<TreePine className="w-12 h-12 text-primary" strokeWidth={1.5} />}
+              title="Sustainable Wood"
+              description="Ethically sourced hardwoods from certified sustainable forests, each piece chosen for its unique grain and character"
             />
             <FeatureCard
-              icon={<Droplet className="w-12 h-12 text-[#3C6C3F]" strokeWidth={1.5} />}
-              title="Pure Formulation"
-              description="No harsh chemicals, only gentle, effective natural compounds for healthy skin"
+              icon={<Palette className="w-12 h-12 text-primary" strokeWidth={1.5} />}
+              title="Resin Artistry"
+              description="Premium epoxy resins in vibrant colors create stunning rivers, oceans, and artistic patterns that flow with the wood"
             />
             <FeatureCard
-              icon={<ShieldCheck className="w-12 h-12 text-[#3C6C3F]" strokeWidth={1.5} />}
-              title="Sustainable"
-              description="Eco-friendly packaging and responsible production practices that respect our planet"
+              icon={<Hammer className="w-12 h-12 text-primary" strokeWidth={1.5} />}
+              title="Master Craftsmanship"
+              description="Hand-finished by skilled artisans with decades of experience in traditional and modern woodworking techniques"
             />
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* Featured Products */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="flex justify-between items-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-light text-[#2A462B]">
-              Featured <span className="text-[#3C6C3F] font-semibold">Products</span>
+            <h2 className="text-3xl md:text-4xl font-light text-timber-700">
+              Featured <span className="text-primary font-semibold">Creations</span>
             </h2>
             <Link
               to="/products"
-              className="text-[#3C6C3F] font-medium hover:text-[#2A462B] transition-colors flex items-center gap-1"
+              className="text-primary font-medium hover:text-primary-dark transition-colors flex items-center gap-1"
             >
               View All <ArrowRight className="w-4 h-4" />
             </Link>
@@ -252,10 +244,10 @@ const HomePage = () => {
                   key={product.id}
                   className="bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden
                     shadow-lg hover:shadow-xl transition-all duration-300
-                    border border-[#3C6C3F]/10 hover:bg-white/95 group cursor-pointer"
+                    border border-primary/10 hover:bg-white/95 group cursor-pointer"
                   onClick={() => navigate(`/product/${product.id}`)}
                 >
-                  <div className="bg-gradient-to-br from-[#F4F7F4] to-[#E8EEE8]
+                  <div className="bg-gradient-to-br from-timber-50 to-timber-100
                     aspect-square relative overflow-hidden"
                   >
                     <img
@@ -265,14 +257,14 @@ const HomePage = () => {
                         transform group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm
-                      px-3 py-1 rounded-full text-[#2A462B] font-semibold text-sm">
-                      {product.price.toFixed(2)} DH
+                      px-3 py-1 rounded-full text-timber-700 font-semibold text-sm">
+                      ${product.price.toFixed(0)}
                     </div>
                   </div>
                   <div className="p-6 space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm text-[#3C6C3F] font-medium">
+                        <span className="text-sm text-primary font-medium">
                           {product.category}
                         </span>
                         <div className="flex">
@@ -284,26 +276,25 @@ const HomePage = () => {
                           ))}
                         </div>
                       </div>
-                      <h3 className="text-lg font-semibold text-[#2A462B] group-hover:text-[#3C6C3F] transition-colors line-clamp-1">
+                      <h3 className="text-lg font-semibold text-timber-700 group-hover:text-primary transition-colors line-clamp-1">
                         {product.name}
                       </h3>
-                      <p className="text-sm text-[#2A462B]/70 line-clamp-2 h-10">
+                      <p className="text-sm text-timber-600 line-clamp-2 h-10">
                         {product.description}
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <button 
                         onClick={(e) => handleAddToCart(product, e)}
-                        className="bg-[#3C6C3F] text-white px-4 py-2 rounded-full
-                          hover:bg-[#2A462B] transition-all duration-300 shadow-md
+                        className="bg-primary text-white px-4 py-2 rounded-full
+                          hover:bg-primary-dark transition-all duration-300 shadow-md
                           hover:shadow-lg font-medium text-sm flex items-center justify-center gap-1"
                       >
-                      
                         <span>Add to Cart</span>
                       </button>
                       <button 
-                        className="bg-white text-[#3C6C3F] px-4 py-2 rounded-full border border-[#3C6C3F]
-                        hover:bg-[#3C6C3F]/5 transition-all duration-300 font-medium text-sm"
+                        className="bg-white text-primary px-4 py-2 rounded-full border border-primary
+                        hover:bg-primary/5 transition-all duration-300 font-medium text-sm"
                       >
                         Details
                       </button>
@@ -316,95 +307,77 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      {/* <section className="bg-[#F4F7F4] py-16">
-        <div className="container mx-auto px-4 sm:px-8">
-          
-          <div className="max-w-lg mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-light text-[#2A462B] mb-4">
-              Customer <span className="text-[#3C6C3F] font-semibold">Stories</span>
-            </h2>
-            <p className="text-[#2A462B]/70 leading-relaxed">
-              See what our customers have to say about their Sirdy experience
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <TestimonialCard
-              quote="I've tried countless natural skincare brands, but Sirdy's products are truly exceptional. My skin has never looked better!"
-              name="Amina K."
-              location="Casablanca"
-              rating={5}
-            />
-            <TestimonialCard
-              quote="The Rosehip Face Oil completely transformed my skin. After just two weeks, my fine lines were visibly reduced. I'm amazed!"
-              name="Sarah M."
-              location="Marrakech"
-              rating={5}
-            />
-            <TestimonialCard
-              quote="SkinScan recommended the perfect products for my combination skin. The personalized approach makes all the difference."
-              name="Thomas L."
-              location="Rabat"
-              rating={4}
-            />
-          </div>
-
-
-
-        </div>
-      </section> */}
-
-      {/* About & Social Impact */}
-      <section className="py-16 bg-[#F4F7F4]">
+      {/* Craftsmanship Story */}
+      <section className="py-16 bg-timber-50">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-light text-[#2A462B]">
-                Beauty with <span className="text-[#3C6C3F] font-semibold">Purpose</span>
+              <h2 className="text-3xl md:text-4xl font-light text-timber-700">
+                Where tradition meets <span className="text-primary font-semibold">Innovation</span>
               </h2>
-              <p className="text-lg text-[#2A462B]/80 leading-relaxed">
-                Sirdy is more than skincare — it's a movement to preserve traditional Moroccan beauty 
-                practices while creating sustainable livelihoods for local communities.
+              <p className="text-lg text-timber-600 leading-relaxed">
+                At WoodFlow, we honor the ancient art of woodworking while embracing modern resin techniques. 
+                Each piece begins with carefully selected sustainable hardwoods, chosen for their unique grain patterns and natural beauty.
               </p>
-              <p className="text-lg text-[#2A462B]/80 leading-relaxed">
-                Every purchase directly supports women's cooperatives in rural Morocco, 
-                providing fair wages and preserving ancestral knowledge.
+              <p className="text-lg text-timber-600 leading-relaxed">
+                Our master craftsmen then enhance these natural canvases with flowing rivers of colored epoxy resin, 
+                creating one-of-a-kind pieces that capture the intersection of nature and artistry.
               </p>
+              <div className="flex flex-wrap gap-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <TreePine className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-timber-700">Sustainable Sourcing</p>
+                    <p className="text-sm text-timber-600">FSC certified hardwoods</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <Hammer className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-timber-700">Expert Craftsmanship</p>
+                    <p className="text-sm text-timber-600">25+ years experience</p>
+                  </div>
+                </div>
+              </div>
               <button 
                 onClick={() => navigate('/about')}
-                className="bg-[#3C6C3F] text-white px-8 py-4 rounded-full
-                  hover:bg-[#2A462B] transition-all duration-300 shadow-md hover:shadow-lg
+                className="bg-primary text-white px-8 py-4 rounded-full
+                  hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
                   font-medium"
               >
-                Discover Our Story
+                Discover Our Process
               </button>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl overflow-hidden h-48 transform translate-y-8">
                 <img 
-                  src="/coop.jpeg" 
-                  alt="Women's cooperative in Morocco"
+                  src="/workshop-1.jpg" 
+                  alt="Craftsman working with wood"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="rounded-2xl overflow-hidden h-64">
                 <img 
-                  src="/argan.jpg" 
-                  alt="Traditional ingredients"
+                  src="/resin-pour.jpg" 
+                  alt="Epoxy resin being poured"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="rounded-2xl overflow-hidden h-64">
                 <img 
-                  src="/argan2.jpg" 
-                  alt="Sustainable harvesting"
+                  src="/wood-selection.jpg" 
+                  alt="Selecting premium wood"
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="rounded-2xl overflow-hidden h-64 transform translate-y-8">
                 <img 
-                  src="/making.webp" 
-                  alt="Product creation"
+                  src="/finishing-process.jpg" 
+                  alt="Final finishing process"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -419,43 +392,19 @@ const HomePage = () => {
 
 const FeatureCard = ({ icon, title, description }) => (
   <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 text-center
-    shadow-lg hover:shadow-xl transition-all duration-300 border border-[#3C6C3F]/10
+    shadow-lg hover:shadow-xl transition-all duration-300 border border-primary/10
     hover:bg-white/95 group">
     <div className="mb-6 flex justify-center">
       <div className="transform group-hover:scale-110 transition-transform duration-300">
         {icon}
       </div>
     </div>
-    <h3 className="text-xl font-semibold text-[#2A462B] mb-4">
+    <h3 className="text-xl font-semibold text-timber-700 mb-4">
       {title}
     </h3>
-    <p className="text-[#2A462B]/70 leading-relaxed">
+    <p className="text-timber-600 leading-relaxed">
       {description}
     </p>
-  </div>
-);
-
-const TestimonialCard = ({ quote, name, location, rating }) => (
-  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-    <div className="flex mb-4">
-      {[...Array(rating)].map((_, i) => (
-        <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-      ))}
-      {[...Array(5-rating)].map((_, i) => (
-        <Star key={i} className="w-5 h-5 text-gray-200" />
-      ))}
-    </div>
-    <p className="text-[#2A462B]/80 italic mb-6">"{quote}"</p>
-    <div className="flex items-center">
-      <div className="w-10 h-10 rounded-full bg-[#3C6C3F]/10 flex items-center justify-center 
-        text-[#3C6C3F] font-semibold">
-        {name.charAt(0)}
-      </div>
-      <div className="ml-3">
-        <p className="font-medium text-[#2A462B]">{name}</p>
-        <p className="text-sm text-[#2A462B]/60">{location}</p>
-      </div>
-    </div>
   </div>
 );
 

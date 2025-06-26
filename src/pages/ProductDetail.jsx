@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, ChevronLeft, ChevronRight, Minus, Plus, Truck, ShieldCheck, RefreshCw, Heart, Share, Check } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Minus, Plus, Truck, ShieldCheck, RefreshCw, Heart, Share, Check, TreePine, Palette, Ruler, Award, Clock, Hammer } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 import Layout from '../components/Layout';
 import { fetchProductById, fetchProducts } from '../services/productService';
-import { getImageUrl } from '../utils/imageUtils'; // Import the same function used in Products.jsx
+import { getImageUrl } from '../utils/imageUtils';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -19,6 +19,7 @@ const ProductDetail = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [activeTab, setActiveTab] = useState('details');
 
   // Fetch product data
   useEffect(() => {
@@ -121,7 +122,7 @@ const ProductDetail = () => {
       
       // Show toast notification
       toast.success(`${quantity} ${product.name} added to cart`, {
-        description: 'Item successfully added to your cart',
+        description: 'Handcrafted piece added to your collection',
         duration: 3000,
       });
       
@@ -191,7 +192,7 @@ const ProductDetail = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="bg-gradient-to-br from-[#F4F7F4] to-white min-h-screen py-20">
+        <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-20">
           <div className="container mx-auto px-4 md:px-8">
             <div className="animate-pulse">
               <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
@@ -218,22 +219,22 @@ const ProductDetail = () => {
   if (error || !product) {
     return (
       <Layout>
-        <div className="bg-gradient-to-br from-[#F4F7F4] to-white min-h-screen py-20">
+        <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-20">
           <div className="container mx-auto px-8">
             <div className="max-w-xl mx-auto text-center">
-              <h2 className="text-4xl font-light text-[#2A462B] mb-6">
-                <span className="text-[#3C6C3F]">Product</span> Not Found
+              <h2 className="text-4xl font-light text-timber-700 mb-6">
+                <span className="text-primary">Piece</span> Not Found
               </h2>
-              <p className="text-[#2A462B]/70 mb-8">
-                We couldn't find the product you were looking for. It may have been removed or the URL might be incorrect.
+              <p className="text-timber-600 mb-8">
+                We couldn't find the piece you were looking for. It may have been sold or the URL might be incorrect.
               </p>
               <button 
                 onClick={() => navigate('/products')}
-                className="bg-[#3C6C3F] text-white px-8 py-4 rounded-full
-                  hover:bg-[#2A462B] transition-all duration-300 shadow-md 
+                className="bg-primary text-white px-8 py-4 rounded-full
+                  hover:bg-primary-dark transition-all duration-300 shadow-md 
                   hover:shadow-lg font-medium"
               >
-                Browse All Products
+                Browse Our Collection
               </button>
             </div>
           </div>
@@ -245,31 +246,28 @@ const ProductDetail = () => {
   return (
     <Layout>
       <Toaster richColors position="bottom-right" />
-      <div className="bg-gradient-to-br from-[#F4F7F4] to-white min-h-screen py-10 md:py-20">
+      <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-10 md:py-20">
         <div className="container mx-auto px-4 md:px-8">
           {/* Breadcrumb */}
           <div className="mb-6">
-            <nav className="flex text-sm text-[#2A462B]/60">
+            <nav className="flex text-sm text-timber-600">
               <button 
                 onClick={() => navigate('/products')}
-                className="hover:text-[#3C6C3F] transition-colors"
+                className="hover:text-primary transition-colors"
               >
-                Products
+                Collection
               </button>
               <span className="mx-2">/</span>
               <button 
                 onClick={() => navigate(`/products/category/${product.category.toLowerCase()}`)}
-                className="hover:text-[#3C6C3F] transition-colors"
+                className="hover:text-primary transition-colors"
               >
                 {product.category}
               </button>
               <span className="mx-2">/</span>
-              <button 
-                className="hover:text-[#3C6C3F] transition-colors"
-              >
+              <span className="text-timber-700 font-medium">
                 {product.name}
-              </button>
-
+              </span>
             </nav>
           </div>
 
@@ -293,7 +291,7 @@ const ProductDetail = () => {
                         hover:bg-white transition-all duration-300"
                       aria-label="Previous image"
                     >
-                      <ChevronLeft className="w-5 h-5 text-[#2A462B]" />
+                      <ChevronLeft className="w-5 h-5 text-timber-700" />
                     </button>
                     <button 
                       onClick={nextImage}
@@ -302,59 +300,53 @@ const ProductDetail = () => {
                         hover:bg-white transition-all duration-300"
                       aria-label="Next image"
                     >
-                      <ChevronRight className="w-5 h-5 text-[#2A462B]" />
+                      <ChevronRight className="w-5 h-5 text-timber-700" />
                     </button>
                   </>
                 )}
 
                 {/* Featured badge if applicable */}
                 {product.featured && (
-                  <div className="absolute top-4 left-4 bg-[#3C6C3F] text-white px-3 py-1 
+                  <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 
                     rounded-full text-xs font-medium">
-                    Featured
+                    Featured Creation
                   </div>
                 )}
               </div>
               
-              {/* Thumbnail Images */}
-              {/* {product.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                  {product.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveImage(index)}
-                      className={`w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all
-                        ${activeImage === index ? 'border-[#3C6C3F] shadow-md' : 'border-transparent opacity-70'}`}
-                    >
-                      <img 
-                        src={getImageUrl(image)} 
-                        alt={`${product.name} - view ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
+              {/* Quality Assurance Badge */}
+              <div className="bg-gradient-to-r from-primary/5 to-timber-50 rounded-xl p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <Award className="w-5 h-5 text-primary" />
+                  <span className="font-semibold text-timber-700">Master Crafted Guarantee</span>
                 </div>
-              )} */}
+                <p className="text-sm text-timber-600">
+                  Handcrafted by master artisans with lifetime craftsmanship warranty. 
+                  Each piece is unique and made with sustainable materials.
+                </p>
+              </div>
             </div>
 
             {/* Product Info */}
             <div>
               <div className={`${scrollPosition > 300 ? 'lg:sticky lg:top-24' : ''}`}>
-                <span className="text-sm text-[#3C6C3F] font-medium inline-block px-2 py-1 
-                  bg-[#3C6C3F]/10 rounded-full mb-2">
+                <span className="text-sm text-primary font-medium inline-block px-3 py-1 
+                  bg-primary/10 rounded-full mb-3">
                   {product.category}
                 </span>
                 
-                <div className="flex items-start justify-between">
-                  <h1 className="text-3xl md:text-4xl font-semibold text-[#2A462B] mb-2">{product.name}</h1>
+                <div className="flex items-start justify-between mb-4">
+                  <h1 className="text-3xl md:text-4xl font-semibold text-timber-700 mb-2 flex-1 pr-4">
+                    {product.name}
+                  </h1>
                   
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-2 flex-shrink-0">
                     <button 
                       onClick={toggleFavorite}
                       className={`p-2 rounded-full transition-colors ${
                         isFavorite 
                           ? 'bg-red-50 text-red-500' 
-                          : 'bg-gray-100 text-[#2A462B]/70 hover:bg-gray-200'
+                          : 'bg-timber-100 text-timber-600 hover:bg-timber-200'
                       }`}
                       aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                     >
@@ -366,44 +358,64 @@ const ProductDetail = () => {
                     
                     <button 
                       onClick={handleShare}
-                      className="p-2 bg-gray-100 rounded-full text-[#2A462B]/70 hover:bg-gray-200 transition-colors"
+                      className="p-2 bg-timber-100 rounded-full text-timber-600 hover:bg-timber-200 transition-colors"
                       aria-label="Share product"
                     >
                       <Share className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
-                
 
-                
-                <div className="text-2xl md:text-3xl font-bold text-[#2A462B] mb-6 pt-6">
-                  {product.price.toFixed(2)} DH
+                <div className="text-2xl md:text-3xl font-bold text-timber-700 mb-6">
+                  ${product.price.toFixed(2)}
                 </div>
                 
-                <p className="text-[#2A462B]/80 mb-8 leading-relaxed">
+                <p className="text-timber-600 mb-8 leading-relaxed">
                   {product.longDescription || product.description}
                 </p>
+
+                {/* Materials & Features */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-6 border border-primary/10">
+                  <h3 className="font-semibold text-timber-700 mb-4 flex items-center">
+                    <TreePine className="w-5 h-5 mr-2 text-primary" />
+                    Materials & Craftsmanship
+                  </h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-start gap-3">
+                      <Palette className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-timber-600">{product.materials}</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Ruler className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-timber-600">Dimensions: {product.size}</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-timber-600">Handcrafted - Allow 2-4 weeks for creation</span>
+                    </div>
+                  </div>
+                </div>
                 
                 {/* Quantity Selector and Add to Cart */}
-                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-8 border border-[#3C6C3F]/10">
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-8 border border-primary/10">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
                     <div className="flex items-center">
-                      <span className="text-sm font-semibold text-[#2A462B] mr-4">Quantity</span>
-                      <div className="flex items-center bg-gray-50 border border-gray-200 rounded-full shadow-sm transition-all duration-200 hover:shadow-md">
+                      <span className="text-sm font-semibold text-timber-700 mr-4">Quantity</span>
+                      <div className="flex items-center bg-timber-50 border border-timber-200 rounded-full shadow-sm transition-all duration-200 hover:shadow-md">
                         <button 
                           onClick={() => handleQuantityChange(-1)}
                           disabled={quantity <= 1}
-                          className="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-[#2A462B] hover:bg-[#E8F5E8] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent rounded-l-full transition-colors duration-150"
+                          className="w-10 h-10 flex items-center justify-center text-timber-700 hover:text-primary hover:bg-timber-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent rounded-l-full transition-colors duration-150"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <div className="w-14 text-center font-semibold text-[#2A462B] py-2">
+                        <div className="w-14 text-center font-semibold text-timber-700 py-2">
                           {quantity}
                         </div>
                         <button 
                           onClick={() => handleQuantityChange(1)}
-                          className="w-10 h-10 flex items-center justify-center text-[#3C6C3F] hover:bg-[#E8F5E8] rounded-r-full transition-colors duration-150"
+                          className="w-10 h-10 flex items-center justify-center text-primary hover:bg-timber-100 rounded-r-full transition-colors duration-150"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-4 h-4" />
@@ -411,16 +423,16 @@ const ProductDetail = () => {
                       </div>
                     </div>
                     
-                    <div className="text-[#2A462B]/70 text-sm">
-                      {(product.price * quantity).toFixed(2)} DH
+                    <div className="text-timber-600 text-sm">
+                      Total: ${(product.price * quantity).toFixed(2)}
                     </div>
                   </div>
                   
                   <button 
                     onClick={handleAddToCart}
                     disabled={isAddingToCart}
-                    className="w-full bg-[#3C6C3F] text-white py-4 rounded-full font-medium 
-                      hover:bg-[#2A462B] transition-all duration-300 shadow-md 
+                    className="w-full bg-primary text-white py-4 rounded-full font-medium 
+                      hover:bg-primary-dark transition-all duration-300 shadow-md 
                       hover:shadow-lg relative overflow-hidden"
                   >
                     <span className={`transition-opacity duration-200 ${isAddingToCart ? 'opacity-0' : 'opacity-100'}`}>
@@ -446,28 +458,28 @@ const ProductDetail = () => {
                 </div>
                 
                 {/* Product Features */}
-                <div className="border-t border-b border-gray-200 py-6 mb-8 space-y-4">
+                <div className="border-t border-b border-timber-200 py-6 mb-8 space-y-4">
                   <div className="flex items-center gap-4">
-                    <Truck className="w-5 h-5 text-[#3C6C3F]" />
+                    <Truck className="w-5 h-5 text-primary" />
                     <div>
-                      <h3 className="font-medium text-[#2A462B]">Free Shipping</h3>
-                      <p className="text-sm text-[#2A462B]/70">Free standard shipping on orders over 500 DH</p>
+                      <h3 className="font-medium text-timber-700">Free White Glove Delivery</h3>
+                      <p className="text-sm text-timber-600">Complimentary setup and placement in your home</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <ShieldCheck className="w-5 h-5 text-[#3C6C3F]" />
+                    <ShieldCheck className="w-5 h-5 text-primary" />
                     <div>
-                      <h3 className="font-medium text-[#2A462B]">Money Back Guarantee</h3>
-                      <p className="text-sm text-[#2A462B]/70">30-day satisfaction guarantee</p>
+                      <h3 className="font-medium text-timber-700">Lifetime Craftsmanship Warranty</h3>
+                      <p className="text-sm text-timber-600">Guaranteed against defects in materials and workmanship</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <RefreshCw className="w-5 h-5 text-[#3C6C3F]" />
+                    <RefreshCw className="w-5 h-5 text-primary" />
                     <div>
-                      <h3 className="font-medium text-[#2A462B]">Easy Returns</h3>
-                      <p className="text-sm text-[#2A462B]/70">Hassle-free return process</p>
+                      <h3 className="font-medium text-timber-700">30-Day Return Policy</h3>
+                      <p className="text-sm text-timber-600">Full refund if not completely satisfied</p>
                     </div>
                   </div>
                 </div>
@@ -476,61 +488,134 @@ const ProductDetail = () => {
           </div>
 
           {/* Product Details Tabs Section */}
-          <div className="mt-4">
-
-            <div className="py-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h2 className="text-2xl font-semibold text-[#2A462B] mb-6">Product Details</h2>
-                  <p className="text-[#2A462B]/80 leading-relaxed mb-6">
-                    {product.longDescription || product.description}
-                  </p>
-                  <div className="grid grid-cols-2 gap-y-2 border-t border-gray-200 pt-6">
-                    <div className="text-sm text-[#2A462B]/70">Size</div>
-                    <div className="text-sm text-[#2A462B]">{product.size}</div>
-                    
-                    <div className="text-sm text-[#2A462B]/70">Category</div>
-                    <div className="text-sm text-[#2A462B]">{product.category}</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h2 className="text-2xl font-semibold text-[#2A462B] mb-6">How to Use</h2>
-                  <div className="grid grid-cols-1 gap-y-2 border-t border-gray-200 pt-6">
-                  <p className="text-[#2A462B]/80 leading-relaxed mb-6">
-                    {product.usage}
-                  </p>
-                  </div>
-                </div>
+          <div className="mt-16">
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex bg-white rounded-full p-1 shadow-md">
+                {['details', 'care', 'sustainability'].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 capitalize ${
+                      activeTab === tab 
+                        ? 'bg-primary text-white shadow-lg' 
+                        : 'text-timber-600 hover:text-timber-700'
+                    }`}
+                  >
+                    {tab === 'details' ? 'Product Details' : 
+                     tab === 'care' ? 'Care Instructions' : 
+                     'Sustainability'}
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
 
-          {/* Benefits Section */}
-          <div className="mt-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-md p-8 border border-[#3C6C3F]/10">
-            <h2 className="text-2xl font-semibold text-[#2A462B] mb-8 text-center">Key Benefits</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {product.benefits && product.benefits.map((benefit, index) => (
-                <div 
-                  key={index}
-                  className="bg-[#F4F7F4]/50 rounded-xl p-6
-                    shadow-sm hover:shadow-md transition-all duration-300
-                    border border-[#3C6C3F]/5 text-center"
-                >
-                  <div className="h-12 w-12 bg-[#3C6C3F]/10 rounded-full flex items-center 
-                    justify-center mx-auto mb-4">
-                    <span className="text-xl font-semibold text-[#3C6C3F]">{index + 1}</span>
+            <div className="max-w-4xl mx-auto">
+              {activeTab === 'details' && (
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <h2 className="text-2xl font-semibold text-timber-700 mb-6">Specifications</h2>
+                      <div className="space-y-4">
+                        <div className="flex justify-between py-2 border-b border-timber-100">
+                          <span className="text-timber-600">Dimensions</span>
+                          <span className="text-timber-700 font-medium">{product.size}</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-timber-100">
+                          <span className="text-timber-600">Category</span>
+                          <span className="text-timber-700 font-medium">{product.category}</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-timber-100">
+                          <span className="text-timber-600">Materials</span>
+                          <span className="text-timber-700 font-medium text-right">{product.materials}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h2 className="text-2xl font-semibold text-timber-700 mb-6">Key Features</h2>
+                      <div className="grid grid-cols-1 gap-4">
+                        {product.benefits && product.benefits.map((benefit, index) => (
+                          <div key={index} className="flex items-center gap-3">
+                            <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                            <span className="text-timber-600">{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[#2A462B] font-medium">{benefit}</p>
                 </div>
-              ))}
+              )}
+
+              {activeTab === 'care' && (
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+                  <h2 className="text-2xl font-semibold text-timber-700 mb-6">Care Instructions</h2>
+                  <div className="prose prose-timber max-w-none">
+                    <p className="text-timber-600 leading-relaxed mb-6">
+                      {product.care}
+                    </p>
+                    <div className="bg-primary/5 rounded-xl p-6">
+                      <h3 className="text-lg font-semibold text-primary mb-3 flex items-center">
+                        <Hammer className="w-5 h-5 mr-2" />
+                        Professional Maintenance
+                      </h3>
+                      <p className="text-timber-600 text-sm">
+                        For deep cleaning or restoration, we recommend consulting with our craftsmen. 
+                        Contact us for professional maintenance services to keep your piece looking its best for generations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'sustainability' && (
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+                  <h2 className="text-2xl font-semibold text-timber-700 mb-6">Our Sustainability Promise</h2>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div className="flex items-start gap-4">
+                        <TreePine className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <h3 className="font-semibold text-timber-700 mb-2">FSC Certified Wood</h3>
+                          <p className="text-timber-600 text-sm">All hardwoods are sourced from responsibly managed forests with proper certification.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-4">
+                        <Palette className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <h3 className="font-semibold text-timber-700 mb-2">Eco-Friendly Resins</h3>
+                          <p className="text-timber-600 text-sm">Low-VOC epoxy resins that are safe for your home and the environment.</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <div className="flex items-start gap-4">
+                        <RefreshCw className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <h3 className="font-semibold text-timber-700 mb-2">Zero Waste Workshop</h3>
+                          <p className="text-timber-600 text-sm">Wood scraps become smaller pieces, sawdust becomes compost.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-4">
+                        <Truck className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <h3 className="font-semibold text-timber-700 mb-2">Carbon Neutral Delivery</h3>
+                          <p className="text-timber-600 text-sm">All shipments are offset through our tree planting partnerships.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <div className="mt-16">
-              <h2 className="text-2xl font-semibold text-[#2A462B] mb-8">You May Also Like</h2>
+              <h2 className="text-2xl font-semibold text-timber-700 mb-8">You May Also Like</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {relatedProducts.map((relProduct) => (
                   <div
@@ -538,9 +623,9 @@ const ProductDetail = () => {
                     onClick={() => navigate(`/product/${relProduct.id}`)}
                     className="bg-white/90 backdrop-blur-sm rounded-xl p-4
                       shadow-md hover:shadow-lg transition-all duration-300
-                      border border-[#3C6C3F]/10 hover:bg-white/95 group cursor-pointer"
+                      border border-primary/10 hover:bg-white/95 group cursor-pointer"
                   >
-                    <div className="bg-[#F4F7F4] rounded-lg mb-3 aspect-square relative overflow-hidden">
+                    <div className="bg-timber-50 rounded-lg mb-3 aspect-square relative overflow-hidden">
                       <img
                         src={getImageUrl(relProduct.image || relProduct.images[0])}
                         alt={relProduct.name}
@@ -548,11 +633,11 @@ const ProductDetail = () => {
                           transform group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    <h3 className="text-sm font-medium text-[#2A462B] truncate group-hover:text-[#3C6C3F] transition-colors">
+                    <h3 className="text-sm font-medium text-timber-700 truncate group-hover:text-primary transition-colors">
                       {relProduct.name}
                     </h3>
-                    <p className="text-[#3C6C3F] font-semibold text-sm mt-1">
-                      {relProduct.price.toFixed(2)} DH
+                    <p className="text-primary font-semibold text-sm mt-1">
+                      ${relProduct.price.toFixed(2)}
                     </p>
                   </div>
                 ))}
