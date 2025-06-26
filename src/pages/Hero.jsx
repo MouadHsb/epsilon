@@ -413,37 +413,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Newsletter & CTA */}
-      <section className="bg-gradient-to-br from-[#3C6C3F] to-[#2A462B] py-16 text-white">
-        <div className="container mx-auto px-4 sm:px-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-light mb-6">
-              Join the Sirdy <span className="font-semibold">Community</span>
-            </h2>
-            <p className="text-white/90 mb-8 leading-relaxed">
-              Subscribe to receive natural skincare tips, exclusive offers, and early access to new products
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-6 py-4 rounded-full border border-white/30
-                  focus:outline-none focus:ring-2 focus:ring-white/50 shadow-inner
-                  bg-white/10 backdrop-blur-sm text-white placeholder-white/60
-                  transition-all duration-300"
-              />
-              
-              <button className="bg-white text-[#3C6C3F] px-8 py-4 rounded-full
-                hover:bg-[#F4F7F4] transition-all duration-300 shadow-md 
-                hover:shadow-lg font-medium"
-              >
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 };
