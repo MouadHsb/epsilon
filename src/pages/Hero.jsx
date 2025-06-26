@@ -175,37 +175,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="bg-timber-100/60 py-16">
-        <div className="container mx-auto px-4 sm:px-8">
-          <div className="max-w-lg mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-light text-timber-700 mb-4">
-              Why Choose <span className="text-primary font-semibold">WoodFlow</span>
-            </h2>
-            <p className="text-timber-600 leading-relaxed">
-              Our craftsmen combine traditional woodworking techniques with modern resin artistry 
-              to create furniture and decor that's both functional and breathtaking.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<TreePine className="w-12 h-12 text-primary" strokeWidth={1.5} />}
-              title="Sustainable Wood"
-              description="Ethically sourced hardwoods from certified sustainable forests, each piece chosen for its unique grain and character"
-            />
-            <FeatureCard
-              icon={<Palette className="w-12 h-12 text-primary" strokeWidth={1.5} />}
-              title="Resin Artistry"
-              description="Premium epoxy resins in vibrant colors create stunning rivers, oceans, and artistic patterns that flow with the wood"
-            />
-            <FeatureCard
-              icon={<Hammer className="w-12 h-12 text-primary" strokeWidth={1.5} />}
-              title="Master Craftsmanship"
-              description="Hand-finished by skilled artisans with decades of experience in traditional and modern woodworking techniques"
-            />
-          </div>
-        </div>
-      </section>
 
       {/* Featured Products */}
       <section className="py-16 bg-white">
@@ -308,83 +277,99 @@ const HomePage = () => {
       </section>
 
       {/* Craftsmanship Story */}
-      <section className="py-16 bg-timber-50">
-        <div className="container mx-auto px-4 sm:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-light text-timber-700">
-                Where tradition meets <span className="text-primary font-semibold">Innovation</span>
-              </h2>
-              <p className="text-lg text-timber-600 leading-relaxed">
-                At WoodFlow, we honor the ancient art of woodworking while embracing modern resin techniques. 
-                Each piece begins with carefully selected sustainable hardwoods, chosen for their unique grain patterns and natural beauty.
-              </p>
-              <p className="text-lg text-timber-600 leading-relaxed">
-                Our master craftsmen then enhance these natural canvases with flowing rivers of colored epoxy resin, 
-                creating one-of-a-kind pieces that capture the intersection of nature and artistry.
-              </p>
-              <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <TreePine className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-timber-700">Sustainable Sourcing</p>
-                    <p className="text-sm text-timber-600">FSC certified hardwoods</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Hammer className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-timber-700">Expert Craftsmanship</p>
-                    <p className="text-sm text-timber-600">25+ years experience</p>
-                  </div>
-                </div>
-              </div>
-              <button 
-                onClick={() => navigate('/about')}
-                className="bg-primary text-white px-8 py-4 rounded-full
-                  hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
-                  font-medium"
-              >
-                Discover Our Process
-              </button>
+{/* Combined Why Choose & Craftsmanship Story */}
+<section className="py-16 bg-timber-50">
+  <div className="container mx-auto px-4 sm:px-8">
+    <div className="grid md:grid-cols-2 gap-12 items-center">
+      <div className="space-y-6">
+        <h2 className="text-3xl md:text-4xl font-light text-timber-700">
+          Where tradition meets <span className="text-primary font-semibold">Innovation</span>
+        </h2>
+        <p className="text-lg text-timber-600 leading-relaxed">
+          At WoodFlow, we honor the ancient art of woodworking while embracing modern resin techniques. 
+          Each piece begins with carefully selected sustainable hardwoods, chosen for their unique grain patterns and natural beauty.
+        </p>
+        <p className="text-lg text-timber-600 leading-relaxed">
+          Our master craftsmen then enhance these natural canvases with flowing rivers of colored epoxy resin, 
+          creating one-of-a-kind pieces that capture the intersection of nature and artistry.
+        </p>
+        
+        {/* Why Choose WoodFlow Features */}
+        <div className="grid grid-cols-1 gap-4 mt-8">
+          <div className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-primary/10">
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <TreePine className="w-6 h-6 text-primary" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-2xl overflow-hidden h-48 transform translate-y-8">
-                <img 
-                  src="/workshop-1.jpg" 
-                  alt="Craftsman working with wood"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="rounded-2xl overflow-hidden h-64">
-                <img 
-                  src="/resin-pour.jpg" 
-                  alt="Epoxy resin being poured"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="rounded-2xl overflow-hidden h-64">
-                <img 
-                  src="/wood-selection.jpg" 
-                  alt="Selecting premium wood"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="rounded-2xl overflow-hidden h-64 transform translate-y-8">
-                <img 
-                  src="/finishing-process.jpg" 
-                  alt="Final finishing process"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div>
+              <h3 className="font-semibold text-timber-700">Sustainable Wood</h3>
+              <p className="text-sm text-timber-600">Ethically sourced hardwoods from certified sustainable forests, each piece chosen for its unique grain and character</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-primary/10">
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <Palette className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-timber-700">Resin Artistry</h3>
+              <p className="text-sm text-timber-600">Premium epoxy resins in vibrant colors create stunning rivers, oceans, and artistic patterns that flow with the wood</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-primary/10">
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <Hammer className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-timber-700">Master Craftsmanship</h3>
+              <p className="text-sm text-timber-600">Hand-finished by skilled artisans with decades of experience in traditional and modern woodworking techniques</p>
             </div>
           </div>
         </div>
-      </section>
+        
+        <button 
+          onClick={() => navigate('/about')}
+          className="bg-primary text-white px-8 py-4 rounded-full
+            hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
+            font-medium mt-6"
+        >
+          Discover Our Process
+        </button>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded-2xl overflow-hidden h-48 transform translate-y-8">
+          <img 
+            src="/workshop-1.jpg" 
+            alt="Craftsman working with wood"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="rounded-2xl overflow-hidden h-64">
+          <img 
+            src="/resin-pour.jpg" 
+            alt="Epoxy resin being poured"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="rounded-2xl overflow-hidden h-64">
+          <img 
+            src="/wood-selection.jpg" 
+            alt="Selecting premium wood"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="rounded-2xl overflow-hidden h-64 transform translate-y-8">
+          <img 
+            src="/finishing-process.jpg" 
+            alt="Final finishing process"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
     </Layout>
   );

@@ -9,7 +9,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 function App() {
   return (
     <BrowserRouter>
-    <ScrollToTop />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/products" element={<Products />} />

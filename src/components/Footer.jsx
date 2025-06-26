@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, ChevronRight, ArrowRight } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, ChevronRight, ArrowRight, TreePine, Hammer, Award } from 'lucide-react';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -22,46 +22,33 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative overflow-hidden bg-[#F4F7F4]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#F4F7F4] to-white opacity-70" />
+    <footer className="relative overflow-hidden bg-timber-50">
+      <div className="absolute inset-0 bg-gradient-to-br from-timber-50 to-white opacity-70" />
       
-      {/* Awards & Recognition Banner */}
-      <div className="relative bg-[#3C6C3F]/5 py-4 border-b border-[#3C6C3F]/10">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
-            <h4 className="text-[#2A462B] font-semibold text-center sm:text-left">
-              <span className="text-[#3C6C3F]">Awards</span> & Recognition:
-            </h4>
-            <div className="flex flex-wrap justify-center gap-6 items-center">
-              <AwardBadge name="Enactus World Cup 2024" place="Vice-world champion" />
-            </div>
-          </div>
-        </div>
-      </div>
       
       {/* Main Footer Content */}
       <div className="container mx-auto px-6 pt-16 pb-8 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Column 1: About */}
-          <div>
-            <h3 className="text-xl font-semibold text-[#2A462B] mb-6">
-              About <span className="text-[#3C6C3F]">Sirdy</span>
+          <div className="lg:col-span-2">
+            <h3 className="text-xl font-semibold text-timber-700 mb-6">
+              About <span className="text-primary">Epsilon Woods</span>
             </h3>
-            <h4 className="text-[#2A462B]/80 mb-6 leading-relaxed">
-              Sirdy brings Morocco's natural treasures to modern products through sustainable practices and social impact. We create products that honor both your health and the Earth.
-            </h4>
-            {/* <div className="flex space-x-4">
-              <SocialLink href="https://instagram.com" icon={<Instagram size={18} />} />
-              <SocialLink href="https://facebook.com" icon={<Facebook size={18} />} />
-              <SocialLink href="https://twitter.com" icon={<Twitter size={18} />} />
-            </div> */}
+            <p className="text-timber-600 mb-6 leading-relaxed">
+              Epsilon Woods creates exceptional furniture and decor through the fusion of sustainable hardwoods 
+              and artistic resin flows. Each handcrafted piece celebrates the harmony between nature's gifts 
+              and human creativity, bringing functional art to your home.
+            </p>
+            <div className="flex space-x-4">
+              <SocialLink href="https://instagram.com/woodflow" icon={<Instagram size={18} />} />
+              <SocialLink href="https://facebook.com/woodflow" icon={<Facebook size={18} />} />
+            </div>
           </div>
           
-
           
-          {/* Column 4: Contact & Subscribe */}
+          {/* Column 3: Contact & Subscribe */}
           <div>
-            <h3 className="text-xl font-semibold text-[#2A462B] mb-6">Stay Connected</h3>
+            <h3 className="text-xl font-semibold text-timber-700 mb-6">Stay Connected</h3>
             
             <form onSubmit={handleSubscribe} className="mb-6">
               <div className="relative">
@@ -70,16 +57,16 @@ const Footer = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-lg border border-[#3C6C3F]/20
-                    focus:outline-none focus:ring-2 focus:ring-[#3C6C3F]/40 shadow-sm
-                    bg-white/70 backdrop-blur-sm text-[#2A462B] placeholder-[#2A462B]/50
+                  className="w-full px-4 py-3 rounded-lg border border-primary/20
+                    focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-sm
+                    bg-white/70 backdrop-blur-sm text-timber-700 placeholder-timber-600/50
                     transition-all duration-300"
                 />
                 <button 
                   type="submit"
                   className="absolute right-2 top-1/2 transform -translate-y-1/2
-                    bg-[#3C6C3F] text-white p-2 rounded-full
-                    hover:bg-[#2A462B] transition-all duration-300"
+                    bg-primary text-white p-2 rounded-full
+                    hover:bg-primary-dark transition-all duration-300"
                 >
                   <ArrowRight size={16} />
                 </button>
@@ -93,33 +80,41 @@ const Footer = () => {
               )}
             </form>
             
-            <div className="flex space-x-3">
+            <div className="space-y-3">
               <ContactItem 
                 icon={<MapPin size={16} />} 
-                text="Rabat, Morocco" 
+                text="Portland, Oregon" 
               />
               <ContactItem 
                 icon={<Phone size={16} />} 
-                text="+212 682-297812" 
-                href="tel:+212682297812"
+                text="+1 (503) 555-WOOD" 
+                href="tel:+15035559663"
               />
               <ContactItem 
                 icon={<Mail size={16} />} 
-                text="contact@sirdy.com" 
-                href="mailto:contact@sirdy.com"
+                text="hello@woodflow.com" 
+                href="mailto:hello@woodflow.com"
               />
             </div>
           </div>
         </div>
         
         {/* Bottom Footer */}
-        <div className="border-t border-[#3C6C3F]/10 pt-6 mt-4">
+        <div className="border-t border-primary/10 pt-6 mt-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-[#2A462B]/70 mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} Sirdy. All rights reserved.
+            <p className="text-sm text-timber-600/70 mb-4 md:mb-0">
+              &copy; {new Date().getFullYear()} Epsilon Woods. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm">
-              Made with 💚 by Enactus EMI
+              <Link to="/privacy" className="text-timber-600/70 hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
+              <Link to="/terms" className="text-timber-600/70 hover:text-primary transition-colors">
+                Terms of Service
+              </Link>
+              <Link to="/shipping" className="text-timber-600/70 hover:text-primary transition-colors">
+                Shipping & Returns
+              </Link>
             </div>
           </div>
         </div>
@@ -133,7 +128,7 @@ const FooterLink = ({ to, children }) => (
   <li>
     <Link 
       to={to} 
-      className="text-[#2A462B]/80 hover:text-[#3C6C3F] transition-colors flex items-center group"
+      className="text-timber-600/80 hover:text-primary transition-colors flex items-center group"
     >
       <ChevronRight size={16} className="mr-2 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
       {children}
@@ -147,7 +142,7 @@ const SocialLink = ({ href, icon }) => (
     target="_blank" 
     rel="noopener noreferrer"
     className="w-9 h-9 rounded-full bg-white flex items-center justify-center
-      text-[#3C6C3F] border border-[#3C6C3F]/20 hover:bg-[#3C6C3F] hover:text-white
+      text-primary border border-primary/20 hover:bg-primary hover:text-white
       transition-all duration-300 shadow-sm"
   >
     {icon}
@@ -156,8 +151,8 @@ const SocialLink = ({ href, icon }) => (
 
 const ContactItem = ({ icon, text, href }) => {
   const content = (
-    <div className="flex items-center text-[#2A462B]/80 hover:text-[#3C6C3F] transition-colors">
-      <span className="mr-3 text-[#3C6C3F]">{icon}</span>
+    <div className="flex items-center text-timber-600/80 hover:text-primary transition-colors">
+      <span className="mr-3 text-primary">{icon}</span>
       <span>{text}</span>
     </div>
   );
@@ -173,16 +168,13 @@ const ContactItem = ({ icon, text, href }) => {
 
 const AwardBadge = ({ name, place }) => (
   <div className="flex items-center">
-    <div className="w-8 h-8 rounded-full bg-white border border-[#3C6C3F]/20 
+    <div className="w-8 h-8 rounded-full bg-white border border-primary/20 
       flex items-center justify-center mr-3 shadow-sm flex-shrink-0">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z" stroke="#3C6C3F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" stroke="#3C6C3F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      <Award className="w-4 h-4 text-primary" />
     </div>
     <div>
-      <p className="text-xs font-medium text-[#2A462B]">{name}</p>
-      <p className="text-xs text-[#2A462B]/60">{place}</p>
+      <p className="text-xs font-medium text-timber-700">{name}</p>
+      <p className="text-xs text-timber-600/60">{place}</p>
     </div>
   </div>
 );

@@ -1,13 +1,22 @@
 {
-  "rewrites": [
-    { "source": "/api/products/:id", "destination": "/api/products/[id].js" },
-    { "source": "/api/products", "destination": "/api/products/index.js" },
-    { "source": "/api/products/category/:category", "destination": "/api/products/category/[category].js" },
-    { "source": "/api/products/featured/items", "destination": "/api/products/featured/items.js" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "regions": ["cdg1"]
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
 }

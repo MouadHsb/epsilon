@@ -10,5 +10,3 @@ yarn-error.log
 .env.development.local
 .env.test.local
 .env.production.local
-src/services/skinAnalysisService copy.js
-api/skin-analysis copy.js
