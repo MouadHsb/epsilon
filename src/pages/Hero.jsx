@@ -289,22 +289,9 @@ const HomePage = () => {
           At WoodFlow, we honor the ancient art of woodworking while embracing modern resin techniques. 
           Each piece begins with carefully selected sustainable hardwoods, chosen for their unique grain patterns and natural beauty.
         </p>
-        <p className="text-lg text-timber-600 leading-relaxed">
-          Our master craftsmen then enhance these natural canvases with flowing rivers of colored epoxy resin, 
-          creating one-of-a-kind pieces that capture the intersection of nature and artistry.
-        </p>
-        
+
         {/* Why Choose WoodFlow Features */}
         <div className="grid grid-cols-1 gap-4 mt-8">
-          <div className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-primary/10">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-              <TreePine className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-timber-700">Sustainable Wood</h3>
-              <p className="text-sm text-timber-600">Ethically sourced hardwoods from certified sustainable forests, each piece chosen for its unique grain and character</p>
-            </div>
-          </div>
           
           <div className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-primary/10">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -327,41 +314,33 @@ const HomePage = () => {
           </div>
         </div>
         
-        <button 
-          onClick={() => navigate('/about')}
-          className="bg-primary text-white px-8 py-4 rounded-full
-            hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
-            font-medium mt-6"
-        >
-          Discover Our Process
-        </button>
       </div>
       
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-2xl overflow-hidden h-48 transform translate-y-8">
           <img 
-            src="/workshop-1.jpg" 
+            src="/ft1.png" 
             alt="Craftsman working with wood"
             className="w-full h-full object-cover"
           />
         </div>
         <div className="rounded-2xl overflow-hidden h-64">
           <img 
-            src="/resin-pour.jpg" 
+            src="/ft2.png" 
             alt="Epoxy resin being poured"
             className="w-full h-full object-cover"
           />
         </div>
         <div className="rounded-2xl overflow-hidden h-64">
           <img 
-            src="/wood-selection.jpg" 
+            src="/ft3.png" 
             alt="Selecting premium wood"
             className="w-full h-full object-cover"
           />
         </div>
         <div className="rounded-2xl overflow-hidden h-64 transform translate-y-8">
           <img 
-            src="/finishing-process.jpg" 
+            src="/ft4.png" 
             alt="Final finishing process"
             className="w-full h-full object-cover"
           />

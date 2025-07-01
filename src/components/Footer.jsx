@@ -27,7 +27,7 @@ const Footer = () => {
       
       
       {/* Main Footer Content */}
-      <div className="container mx-auto px-6 pt-16 pb-8 relative">
+      <div className="container mx-auto px-6 pt-12 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Column 1: About */}
           <div className="lg:col-span-2">
@@ -43,6 +43,9 @@ const Footer = () => {
               <SocialLink href="https://instagram.com/woodflow" icon={<Instagram size={18} />} />
               <SocialLink href="https://facebook.com/woodflow" icon={<Facebook size={18} />} />
             </div>
+            <p className="text-sm text-timber-600/70 pt-8 mb-4 md:mb-0">
+              &copy; {new Date().getFullYear()} Epsilon Woods. All rights reserved.
+            </p>
           </div>
           
           
@@ -83,38 +86,18 @@ const Footer = () => {
             <div className="space-y-3">
               <ContactItem 
                 icon={<MapPin size={16} />} 
-                text="Portland, Oregon" 
+                text="Casablanca, Morocco" 
               />
               <ContactItem 
                 icon={<Phone size={16} />} 
-                text="+1 (503) 555-WOOD" 
-                href="tel:+15035559663"
+                text="+212 617497105"
+                href="tel:+212617497105"
               />
               <ContactItem 
                 icon={<Mail size={16} />} 
-                text="hello@woodflow.com" 
-                href="mailto:hello@woodflow.com"
+                text="contact@epsilonwoods.com" 
+                href="mailto:contact@epsilonwoods.com"
               />
-            </div>
-          </div>
-        </div>
-        
-        {/* Bottom Footer */}
-        <div className="border-t border-primary/10 pt-6 mt-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-timber-600/70 mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} Epsilon Woods. All rights reserved.
-            </p>
-            <div className="flex space-x-6 text-sm">
-              <Link to="/privacy" className="text-timber-600/70 hover:text-primary transition-colors">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="text-timber-600/70 hover:text-primary transition-colors">
-                Terms of Service
-              </Link>
-              <Link to="/shipping" className="text-timber-600/70 hover:text-primary transition-colors">
-                Shipping & Returns
-              </Link>
             </div>
           </div>
         </div>

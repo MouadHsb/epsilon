@@ -23,7 +23,7 @@ const AboutUs = () => {
                 Our <span className="text-primary font-semibold">Craft Story</span>
               </h1>
               <p className="text-xl text-timber-600 leading-relaxed mb-8 opacity-0 animate-fade-in-delay-1">
-                At WoodFlow, we're reimagining furniture design through the fusion of sustainable hardwoods 
+                At Epsilon Woods, we're reimagining furniture design through the fusion of sustainable hardwoods 
                 and artistic resin flows. Born from a deep passion for both traditional craftsmanship and modern innovation,
                 our journey celebrates the harmony between nature's gifts and human creativity.
               </p>
@@ -67,62 +67,13 @@ const AboutUs = () => {
                 Master <span className="text-primary font-semibold">Artisans</span>
               </h2>
               <p className="text-lg text-timber-600 leading-relaxed">
-                WoodFlow was founded by a collective of master woodworkers and resin artists, each bringing decades 
+                Epsilon Woods was founded by a collective of master woodworkers and resin artists, each bringing decades 
                 of experience in their craft. Our workshop combines traditional joinery techniques with cutting-edge 
                 resin artistry to create pieces that are both timeless and contemporary.
               </p>
             </div>
 
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg animate-fade-in-up">
-              <h3 className="text-2xl font-semibold text-primary mb-8 text-center">
-                Awards & Recognition
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  {achievements.map((achievement, index) => (
-                    <div key={index} className="flex items-center gap-4 group">
-                      <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
-                        <Award 
-                          className={`transform group-hover:scale-110 transition-transform ${
-                            index === 0 ? 'w-12 h-12 text-primary' :
-                            index === 1 ? 'w-10 h-10 text-primary/90' :
-                            index === 2 ? 'w-9 h-9 text-primary/80' :
-                            'w-8 h-8 text-primary/70'
-                          }`}
-                        />
-                      </div>
-                      <p className={`text-timber-600 ${
-                        index === 0 ? 'font-semibold' :
-                        index === 1 ? 'font-medium' : ''
-                      }`}>{achievement}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-4">
-                  <div className="p-6 bg-timber-50/70 rounded-xl">
-                    <h4 className="text-xl font-medium text-primary mb-3">Our Impact in Numbers</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center">
-                        <p className="text-3xl font-bold text-timber-700">500+</p>
-                        <p className="text-sm text-timber-600">Custom Pieces</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-3xl font-bold text-timber-700">25</p>
-                        <p className="text-sm text-timber-600">Years Experience</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-3xl font-bold text-timber-700">1,000+</p>
-                        <p className="text-sm text-timber-600">Trees Planted</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-3xl font-bold text-timber-700">98%</p>
-                        <p className="text-sm text-timber-600">Client Satisfaction</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </section>
 
@@ -155,12 +106,12 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* The WoodFlow Philosophy Section */}
+        {/* The Epsilon Woods Philosophy Section */}
         <section className="py-16">
           <div className="container mx-auto px-8">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl font-light text-timber-700 mb-8 text-center">
-                The <span className="text-primary font-semibold">WoodFlow</span> Philosophy
+                The <span className="text-primary font-semibold">Epsilon Woods</span> Philosophy
               </h2>
               
               <div className="space-y-10">
@@ -243,7 +194,7 @@ const AboutUs = () => {
                 Experience the <span className="text-primary font-semibold">Artistry</span>
               </h2>
               <p className="text-lg text-timber-600 leading-relaxed mb-8">
-                From stunning river tables to elegant wall art, each WoodFlow piece tells a unique story 
+                From stunning river tables to elegant wall art, each Epsilon Woods piece tells a unique story 
                 of natural beauty enhanced by human creativity. Discover furniture that transforms 
                 your space into a gallery of functional art.
               </p>
@@ -330,7 +281,7 @@ const values = [
   {
     icon: <TreePine className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />,
     title: "Sustainability",
-    description: "We source only FSC-certified hardwoods and use eco-friendly finishes, ensuring our beautiful furniture doesn't come at the planet's expense."
+    description: "We source only high quality hardwoods and use eco-friendly finishes, ensuring our beautiful furniture doesn't come at the planet's expense."
   },
   {
     icon: <Hammer className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />,
@@ -348,7 +299,7 @@ const storyPoints = [
   {
     icon: <TreePine className="w-8 h-8 text-primary" />,
     title: "Natural Heritage",
-    description: "WoodFlow celebrates the inherent beauty of hardwoods - from the rich chocolate tones of walnut to the golden warmth of oak. Each piece of wood is carefully selected for its unique grain pattern, character marks, and natural beauty. We believe that the best furniture starts with respecting and showcasing the tree's natural story, preserved through centuries of growth."
+    description: "Epsilon Woods celebrates the inherent beauty of hardwoods - from the rich chocolate tones of walnut to the golden warmth of oak. Each piece of wood is carefully selected for its unique grain pattern, character marks, and natural beauty. We believe that the best furniture starts with respecting and showcasing the tree's natural story, preserved through centuries of growth."
   },
   {
     icon: <Palette className="w-8 h-8 text-primary" />,

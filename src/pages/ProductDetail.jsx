@@ -257,17 +257,12 @@ const ProductDetail = () => {
               >
                 Collection
               </button>
-              <span className="mx-2">/</span>
+              <span className="mx-2"> </span>
               <button 
-                onClick={() => navigate(`/products/category/${product.category.toLowerCase()}`)}
                 className="hover:text-primary transition-colors"
               >
-                {product.category}
-              </button>
-              <span className="mx-2">/</span>
-              <span className="text-timber-700 font-medium">
                 {product.name}
-              </span>
+              </button>
             </nav>
           </div>
 
@@ -457,193 +452,10 @@ const ProductDetail = () => {
                   </button>
                 </div>
                 
-                {/* Product Features */}
-                <div className="border-t border-b border-timber-200 py-6 mb-8 space-y-4">
-                  <div className="flex items-center gap-4">
-                    <Truck className="w-5 h-5 text-primary" />
-                    <div>
-                      <h3 className="font-medium text-timber-700">Free White Glove Delivery</h3>
-                      <p className="text-sm text-timber-600">Complimentary setup and placement in your home</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <ShieldCheck className="w-5 h-5 text-primary" />
-                    <div>
-                      <h3 className="font-medium text-timber-700">Lifetime Craftsmanship Warranty</h3>
-                      <p className="text-sm text-timber-600">Guaranteed against defects in materials and workmanship</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <RefreshCw className="w-5 h-5 text-primary" />
-                    <div>
-                      <h3 className="font-medium text-timber-700">30-Day Return Policy</h3>
-                      <p className="text-sm text-timber-600">Full refund if not completely satisfied</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
-          {/* Product Details Tabs Section */}
-          <div className="mt-16">
-            <div className="flex justify-center mb-8">
-              <div className="inline-flex bg-white rounded-full p-1 shadow-md">
-                {['details', 'care', 'sustainability'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 capitalize ${
-                      activeTab === tab 
-                        ? 'bg-primary text-white shadow-lg' 
-                        : 'text-timber-600 hover:text-timber-700'
-                    }`}
-                  >
-                    {tab === 'details' ? 'Product Details' : 
-                     tab === 'care' ? 'Care Instructions' : 
-                     'Sustainability'}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="max-w-4xl mx-auto">
-              {activeTab === 'details' && (
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div>
-                      <h2 className="text-2xl font-semibold text-timber-700 mb-6">Specifications</h2>
-                      <div className="space-y-4">
-                        <div className="flex justify-between py-2 border-b border-timber-100">
-                          <span className="text-timber-600">Dimensions</span>
-                          <span className="text-timber-700 font-medium">{product.size}</span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-timber-100">
-                          <span className="text-timber-600">Category</span>
-                          <span className="text-timber-700 font-medium">{product.category}</span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-timber-100">
-                          <span className="text-timber-600">Materials</span>
-                          <span className="text-timber-700 font-medium text-right">{product.materials}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h2 className="text-2xl font-semibold text-timber-700 mb-6">Key Features</h2>
-                      <div className="grid grid-cols-1 gap-4">
-                        {product.benefits && product.benefits.map((benefit, index) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                            <span className="text-timber-600">{benefit}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'care' && (
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-                  <h2 className="text-2xl font-semibold text-timber-700 mb-6">Care Instructions</h2>
-                  <div className="prose prose-timber max-w-none">
-                    <p className="text-timber-600 leading-relaxed mb-6">
-                      {product.care}
-                    </p>
-                    <div className="bg-primary/5 rounded-xl p-6">
-                      <h3 className="text-lg font-semibold text-primary mb-3 flex items-center">
-                        <Hammer className="w-5 h-5 mr-2" />
-                        Professional Maintenance
-                      </h3>
-                      <p className="text-timber-600 text-sm">
-                        For deep cleaning or restoration, we recommend consulting with our craftsmen. 
-                        Contact us for professional maintenance services to keep your piece looking its best for generations.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'sustainability' && (
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-                  <h2 className="text-2xl font-semibold text-timber-700 mb-6">Our Sustainability Promise</h2>
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                      <div className="flex items-start gap-4">
-                        <TreePine className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                        <div>
-                          <h3 className="font-semibold text-timber-700 mb-2">FSC Certified Wood</h3>
-                          <p className="text-timber-600 text-sm">All hardwoods are sourced from responsibly managed forests with proper certification.</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-4">
-                        <Palette className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                        <div>
-                          <h3 className="font-semibold text-timber-700 mb-2">Eco-Friendly Resins</h3>
-                          <p className="text-timber-600 text-sm">Low-VOC epoxy resins that are safe for your home and the environment.</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-6">
-                      <div className="flex items-start gap-4">
-                        <RefreshCw className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                        <div>
-                          <h3 className="font-semibold text-timber-700 mb-2">Zero Waste Workshop</h3>
-                          <p className="text-timber-600 text-sm">Wood scraps become smaller pieces, sawdust becomes compost.</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-4">
-                        <Truck className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                        <div>
-                          <h3 className="font-semibold text-timber-700 mb-2">Carbon Neutral Delivery</h3>
-                          <p className="text-timber-600 text-sm">All shipments are offset through our tree planting partnerships.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Related Products */}
-          {relatedProducts.length > 0 && (
-            <div className="mt-16">
-              <h2 className="text-2xl font-semibold text-timber-700 mb-8">You May Also Like</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {relatedProducts.map((relProduct) => (
-                  <div
-                    key={relProduct.id}
-                    onClick={() => navigate(`/product/${relProduct.id}`)}
-                    className="bg-white/90 backdrop-blur-sm rounded-xl p-4
-                      shadow-md hover:shadow-lg transition-all duration-300
-                      border border-primary/10 hover:bg-white/95 group cursor-pointer"
-                  >
-                    <div className="bg-timber-50 rounded-lg mb-3 aspect-square relative overflow-hidden">
-                      <img
-                        src={getImageUrl(relProduct.image || relProduct.images[0])}
-                        alt={relProduct.name}
-                        className="w-full h-full object-cover rounded-lg
-                          transform group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <h3 className="text-sm font-medium text-timber-700 truncate group-hover:text-primary transition-colors">
-                      {relProduct.name}
-                    </h3>
-                    <p className="text-primary font-semibold text-sm mt-1">
-                      ${relProduct.price.toFixed(2)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </Layout>

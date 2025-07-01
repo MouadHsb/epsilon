@@ -19,8 +19,7 @@ const CartPage = () => {
     phone: '',
     address: '',
     city: '',
-    note: '',
-    paymentMethod: 'delivery' // Default to delivery payment
+    note: ''
   });
 
   // Load cart data from localStorage
@@ -88,24 +87,14 @@ const CartPage = () => {
     return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
-  // Calculate shipping cost
-  const getShippingCost = () => {
-    const subtotal = getTotalPrice();
-    const FREE_SHIPPING_THRESHOLD = 1500; // Higher threshold for furniture
-    return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 150; // Higher shipping cost for furniture
-  };
 
-  // Calculate final total (subtotal + shipping)
+
+  // Calculate final total (subtotal )
   const getFinalTotal = () => {
-    return getTotalPrice() + getShippingCost();
+    return getTotalPrice() 
   };
 
-  // Calculate amount needed for free shipping
-  const getAmountForFreeShipping = () => {
-    const FREE_SHIPPING_THRESHOLD = 1500;
-    const subtotal = getTotalPrice();
-    return Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  };
+
 
   // Handle input changes in form
   const handleInputChange = (e) => {
@@ -147,10 +136,7 @@ const CartPage = () => {
       customer_address: formData.address,
       customer_city: formData.city,
       order_details: orderDetails,
-      subtotal: getTotalPrice().toFixed(2),
-      shipping_cost: getShippingCost().toFixed(2),
       total_price: getFinalTotal().toFixed(2),
-      payment_method: formData.paymentMethod,
       note: formData.note || 'No special instructions provided',
       reply_to: formData.email
     };
@@ -173,8 +159,7 @@ const CartPage = () => {
           phone: '',
           address: '',
           city: '',
-          note: '',
-          paymentMethod: 'delivery'
+          note: ''
         });
         
         toast.success('Order placed successfully!', {
@@ -283,52 +268,16 @@ const CartPage = () => {
                     ))}
                   </div>
                   
-                  <div className="pt-4 border-t border-primary/10">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-timber-600">Subtotal</span>
-                      <span className="text-timber-700 font-medium">${getTotalPrice().toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-timber-600">White Glove Delivery</span>
-                      <span className="text-timber-700 font-medium">
-                        {getShippingCost() === 0 ? (
-                          <span className="text-green-600">Free</span>
-                        ) : (
-                          `$${getShippingCost().toFixed(2)}`
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-lg font-semibold text-timber-700 mt-4 pt-4 border-t border-primary/10">
+                  <div className="border-primary/10">
+
+                    <div className="flex justify-between items-center text-lg font-semibold text-timber-700 mt-4 border-primary/10">
                       <span>Total</span>
                       <span>${getFinalTotal().toFixed(2)}</span>
                     </div>
                     
-                    {getAmountForFreeShipping() > 0 && (
-                      <div className="mt-4 bg-primary/5 rounded-lg p-3 text-sm text-timber-700">
-                        Add <span className="font-semibold">${getAmountForFreeShipping().toFixed(2)}</span> more to qualify for free white glove delivery!
-                      </div>
-                    )}
                   </div>
                 </div>
                 
-                {/* Shipping & Returns Info */}
-                <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6">
-                  <h3 className="font-medium text-timber-700 mb-4">Delivery & Warranty</h3>
-                  <div className="space-y-4 text-sm text-timber-600">
-                    <div className="flex items-start gap-3">
-                      <Truck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <p>Free white glove delivery on orders over $1,500. Professional setup and placement included. Allow 2-4 weeks for custom pieces.</p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <p>Lifetime craftsmanship warranty against defects in materials and workmanship. 30-day satisfaction guarantee.</p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Award className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <p>Each piece is handcrafted by master artisans using sustainable FSC-certified hardwoods and eco-friendly resins.</p>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* Delivery Information Form */}
@@ -438,44 +387,7 @@ const CartPage = () => {
                     ></textarea>
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-timber-700 mb-1">
-                      Payment Method
-                    </label>
-                    <div className="space-y-3">
-                      <label className="flex items-center p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-not-allowed">
-                        <input
-                          type="radio"
-                          id="online"
-                          name="paymentMethod"
-                          value="online"
-                          disabled
-                          className="w-4 h-4 text-primary border-gray-300"
-                        />
-                        <span className="ml-3 flex items-center text-gray-400">
-                          <CreditCard className="w-4 h-4 mr-2" />
-                          Online Payment
-                        </span>
-                        <span className="ml-2 text-xs text-red-400 font-medium">(Coming Soon)</span>
-                      </label>
 
-                      <label className="flex items-center p-3 rounded-lg border border-primary bg-white cursor-pointer hover:bg-timber-50 transition-colors">
-                        <input
-                          type="radio"
-                          id="delivery"
-                          name="paymentMethod"
-                          value="delivery"
-                          checked={formData.paymentMethod === 'delivery'}
-                          onChange={handleInputChange}
-                          className="w-4 h-4 text-primary border-primary"
-                        />
-                        <span className="ml-3 flex items-center text-timber-700">
-                          <Truck className="w-4 h-4 mr-2" />
-                          Payment on Delivery
-                        </span>
-                      </label>
-                    </div>
-                  </div>
 
                   {/* Order Summary */}
                   <div className="bg-timber-50/50 rounded-xl p-4 mt-6">
@@ -485,12 +397,7 @@ const CartPage = () => {
                         <span className="text-timber-600">{cartItems.length} handcrafted piece{cartItems.length > 1 ? 's' : ''}</span>
                         <span className="text-timber-700">${getTotalPrice().toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-timber-600">White glove delivery</span>
-                        <span className="text-timber-700">
-                          {getShippingCost() === 0 ? 'Free' : `$${getShippingCost().toFixed(2)}`}
-                        </span>
-                      </div>
+
                       <div className="flex justify-between font-semibold text-timber-700 pt-2 border-t border-timber-200">
                         <span>Total</span>
                         <span>${getFinalTotal().toFixed(2)}</span>
