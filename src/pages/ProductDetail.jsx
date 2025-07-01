@@ -362,7 +362,7 @@ const ProductDetail = () => {
                 </div>
 
                 <div className="text-2xl md:text-3xl font-bold text-timber-700 mb-6">
-                  ${product.price.toFixed(2)}
+                  {product.price.toFixed(2)} DH
                 </div>
                 
                 <p className="text-timber-600 mb-8 leading-relaxed">
@@ -419,7 +419,7 @@ const ProductDetail = () => {
                     </div>
                     
                     <div className="text-timber-600 text-sm">
-                      Total: ${(product.price * quantity).toFixed(2)}
+                      Total: {(product.price * quantity).toFixed(2)} DH
                     </div>
                   </div>
                   

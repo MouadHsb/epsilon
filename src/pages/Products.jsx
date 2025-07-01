@@ -70,7 +70,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         <div className="absolute top-3 right-3 z-20">
           <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-timber-700 
             font-semibold text-sm shadow-sm">
-            ${product.price.toFixed(0)}
+            {product.price.toFixed(0)} DH
           </span>
         </div>
         
@@ -427,7 +427,7 @@ const Products = () => {
               
               {(priceRange[0] !== 0 || priceRange[1] !== maxPrice) && (
                 <div className="bg-primary/10 text-primary py-1 px-3 rounded-full text-sm font-medium flex items-center">
-                  Price: ${priceRange[0]} - ${priceRange[1]}
+                  Price: {priceRange[0]} DH - {priceRange[1]} DH
                   <button 
                     onClick={() => setPriceRange([0, maxPrice])}
                     className="ml-2 hover:text-primary-dark"

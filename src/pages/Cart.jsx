@@ -125,7 +125,7 @@ const CartPage = () => {
     setIsSubmitting(true);
 
     const orderDetails = cartItems.map(item => 
-      `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`
+      `${item.quantity}x ${item.name} - ${(item.price * item.quantity).toFixed(2)} DH`
     ).join('\n');
 
     const templateParams = {
@@ -232,7 +232,7 @@ const CartPage = () => {
                             <Link to={`/product/${item.id}`} className="font-medium text-timber-700 hover:text-primary transition-colors">
                               {item.name}
                             </Link>
-                            <p className="text-sm text-timber-600">${item.price.toFixed(2)} each</p>
+                            <p className="text-sm text-timber-600">{item.price.toFixed(2)} DH each</p>
                             <div className="flex items-center gap-2 mt-2">
                               <button 
                                 onClick={() => updateQuantity(item.id, -1)}
@@ -254,7 +254,7 @@ const CartPage = () => {
                         </div>
                         <div className="text-right">
                           <p className="font-medium text-timber-700">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {(item.price * item.quantity).toFixed(2)} DH
                           </p>
                           <button 
                             onClick={() => removeFromCart(item.id)}
@@ -272,7 +272,7 @@ const CartPage = () => {
 
                     <div className="flex justify-between items-center text-lg font-semibold text-timber-700 mt-4 border-primary/10">
                       <span>Total</span>
-                      <span>${getFinalTotal().toFixed(2)}</span>
+                      <span>{getFinalTotal().toFixed(2)} DH</span>
                     </div>
                     
                   </div>
@@ -395,12 +395,12 @@ const CartPage = () => {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-timber-600">{cartItems.length} handcrafted piece{cartItems.length > 1 ? 's' : ''}</span>
-                        <span className="text-timber-700">${getTotalPrice().toFixed(2)}</span>
+                        <span className="text-timber-700">{getTotalPrice().toFixed(2)} DH</span>
                       </div>
 
                       <div className="flex justify-between font-semibold text-timber-700 pt-2 border-t border-timber-200">
                         <span>Total</span>
-                        <span>${getFinalTotal().toFixed(2)}</span>
+                        <span>{getFinalTotal().toFixed(2)} DH</span>
                       </div>
                     </div>
                   </div>

@@ -207,7 +207,7 @@ const Header = () => {
                             <div key={item.id} className="flex justify-between items-start bg-timber-50/50 rounded-lg p-3">
                               <div className="flex-1">
                                 <p className="text-sm font-medium text-timber-700 line-clamp-1">{item.name}</p>
-                                <p className="text-xs text-timber-500 mt-1">${item.price.toFixed(2)} each</p>
+                                <p className="text-xs text-timber-500 mt-1">{item.price.toFixed(2)} DH each</p>
                                 <div className="flex items-center gap-2 mt-2">
                                   <button 
                                     onClick={() => updateQuantity(item.id, -1)}
@@ -228,7 +228,7 @@ const Header = () => {
                               </div>
                               <div className="ml-3 text-right">
                                 <p className="text-sm font-semibold text-timber-700">
-                                  ${(item.price * item.quantity).toFixed(2)}
+                                  {(item.price * item.quantity).toFixed(2)} DH
                                 </p>
                                 <button 
                                   onClick={() => removeFromCart(item.id)}
@@ -245,7 +245,7 @@ const Header = () => {
                           <div className="flex justify-between items-center mb-4">
                             <p className="text-base font-semibold text-timber-700">Total</p>
                             <p className="text-lg font-bold text-primary">
-                              ${totalPrice.toFixed(2)}
+                              {totalPrice.toFixed(2)} DH
                             </p>
                           </div>
                           

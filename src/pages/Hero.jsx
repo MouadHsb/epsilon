@@ -227,7 +227,7 @@ const HomePage = () => {
                     />
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm
                       px-3 py-1 rounded-full text-timber-700 font-semibold text-sm">
-                      ${product.price.toFixed(0)}
+                      {product.price.toFixed(0)} DH
                     </div>
                   </div>
                   <div className="p-6 space-y-4">
