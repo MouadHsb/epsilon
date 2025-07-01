@@ -40,8 +40,8 @@ const Footer = () => {
               and human creativity, bringing functional art to your home.
             </p>
             <div className="flex space-x-4">
-              <SocialLink href="https://instagram.com/woodflow" icon={<Instagram size={18} />} />
-              <SocialLink href="https://facebook.com/woodflow" icon={<Facebook size={18} />} />
+              <SocialLink href="https://www.instagram.com/epsilon.woods.resine/?hl=en" icon={<Instagram size={18} />} />
+              <SocialLink href="https://facebook.com/" icon={<Facebook size={18} />} />
             </div>
             <p className="text-sm text-timber-600/70 pt-8 mb-4 md:mb-0">
               &copy; {new Date().getFullYear()} Epsilon Woods. All rights reserved.

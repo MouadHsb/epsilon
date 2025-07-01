@@ -143,7 +143,7 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center justify-center flex-1">
-            <div className="flex space-x-16 pl-6">
+            <div className="flex space-x-16 pr-16">
               <NavLink to="/" isActive={location.pathname === '/'}>Home</NavLink>
               <NavLink to="/products" isActive={location.pathname === '/products'}>Products</NavLink>
               <NavLink to="/about" isActive={location.pathname === '/about'}>About Us</NavLink>
