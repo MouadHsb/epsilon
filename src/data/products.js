@@ -10,7 +10,9 @@ const products = [
     size: "120cm x 60cm x 45cm",
     featured: true,
     images: [
-      "/pd1.jpeg"
+      "/pd11.jpeg",
+      "/pd12.jpeg",
+      "/pd13.jpeg"
     ],
     materials: "Premium walnut wood, blue epoxy resin, steel hairpin legs",
     care: "Clean with a damp cloth and mild soap. Avoid harsh chemicals. Apply wood conditioner every 6 months for optimal preservation.",
@@ -34,7 +36,10 @@ const products = [
     size: "40cm x 25cm x 3cm",
     featured: true,
     images: [
-      "/products/olive-cutting-board.jpg"
+      "/pd23.jpeg",
+      "/pd22.jpeg",
+      "/pd24.jpeg",
+      "/pd21.jpeg"
     ],
     materials: "Mediterranean olive wood, amber epoxy resin, food-safe finish",
     care: "Hand wash only with warm soapy water. Dry immediately. Oil monthly with food-safe mineral oil to maintain finish.",
@@ -58,7 +63,8 @@ const products = [
     size: "80cm x 60cm x 2.5cm",
     featured: true,
     images: [
-      "/products/cedar-wall-art.jpg"
+      "/pd31.jpeg",
+      "/pd32.jpeg"
     ],
     materials: "Aromatic cedar wood, turquoise epoxy resin, mounting hardware",
     care: "Dust gently with a soft cloth. Avoid direct sunlight to prevent fading. No additional treatment needed.",
