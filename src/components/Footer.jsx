@@ -41,7 +41,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <SocialLink href="https://www.instagram.com/epsilon.woods.resine/?hl=en" icon={<Instagram size={18} />} />
-              <SocialLink href="https://facebook.com/" icon={<Facebook size={18} />} />
+              <SocialLink href="https://www.facebook.com/epsilonwoods/" icon={<Facebook size={18} />} />
             </div>
             <p className="text-sm text-timber-600/70 pt-8 mb-4 md:mb-0">
               &copy; {new Date().getFullYear()} Epsilon Woods. All rights reserved.
@@ -92,6 +92,11 @@ const Footer = () => {
                 icon={<Phone size={16} />} 
                 text="+212 617497105"
                 href="tel:+212617497105"
+              />
+              <ContactItem 
+                icon={<Phone size={16} />} 
+                text="+212 766552652"
+                href="tel:+212766552652"
               />
               <ContactItem 
                 icon={<Mail size={16} />} 

@@ -11,7 +11,6 @@ const ProductCard = ({ product, onAddToCart }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   
-  // Check if product is in favorites
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     setIsFavorite(favorites.includes(product.id));
@@ -58,7 +57,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           loading="lazy"
         />
         
-        {/* Category Badge */}
         <div className="absolute top-3 left-3 z-20">
           <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-primary 
             text-xs font-medium shadow-sm">
@@ -66,7 +64,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           </span>
         </div>
         
-        {/* Price Badge */}
         <div className="absolute top-3 right-3 z-20">
           <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-timber-700 
             font-semibold text-sm shadow-sm">
@@ -74,7 +71,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           </span>
         </div>
         
-        {/* Favorite Button */}
         <button
           onClick={toggleFavorite}
           className="absolute bottom-3 right-3 z-20 p-2 bg-white/80 backdrop-blur-sm rounded-full
@@ -87,7 +83,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           />
         </button>
 
-        {/* Hover Overlay */}
         <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
           isHovering ? 'opacity-100' : 'opacity-0'
         }`} />
@@ -106,7 +101,6 @@ const ProductCard = ({ product, onAddToCart }) => {
           {product.description}
         </p>
         
-        {/* Material Tags */}
         <div className="flex flex-wrap gap-1 mb-4">
           {product.keyFeatures?.slice(0, 2).map((feature, index) => (
             <span key={index} className="text-xs bg-timber-50 text-timber-600 px-2 py-1 rounded-full">
@@ -142,6 +136,79 @@ const ProductCard = ({ product, onAddToCart }) => {
   );
 };
 
+const FilterSidebar = ({ categories, activeCategory, onCategoryChange, sortOption, onSortChange, priceRange, onPriceRangeChange, maxPrice }) => {
+  const sortOptions = [
+    { value: 'default', label: 'Featured' },
+    { value: 'price-low', label: 'Price: Low to High' },
+    { value: 'price-high', label: 'Price: High to Low' },
+    { value: 'name-asc', label: 'Name: A to Z' },
+    { value: 'name-desc', label: 'Name: Z to A' }
+  ];
+
+  return (
+    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg sticky top-24">
+      <h3 className="text-xl font-semibold text-timber-700 mb-6 flex items-center">
+        <Filter className="w-5 h-5 mr-2" />
+        Filters
+      </h3>
+      
+      <div className="mb-8">
+        <h4 className="text-md font-medium text-timber-700 mb-3">Categories</h4>
+        <div className="space-y-2 max-h-60 overflow-y-auto pr-2 scrollbar-thin">
+          {['All', ...categories].map((category) => (
+            <button
+              key={category}
+              onClick={() => onCategoryChange(category)}
+              className={`block w-full text-left px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                activeCategory === category
+                  ? 'bg-primary text-white font-medium'
+                  : 'text-timber-700 hover:bg-primary/10'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="mb-8">
+        <h4 className="text-md font-medium text-timber-700 mb-3">Price Range</h4>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm text-timber-600 mb-1">
+            <span>{priceRange[0]} DH</span>
+            <span>{priceRange[1]} DH</span>
+          </div>
+          <input 
+            type="range" 
+            min="0" 
+            max={maxPrice} 
+            value={priceRange[1]}
+            onChange={(e) => onPriceRangeChange([priceRange[0], parseInt(e.target.value)])}
+            className="w-full accent-primary h-2 bg-timber-100 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="text-md font-medium text-timber-700 mb-3">Sort By</h4>
+        <select
+          value={sortOption}
+          onChange={(e) => onSortChange(e.target.value)}
+          className="w-full p-3 border border-primary/20 rounded-lg text-timber-700 
+            focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+        >
+          {sortOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -158,7 +225,6 @@ const Products = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Initialize from URL search params
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const query = params.get('q');
@@ -167,7 +233,6 @@ const Products = () => {
     }
   }, [location.search]);
 
-  // Fetch products
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -175,11 +240,9 @@ const Products = () => {
         const data = await fetchProducts();
         setProducts(data);
         
-        // Extract categories
         const uniqueCategories = [...new Set(data.map(product => product.category))];
         setCategories(uniqueCategories);
         
-        // Find max price for range slider
         const highestPrice = Math.ceil(Math.max(...data.map(product => product.price)));
         setMaxPrice(highestPrice);
         setPriceRange([0, highestPrice]);
@@ -195,18 +258,15 @@ const Products = () => {
     getProducts();
   }, []);
   
-  // Filter and sort products
   useEffect(() => {
     if (products.length === 0) return;
     
     let result = [...products];
     
-    // Apply category filter
     if (selectedCategory !== 'All') {
       result = result.filter(product => product.category === selectedCategory);
     }
     
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(product => {
@@ -218,12 +278,10 @@ const Products = () => {
       });
     }
     
-    // Apply price filter
     result = result.filter(product => {
       return product.price >= priceRange[0] && product.price <= priceRange[1];
     });
     
-    // Apply sorting
     switch (sortOption) {
       case 'price-low':
         result.sort((a, b) => a.price - b.price);
@@ -238,7 +296,6 @@ const Products = () => {
         result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       default:
-        // Keep default order or sort by featured
         result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
     
@@ -247,7 +304,6 @@ const Products = () => {
   
   const handleSearch = (e) => {
     e.preventDefault();
-    // Update URL with search query for shareable links
     navigate(`/products?q=${encodeURIComponent(searchQuery)}`);
   };
   
@@ -268,7 +324,6 @@ const Products = () => {
         position: 'bottom-right',
       });
     } else {
-      // Only add essential product data to cart
       const cartItem = {
         id: product.id,
         name: product.name,
@@ -285,12 +340,9 @@ const Products = () => {
     }
     
     localStorage.setItem('cart', JSON.stringify(newCart));
-    
-    // Also dispatch an event so other components like Header can update
     window.dispatchEvent(new Event('storage'));
   }, []);
 
-  // Loading state
   if (loading) {
     return (
       <Layout>
@@ -299,7 +351,6 @@ const Products = () => {
             <h2 className="text-5xl font-light text-timber-700 mb-8 tracking-tight">
               Our <span className="text-primary font-semibold">Collection</span>
             </h2>
-            
             <div className="flex items-center justify-center pt-10 pb-20">
               <div className="flex flex-col items-center">
                 <Loader className="w-12 h-12 text-primary animate-spin mb-4" />
@@ -312,7 +363,6 @@ const Products = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <Layout>
@@ -354,11 +404,8 @@ const Products = () => {
               Discover our curated collection of handcrafted furniture and decor, where sustainable hardwoods 
               meet artistic resin flows to create functional masterpieces for your home.
             </p>
-
-            {/* Featured Highlights */}
           </div>
           
-          {/* Search & Mobile Filter Button */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <form onSubmit={handleSearch} className="flex-1">
               <div className="relative">
@@ -394,7 +441,6 @@ const Products = () => {
             </button>
           </div>
           
-          {/* Search Results Info */}
           {searchQuery && (
             <div className="mb-8">
               <p className="text-timber-600 flex items-center">
@@ -407,7 +453,6 @@ const Products = () => {
             </div>
           )}
           
-          {/* Active Filters */}
           {(selectedCategory !== 'All' || sortOption !== 'default' || 
             priceRange[0] !== 0 || priceRange[1] !== maxPrice) && (
             <div className="flex flex-wrap gap-2 mb-6">
@@ -463,14 +508,35 @@ const Products = () => {
           )}
           
           <div className="grid grid-cols-12 gap-8">
-            {/* Mobile filters (collapsible) */}
-
+            {showMobileFilters && (
+              <div className="col-span-12 lg:hidden">
+                <FilterSidebar 
+                  categories={categories}
+                  activeCategory={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                  sortOption={sortOption}
+                  onSortChange={setSortOption}
+                  priceRange={priceRange}
+                  onPriceRangeChange={setPriceRange}
+                  maxPrice={maxPrice}
+                />
+              </div>
+            )}
             
-            {/* Desktop Sidebar */}
-
+            <div className="hidden lg:block lg:col-span-3">
+              <FilterSidebar 
+                categories={categories}
+                activeCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                sortOption={sortOption}
+                onSortChange={setSortOption}
+                priceRange={priceRange}
+                onPriceRangeChange={setPriceRange}
+                maxPrice={maxPrice}
+              />
+            </div>
             
-            {/* Products Grid */}
-            <div className="col-span-12 lg:col-span-12">
+            <div className="col-span-12 lg:col-span-9">
               {filteredProducts.length === 0 ? (
                 <div className="text-center py-12 bg-white/60 backdrop-blur-sm rounded-2xl shadow-md">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-timber-50 flex items-center justify-center">
@@ -491,7 +557,8 @@ const Products = () => {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                // ## MODIFIED: Sizing now matches the first code ##
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredProducts.map((product) => (
                     <ProductCard 
                       key={product.id} 
@@ -503,8 +570,6 @@ const Products = () => {
               )}
             </div>
           </div>
-
-
         </div>
       </div>
     </Layout>
