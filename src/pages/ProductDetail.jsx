@@ -5,6 +5,8 @@ import { Toaster, toast } from 'sonner';
 import Layout from '../components/Layout';
 import { fetchProductById, fetchProducts } from '../services/productService';
 import { getImageUrl } from '../utils/imageUtils';
+import { formatPrice, hasDiscount, hasCustomPrice, calculateDiscount } from '../utils/priceUtils';
+import { Phone, Mail } from 'lucide-react';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -20,6 +22,7 @@ const ProductDetail = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('details');
+  
 
   // Fetch product data
   useEffect(() => {
@@ -186,6 +189,168 @@ const ProductDetail = () => {
   const prevImage = () => {
     if (!product) return;
     setActiveImage(current => (current - 1 + product.images.length) % product.images.length);
+  };
+
+  const PricingSection = ({ product }) => {
+    const discount = hasDiscount(product) ? calculateDiscount(product.originalPrice, product.price) : 0;
+    const isCustomPrice = hasCustomPrice(product);
+
+    if (isCustomPrice) {
+      return (
+        <div className="mb-6">
+          <div className="text-2xl md:text-3xl font-bold text-primary mb-2">
+            Depends on size
+          </div>
+          <p className="text-timber-600">
+            This piece is custom-made to your specifications. Contact us for a personalized quote 
+            based on your desired dimensions and finish options.
+          </p>
+          <div className="mt-4 p-4 bg-timber-50/50 rounded-xl">
+            <h4 className="font-semibold text-timber-700 mb-2">Custom Pricing Includes:</h4>
+            <ul className="text-sm text-timber-600 space-y-1">
+              <li>• Consultation on design and materials</li>
+              <li>• Custom sizing to fit your space</li>
+              <li>• Choice of wood type and resin colors</li>
+              <li>• Professional delivery and setup</li>
+            </ul>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mb-6">
+        {hasDiscount(product) && (
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-lg md:text-xl text-timber-500 line-through">
+              {formatPrice(product.originalPrice)}
+            </span>
+            <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+              -{discount}% OFF
+            </span>
+          </div>
+        )}
+        <div className="text-2xl md:text-3xl font-bold text-timber-700">
+          {formatPrice(product.price)}
+        </div>
+        {hasDiscount(product) && (
+          <p className="text-sm text-green-600 mt-1">
+            You save {formatPrice(product.originalPrice - product.price)}!
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  const QuantityAndCartSection = ({ product, quantity, setQuantity, handleAddToCart, isAddingToCart, showNotification }) => {
+    const isCustomPrice = hasCustomPrice(product);
+
+    const handleQuantityChange = (delta) => {
+      setQuantity(prev => {
+        const newValue = prev + delta;
+        return newValue > 0 ? newValue : 1;
+      });
+    };
+
+    if (isCustomPrice) {
+      return (
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-8 border border-primary/10">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-timber-700 mb-4">
+              Get Your Custom Quote
+            </h3>
+            <p className="text-timber-600 mb-6">
+              This piece is made to order with your specific dimensions and preferences.
+            </p>
+            
+            <div className="space-y-3">
+              <a 
+                href="tel:+212617497105"
+                className="w-full bg-primary text-white py-4 rounded-full font-medium 
+                  hover:bg-primary-dark transition-all duration-300 shadow-md 
+                  hover:shadow-lg flex items-center justify-center gap-2"
+              >
+                <Phone className="w-5 h-5" />
+                Call for Quote: +212 617497105
+              </a>
+              
+              <a 
+                href="mailto:contact@epsilonwoods.com?subject=Custom Quote Request - {product.name}"
+                className="w-full bg-white text-primary py-4 rounded-full font-medium border border-primary
+                  hover:bg-primary/5 transition-all duration-300 shadow-md 
+                  hover:shadow-lg flex items-center justify-center gap-2"
+              >
+                <Mail className="w-5 h-5" />
+                Email for Quote
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-8 border border-primary/10">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+          <div className="flex items-center">
+            <span className="text-sm font-semibold text-timber-700 mr-4">Quantity</span>
+            <div className="flex items-center bg-timber-50 border border-timber-200 rounded-full shadow-sm transition-all duration-200 hover:shadow-md">
+              <button 
+                onClick={() => handleQuantityChange(-1)}
+                disabled={quantity <= 1}
+                className="w-10 h-10 flex items-center justify-center text-timber-700 hover:text-primary hover:bg-timber-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent rounded-l-full transition-colors duration-150"
+                aria-label="Decrease quantity"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <div className="w-14 text-center font-semibold text-timber-700 py-2">
+                {quantity}
+              </div>
+              <button 
+                onClick={() => handleQuantityChange(1)}
+                className="w-10 h-10 flex items-center justify-center text-primary hover:bg-timber-100 rounded-r-full transition-colors duration-150"
+                aria-label="Increase quantity"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="text-timber-600 text-sm">
+            Total: {formatPrice(product.price * quantity)}
+          </div>
+        </div>
+        
+        <button 
+          onClick={handleAddToCart}
+          disabled={isAddingToCart}
+          className="w-full bg-primary text-white py-4 rounded-full font-medium 
+            hover:bg-primary-dark transition-all duration-300 shadow-md 
+            hover:shadow-lg relative overflow-hidden"
+        >
+          <span className={`transition-opacity duration-200 ${isAddingToCart ? 'opacity-0' : 'opacity-100'}`}>
+            Add to Cart
+          </span>
+          
+          {isAddingToCart && (
+            <span className="absolute inset-0 flex items-center justify-center">
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+          )}
+          
+          {showNotification && (
+            <span className="absolute inset-0 flex items-center justify-center bg-green-600 text-white">
+              <Check className="w-5 h-5 mr-2" />
+              Added to Cart
+            </span>
+          )}
+        </button>
+      </div>
+    );
   };
 
   // Loading state
@@ -361,9 +526,8 @@ const ProductDetail = () => {
                   </div>
                 </div>
 
-                <div className="text-2xl md:text-3xl font-bold text-timber-700 mb-6">
-                  {product.price.toFixed(2)} DH
-                </div>
+                <PricingSection product={product} />
+
                 
                 <p className="text-timber-600 mb-8 leading-relaxed">
                   {product.longDescription || product.description}
@@ -377,10 +541,6 @@ const ProductDetail = () => {
                   </h3>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-start gap-3">
-                      <Palette className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-timber-600">{product.materials}</span>
-                    </div>
-                    <div className="flex items-start gap-3">
                       <Ruler className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                       <span className="text-timber-600">Dimensions: {product.size}</span>
                     </div>
@@ -392,65 +552,14 @@ const ProductDetail = () => {
                 </div>
                 
                 {/* Quantity Selector and Add to Cart */}
-                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm mb-8 border border-primary/10">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-                    <div className="flex items-center">
-                      <span className="text-sm font-semibold text-timber-700 mr-4">Quantity</span>
-                      <div className="flex items-center bg-timber-50 border border-timber-200 rounded-full shadow-sm transition-all duration-200 hover:shadow-md">
-                        <button 
-                          onClick={() => handleQuantityChange(-1)}
-                          disabled={quantity <= 1}
-                          className="w-10 h-10 flex items-center justify-center text-timber-700 hover:text-primary hover:bg-timber-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent rounded-l-full transition-colors duration-150"
-                          aria-label="Decrease quantity"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                        <div className="w-14 text-center font-semibold text-timber-700 py-2">
-                          {quantity}
-                        </div>
-                        <button 
-                          onClick={() => handleQuantityChange(1)}
-                          className="w-10 h-10 flex items-center justify-center text-primary hover:bg-timber-100 rounded-r-full transition-colors duration-150"
-                          aria-label="Increase quantity"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="text-timber-600 text-sm">
-                      Total: {(product.price * quantity).toFixed(2)} DH
-                    </div>
-                  </div>
-                  
-                  <button 
-                    onClick={handleAddToCart}
-                    disabled={isAddingToCart}
-                    className="w-full bg-primary text-white py-4 rounded-full font-medium 
-                      hover:bg-primary-dark transition-all duration-300 shadow-md 
-                      hover:shadow-lg relative overflow-hidden"
-                  >
-                    <span className={`transition-opacity duration-200 ${isAddingToCart ? 'opacity-0' : 'opacity-100'}`}>
-                      Add to Cart
-                    </span>
-                    
-                    {isAddingToCart && (
-                      <span className="absolute inset-0 flex items-center justify-center">
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      </span>
-                    )}
-                    
-                    {showNotification && (
-                      <span className="absolute inset-0 flex items-center justify-center bg-green-600 text-white">
-                        <Check className="w-5 h-5 mr-2" />
-                        Added to Cart
-                      </span>
-                    )}
-                  </button>
-                </div>
+                  <QuantityAndCartSection 
+                    product={product}
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                    handleAddToCart={handleAddToCart}
+                    isAddingToCart={isAddingToCart}
+                    showNotification={showNotification}
+                  />
                 
               </div>
             </div>

@@ -5,6 +5,8 @@ import { Toaster, toast } from 'sonner';
 import { fetchProducts } from '../services/productService';
 import { Star, Filter, ChevronDown, Loader, Search, ShoppingBag, TreePine, Palette, Heart } from 'lucide-react';
 import { getImageUrl } from '../utils/imageUtils';
+import { formatPrice, hasDiscount, hasCustomPrice, calculateDiscount } from '../utils/priceUtils';
+
 
 const ProductCard = ({ product, onAddToCart }) => {
   const navigate = useNavigate();
@@ -16,30 +18,15 @@ const ProductCard = ({ product, onAddToCart }) => {
     setIsFavorite(favorites.includes(product.id));
   }, [product.id]);
 
-  const toggleFavorite = (e) => {
-    e.stopPropagation();
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    let newFavorites;
-    
-    if (isFavorite) {
-      newFavorites = favorites.filter(id => id !== product.id);
-      toast('Removed from favorites');
-    } else {
-      newFavorites = [...favorites, product.id];
-      toast('Added to favorites', {
-        icon: <Heart className="w-4 h-4 text-red-500" fill="#ef4444" />,
-      });
-    }
-    
-    localStorage.setItem('favorites', JSON.stringify(newFavorites));
-    setIsFavorite(!isFavorite);
-  };
+
+  const discount = hasDiscount(product) ? calculateDiscount(product.originalPrice, product.price) : 0;
+  const isCustomPrice = hasCustomPrice(product);
   
   return (
     <div 
       className="bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden
         shadow-md hover:shadow-xl transition-all duration-300
-        border border-primary/10 group"
+        border border-primary/10 group relative"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -57,6 +44,7 @@ const ProductCard = ({ product, onAddToCart }) => {
           loading="lazy"
         />
         
+        {/* Category badge */}
         <div className="absolute top-3 left-3 z-20">
           <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-primary 
             text-xs font-medium shadow-sm">
@@ -64,24 +52,38 @@ const ProductCard = ({ product, onAddToCart }) => {
           </span>
         </div>
         
+        {/* Price display in top right - showing BOTH prices */}
         <div className="absolute top-3 right-3 z-20">
-          <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-timber-700 
-            font-semibold text-sm shadow-sm">
-            {product.price.toFixed(0)} DH
-          </span>
+          {isCustomPrice ? (
+            <div className="bg-primary text-white px-3 py-2 rounded-full text-xs font-bold shadow-sm">
+              CUSTOM SIZE
+            </div>
+          ) : hasDiscount(product) ? (
+            <div className="bg-white/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-red-200">
+              {/* Discount badge */}
+              <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold mb-2 text-center">
+                -{discount}% OFF
+              </div>
+              {/* Original price - clearly visible */}
+              <div className="text-center">
+                <div className="text-sm text-red-500 line-through font-semibold">
+                  {product.originalPrice.toFixed(0)} DH
+                </div>
+                {/* New price - prominent */}
+                <div className="text-lg font-black text-green-600">
+                  {product.price.toFixed(0)} DH
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
+              <div className="text-timber-700 font-semibold text-sm">
+                {product.price.toFixed(0)} DH
+              </div>
+            </div>
+          )}
         </div>
         
-        <button
-          onClick={toggleFavorite}
-          className="absolute bottom-3 right-3 z-20 p-2 bg-white/80 backdrop-blur-sm rounded-full
-            shadow-md hover:bg-white transition-all duration-200"
-        >
-          <Heart 
-            className={`w-4 h-4 transition-colors ${
-              isFavorite ? 'text-red-500 fill-red-500' : 'text-timber-500 hover:text-red-500'
-            }`}
-          />
-        </button>
 
         <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
           isHovering ? 'opacity-100' : 'opacity-0'
@@ -97,41 +99,99 @@ const ProductCard = ({ product, onAddToCart }) => {
           {product.name}
         </h3>
         
-        <p className="text-sm text-timber-600 mb-5 line-clamp-3 h-14">
-          {product.description}
-        </p>
         
-        <div className="flex flex-wrap gap-1 mb-4">
-          {product.keyFeatures?.slice(0, 2).map((feature, index) => (
-            <span key={index} className="text-xs bg-timber-50 text-timber-600 px-2 py-1 rounded-full">
-              {feature}
-            </span>
-          ))}
+        {/* MAIN Price display in card body - showing BOTH prices prominently */}
+        <div className="mb-5">
+          {isCustomPrice ? (
+            <div className="text-center bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-4">
+              <span className="text-xl font-bold text-primary block">
+                Depends on size
+              </span>
+              <p className="text-sm text-timber-600 mt-1">Contact us for custom pricing</p>
+            </div>
+          ) : hasDiscount(product) ? (
+            /* BOTH PRICES CLEARLY DISPLAYED */
+            <div className="text-center bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 border border-red-200">
+              {/* Original price - large and visible */}
+              <div className="mb-2">
+                <span className="text-lg text-red-500 line-through font-bold">
+                  {product.originalPrice.toFixed(0)} DH
+                </span>
+                <span className="ml-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  -{discount}% OFF
+                </span>
+              </div>
+              
+              {/* New price - even larger and prominent */}
+              <div className="text-3xl font-black text-green-600 mb-2">
+                {product.price.toFixed(0)} DH
+              </div>
+              
+              {/* Savings highlight */}
+              <div className="text-sm text-green-700 font-bold bg-green-100 rounded-full px-3 py-1 inline-block">
+                💰 Save {(product.originalPrice - product.price).toFixed(0)} DH
+              </div>
+            </div>
+          ) : (
+            /* Regular price for non-discounted items */
+            <div className="text-center">
+              <div className="text-2xl font-bold text-timber-700">
+                {product.price.toFixed(0)} DH
+              </div>
+            </div>
+          )}
         </div>
         
+        {/* Action buttons */}
         <div className="grid grid-cols-5 gap-3 mt-auto">
-          <button 
-            onClick={(e) => {
-              e.preventDefault();
-              onAddToCart(product);
-            }}
-            className="bg-primary text-white px-4 py-3 rounded-full
-              hover:bg-primary-dark transition-all duration-300 shadow-sm
-              hover:shadow-md font-medium text-sm col-span-3 flex items-center justify-center gap-2"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            <span>Add to Cart</span>
-          </button>
-          
-          <button 
-            onClick={() => navigate(`/product/${product.id}`)}
-            className="bg-white text-primary px-4 py-3 rounded-full border border-primary
-              hover:bg-primary/5 transition-all duration-300 font-medium text-sm col-span-2"
-          >
-            Details
-          </button>
+          {isCustomPrice ? (
+            <button 
+              onClick={() => navigate(`/product/${product.id}`)}
+              className="bg-primary text-white px-4 py-3 rounded-full
+                hover:bg-primary-dark transition-all duration-300 shadow-sm
+                hover:shadow-md font-medium text-sm col-span-5 flex items-center justify-center gap-2"
+            >
+              <span>Get Custom Quote</span>
+            </button>
+          ) : (
+            <>
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  onAddToCart(product);
+                }}
+                className={`text-white px-4 py-3 rounded-full transition-all duration-300 shadow-sm
+                  hover:shadow-md font-medium text-sm col-span-3 flex items-center justify-center gap-2
+                  ${hasDiscount(product) 
+                    ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 animate-pulse' 
+                    : 'bg-primary hover:bg-primary-dark'
+                  }`}
+              >
+                <ShoppingBag className="w-4 h-4" />
+                <span>{hasDiscount(product) ? 'GRAB DEAL!' : 'Add to Cart'}</span>
+              </button>
+              
+              <button 
+                onClick={() => navigate(`/product/${product.id}`)}
+                className="bg-white text-primary px-4 py-3 rounded-full border border-primary
+                  hover:bg-primary/5 transition-all duration-300 font-medium text-sm col-span-2"
+              >
+                Details
+              </button>
+            </>
+          )}
         </div>
       </div>
+      
+      {/* Floating deal badge for extra attention */}
+      {hasDiscount(product) && (
+        <div className="absolute -top-3 -left-3 z-30">
+          <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full 
+            text-xs font-bold shadow-lg transform -rotate-12 animate-bounce">
+            🔥 SALE
+          </div>
+        </div>
+      )}
     </div>
   );
 };

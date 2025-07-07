@@ -3,8 +3,8 @@ const products = [
   {
     id: 11,
     name: "Thuya & Epoxy Coffee Table",
-    description: "Handcrafted coffee table featuring premium thuya wood with a stunning epoxy design. Perfect centerpiece for modern living spaces.",
-    longDescription: "This exceptional coffee table combines the natural beauty of thuya wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    description: "This exceptional coffee table combines the natural beauty of thuya wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    originalPrice: 2500.00,
     price: 2000.00,
     category: "Coffee Tables",
     size: "60cm x 40cm x 45cm",
@@ -18,8 +18,8 @@ const products = [
   {
     id: 12,
     name: "Walnut & Epoxy Coffee Table",
-    description: "Handcrafted coffee table featuring premium walnut wood with a stunning epoxy design. Perfect centerpiece for modern living spaces.",
-    longDescription: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    description: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    originalPrice: 2400.00,
     price: 2000.00,
     category: "Coffee Tables",
     size: "55cm x 55cm x 45cm",
@@ -33,8 +33,8 @@ const products = [
   {
     id: 13,
     name: "Walnut & Epoxy Coffee Table",
-    description: "Handcrafted coffee table featuring premium walnut wood with a stunning epoxy design. Perfect centerpiece for modern living spaces.",
-    longDescription: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    description: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    originalPrice: 2300.00,
     price: 2000.00,
     category: "Coffee Tables",
     size: "55cm x 55cm x 45cm",
@@ -47,22 +47,21 @@ const products = [
   {
     id: 14,
     name: "Walnut & Epoxy Coffee Table",
-    description: "Handcrafted coffee table featuring premium walnut wood with a stunning epoxy design. Perfect centerpiece for modern living spaces.",
-    longDescription: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    description: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
+    originalPrice: 2200.00,
     price: 2000.00,
     category: "Coffee Tables",
     size: "55cm x 55cm x 45cm",
     featured: false,
     images: [
       "/pd141.jpeg",
-
     ]
   },
   {
     id: 21,
     name: "Walnut Media Console",
-    description: "A sleek and functional TV table crafted from beautiful walnut wood, offering ample storage and cable management for modern living rooms.",
-    longDescription: "This contemporary media console is expertly crafted from high-quality **walnut wood**, showcasing its rich grain and natural beauty. It features two spacious drawers and an open shelf, perfect for housing media devices, remotes, and entertainment accessories. Integrated cable management cutouts keep wires tidy and out of sight, ensuring a clean aesthetic. Its minimalist design and sturdy construction make it an ideal addition to any modern home, blending natural elegance with practical functionality.",
+    description: "This contemporary media console is expertly crafted from high-quality **walnut wood**, showcasing its rich grain and natural beauty. It features two spacious drawers and an open shelf, perfect for housing media devices, remotes, and entertainment accessories. Integrated cable management cutouts keep wires tidy and out of sight, ensuring a clean aesthetic. Its minimalist design and sturdy construction make it an ideal addition to any modern home, blending natural elegance with practical functionality.",
+    originalPrice: null,
     price: 0,
     category: "TV Tables",
     size: "Customizable",
@@ -76,8 +75,8 @@ const products = [
   {
     id: 22,
     name: "Walnut Media Console",
-    description: "A sleek and functional TV table crafted from beautiful walnut wood, offering ample storage and cable management for modern living rooms.",
-    longDescription: "This contemporary media console is expertly crafted from high-quality **walnut wood**, showcasing its rich grain and natural beauty. It features two spacious drawers and an open shelf, perfect for housing media devices, remotes, and entertainment accessories. Integrated cable management cutouts keep wires tidy and out of sight, ensuring a clean aesthetic. Its minimalist design and sturdy construction make it an ideal addition to any modern home, blending natural elegance with practical functionality.",
+    description: "This contemporary media console is expertly crafted from high-quality **walnut wood**, showcasing its rich grain and natural beauty. It features two spacious drawers and an open shelf, perfect for housing media devices, remotes, and entertainment accessories. Integrated cable management cutouts keep wires tidy and out of sight, ensuring a clean aesthetic. Its minimalist design and sturdy construction make it an ideal addition to any modern home, blending natural elegance with practical functionality.",
+    originalPrice: null,
     price: 0,
     category: "TV Tables",
     size: "Customizable",
@@ -89,8 +88,8 @@ const products = [
   {
     id: 23,
     name: "Walnut Media Console",
-    description: "A sleek and functional TV table crafted from beautiful walnut wood, offering ample storage and cable management for modern living rooms.",
-    longDescription: "This contemporary media console is expertly crafted from high-quality **walnut wood**, showcasing its rich grain and natural beauty. It features two spacious drawers and an open shelf, perfect for housing media devices, remotes, and entertainment accessories. Integrated cable management cutouts keep wires tidy and out of sight, ensuring a clean aesthetic. Its minimalist design and sturdy construction make it an ideal addition to any modern home, blending natural elegance with practical functionality.",
+    description: "This contemporary media console is expertly crafted from high-quality **walnut wood**, showcasing its rich grain and natural beauty. It features two spacious drawers and an open shelf, perfect for housing media devices, remotes, and entertainment accessories. Integrated cable management cutouts keep wires tidy and out of sight, ensuring a clean aesthetic. Its minimalist design and sturdy construction make it an ideal addition to any modern home, blending natural elegance with practical functionality.",
+    originalPrice: null,
     price: 0,
     category: "TV Tables",
     size: "Customizable",
