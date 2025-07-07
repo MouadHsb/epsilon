@@ -128,13 +128,27 @@ const products = [
     "id": 32,
     "name": "Walnut & Epoxy River Desk",
     "description": "Elevate your workspace with this stunning Walnut & Epoxy River Desk. Crafted from highly figured Walnut, prized for its intricate grain and rich, warm tones. A custom-poured epoxy river, available in deep sapphire blue or translucent black, flows through the natural live edge of the wood. The expansive, smooth surface provides an inspiring and functional area for work or creativity. Each desk is meticulously handcrafted and sits atop modern, sturdy steel legs. Finished with a durable, satin Osmo Polyx-Oil to protect the wood and provide a natural feel.",
-    "originalPrice": 11000.00,
-    "price": 9000.00,
+    "originalPrice": 14500.00,
+    "price": 12000.00,
     "category": "Desks",
-    "size": "140cm x 70cm x 75cm",
+    "size": "180cm x 70cm x 75cm",
     "featured": true,
     "images": [
-      "/pd311.jpeg"
+      "/pd321.jpeg"
+    ]
+  },
+  {
+    "id": 34,
+    "name": "Walnut & Epoxy River Desk",
+    "description": "Elevate your workspace with this stunning Walnut & Epoxy River Desk. Crafted from highly figured Walnut, prized for its intricate grain and rich, warm tones. A custom-poured epoxy river, available in deep sapphire blue or translucent black, flows through the natural live edge of the wood. The expansive, smooth surface provides an inspiring and functional area for work or creativity. Each desk is meticulously handcrafted and sits atop modern, sturdy steel legs. Finished with a durable, satin Osmo Polyx-Oil to protect the wood and provide a natural feel.",
+    "originalPrice": 20000.00,
+    "price": 15000.00,
+    "category": "Desks",
+    "size": "220cm x 90cm x 75cm",
+    "featured": true,
+    "images": [
+      "/pd341.jpeg",
+      "/pd342.jpeg"
     ]
   },
 ];
