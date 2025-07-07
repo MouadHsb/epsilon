@@ -34,8 +34,8 @@ const products = [
     id: 13,
     name: "Walnut & Epoxy Coffee Table",
     description: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
-    originalPrice: 3500.00,
-    price: 2500.00,
+    originalPrice: 2600.00,
+    price: 1950.00,
     category: "Coffee Tables",
     size: "55cm x 55cm x 45cm",
     featured: false,
@@ -49,7 +49,7 @@ const products = [
     name: "Walnut & Epoxy Coffee Table",
     description: "This exceptional coffee table combines the natural beauty of walnut wood with the modern appeal of epoxy resin. Each piece features unique grain patterns and a flowing epoxy that creates a mesmerizing focal point. Handcrafted with precision and finished with multiple coats of protective polyurethane for durability.",
     originalPrice: 3500.00,
-    
+
     price: 2500.00,
     category: "Coffee Tables",
     size: "55cm x 55cm x 45cm",
