@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Toaster, toast } from 'sonner';
 import { fetchProducts } from '../services/productService';
-import { Star, Filter, ChevronDown, Loader, Search, ShoppingBag, TreePine, Palette, Heart } from 'lucide-react';
+// Removed unused icons: Star, TreePine, Palette, Heart
+import { Filter, ChevronDown, Loader, Search, ShoppingBag } from 'lucide-react';
 import { getImageUrl } from '../utils/imageUtils';
 import { formatPrice, hasDiscount, hasCustomPrice, calculateDiscount } from '../utils/priceUtils';
 
@@ -11,16 +12,8 @@ import { formatPrice, hasDiscount, hasCustomPrice, calculateDiscount } from '../
 const ProductCard = ({ product, onAddToCart }) => {
   const navigate = useNavigate();
   const [isHovering, setIsHovering] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  
-  useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    setIsFavorite(favorites.includes(product.id));
-  }, [product.id]);
-
-
-  const discount = hasDiscount(product) ? calculateDiscount(product.originalPrice, product.price) : 0;
   const isCustomPrice = hasCustomPrice(product);
+  
   
   return (
     <div 
@@ -44,37 +37,30 @@ const ProductCard = ({ product, onAddToCart }) => {
           loading="lazy"
         />
         
-        {/* Category badge */}
-        <div className="absolute top-3 left-3 z-20">
-          <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-primary 
+        {/* Category and Discount badges */}
+        <div className="absolute top-3 left-3 right-3 z-20 flex justify-between items-center">
+          <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-primary
             text-xs font-medium shadow-sm">
             {product.category}
           </span>
+
+          {hasDiscount(product) && (
+            <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+              Discount
+            </div>
+          )}
         </div>
-        
-        {/* Price display in top right - showing BOTH prices */}
+
+        {/* FIXED: Price display in top right - now shows "Custom" for custom pricing */}
         <div className="absolute top-3 right-3 z-20">
           {isCustomPrice ? (
-            <div className="bg-primary text-white px-3 py-2 rounded-full text-xs font-bold shadow-sm">
-              CUSTOM SIZE
+            <div className="bg-primary text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+              Custom
             </div>
           ) : hasDiscount(product) ? (
-            <div className="bg-white/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-red-200">
-              {/* Discount badge */}
-              <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold mb-2 text-center">
-                -{discount}% OFF
+             <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold mb-2 text-center">
+                -{calculateDiscount(product.originalPrice, product.price)}% OFF
               </div>
-              {/* Original price - clearly visible */}
-              <div className="text-center">
-                <div className="text-sm text-red-500 line-through font-semibold">
-                  {product.originalPrice.toFixed(0)} DH
-                </div>
-                {/* New price - prominent */}
-                <div className="text-lg font-black text-green-600">
-                  {product.price.toFixed(0)} DH
-                </div>
-              </div>
-            </div>
           ) : (
             <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
               <div className="text-timber-700 font-semibold text-sm">
@@ -83,7 +69,6 @@ const ProductCard = ({ product, onAddToCart }) => {
             </div>
           )}
         </div>
-        
 
         <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
           isHovering ? 'opacity-100' : 'opacity-0'
@@ -93,105 +78,85 @@ const ProductCard = ({ product, onAddToCart }) => {
       <div className="p-5">
         <h3 
           onClick={() => navigate(`/product/${product.id}`)}
-          className="text-lg font-semibold text-timber-700 mb-2 cursor-pointer
-            hover:text-primary transition-colors leading-tight h-14 line-clamp-2"
+          className="text-lg font-semibold text-timber-700 mb-3 cursor-pointer
+            hover:text-primary transition-colors leading-tight line-clamp-2"
         >
           {product.name}
         </h3>
         
-        
-        {/* MAIN Price display in card body - showing BOTH prices prominently */}
-        <div className="mb-5">
+        {/* Price Section */}
+        <div className="mb-4">
           {isCustomPrice ? (
-            <div className="text-center bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-4">
-              <span className="text-xl font-bold text-primary block">
-                Depends on size
+            <div>
+              <span className="text-lg font-bold text-primary">
+                Contact us for a Quote
               </span>
-              <p className="text-sm text-timber-600 mt-1">Contact us for custom pricing</p>
-            </div>
-          ) : hasDiscount(product) ? (
-            /* BOTH PRICES CLEARLY DISPLAYED */
-            <div className="text-center bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 border border-red-200">
-              {/* Original price - large and visible */}
-              <div className="mb-2">
-                <span className="text-lg text-red-500 line-through font-bold">
-                  {product.originalPrice.toFixed(0)} DH
-                </span>
-                <span className="ml-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                  -{discount}% OFF
-                </span>
-              </div>
               
-              {/* New price - even larger and prominent */}
-              <div className="text-3xl font-black text-green-600 mb-2">
-                {product.price.toFixed(0)} DH
-              </div>
-              
-              {/* Savings highlight */}
-              <div className="text-sm text-green-700 font-bold bg-green-100 rounded-full px-3 py-1 inline-block">
-                💰 Save {(product.originalPrice - product.price).toFixed(0)} DH
-              </div>
             </div>
           ) : (
-            /* Regular price for non-discounted items */
-            <div className="text-center">
-              <div className="text-2xl font-bold text-timber-700">
-                {product.price.toFixed(0)} DH
-              </div>
+            <div>
+              {hasDiscount(product) ? (
+                <div className="flex items-center gap-2">
+                  <div className="text-lg text-timber-500 line-through">
+                    {formatPrice(product.originalPrice)}
+                  </div>
+                  <div className="text-xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
+                    {formatPrice(product.price)}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-lg font-bold text-timber-700">
+                  {formatPrice(product.price)}
+                </div>
+              )}
             </div>
           )}
         </div>
         
         {/* Action buttons */}
-        <div className="grid grid-cols-5 gap-3 mt-auto">
+        <div className="grid grid-cols-5 gap-2">
           {isCustomPrice ? (
             <button 
               onClick={() => navigate(`/product/${product.id}`)}
-              className="bg-primary text-white px-4 py-3 rounded-full
+              className="bg-primary text-white px-4 py-2.5 rounded-full
                 hover:bg-primary-dark transition-all duration-300 shadow-sm
                 hover:shadow-md font-medium text-sm col-span-5 flex items-center justify-center gap-2"
             >
-              <span>Get Custom Quote</span>
+              <span>Get Quote</span>
             </button>
           ) : (
             <>
               <button 
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   onAddToCart(product);
                 }}
-                className={`text-white px-4 py-3 rounded-full transition-all duration-300 shadow-sm
-                  hover:shadow-md font-medium text-sm col-span-3 flex items-center justify-center gap-2
+                className={`text-white px-4 py-2.5 rounded-full transition-all duration-300 shadow-sm
+                  hover:shadow-md font-medium text-sm col-span-3 flex items-center justify-center gap-1
                   ${hasDiscount(product) 
-                    ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 animate-pulse' 
+                    ? 'bg-primary text-white hover:bg-primary-dark transition-all duration-300 shadow-sm hover:shadow-md' 
                     : 'bg-primary hover:bg-primary-dark'
                   }`}
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>{hasDiscount(product) ? 'GRAB DEAL!' : 'Add to Cart'}</span>
+                <span className="hidden sm:inline">Add</span>
               </button>
               
               <button 
-                onClick={() => navigate(`/product/${product.id}`)}
-                className="bg-white text-primary px-4 py-3 rounded-full border border-primary
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/product/${product.id}`);
+                }}
+                className="bg-white text-primary px-4 py-2.5 rounded-full border border-primary
                   hover:bg-primary/5 transition-all duration-300 font-medium text-sm col-span-2"
               >
-                Details
+                View
               </button>
             </>
           )}
         </div>
       </div>
-      
-      {/* Floating deal badge for extra attention */}
-      {hasDiscount(product) && (
-        <div className="absolute -top-3 -left-3 z-30">
-          <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full 
-            text-xs font-bold shadow-lg transform -rotate-12 animate-bounce">
-            🔥 SALE
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -235,8 +200,8 @@ const FilterSidebar = ({ categories, activeCategory, onCategoryChange, sortOptio
         <h4 className="text-md font-medium text-timber-700 mb-3">Price Range</h4>
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-timber-600 mb-1">
-            <span>{priceRange[0]} DH</span>
-            <span>{priceRange[1]} DH</span>
+            <span>{formatPrice(priceRange[0])}</span>
+            <span>{formatPrice(priceRange[1])}</span>
           </div>
           <input 
             type="range" 
@@ -303,7 +268,8 @@ const Products = () => {
         const uniqueCategories = [...new Set(data.map(product => product.category))];
         setCategories(uniqueCategories);
         
-        const highestPrice = Math.ceil(Math.max(...data.map(product => product.price)));
+        const pricesOnly = data.filter(p => p.price > 0).map(p => p.price);
+        const highestPrice = pricesOnly.length > 0 ? Math.ceil(Math.max(...pricesOnly)) : 5000;
         setMaxPrice(highestPrice);
         setPriceRange([0, highestPrice]);
         
@@ -339,15 +305,24 @@ const Products = () => {
     }
     
     result = result.filter(product => {
+      if (product.price === 0) return true;
       return product.price >= priceRange[0] && product.price <= priceRange[1];
     });
     
     switch (sortOption) {
       case 'price-low':
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => {
+          if (a.price === 0) return 1;
+          if (b.price === 0) return -1;
+          return a.price - b.price;
+        });
         break;
       case 'price-high':
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => {
+          if (a.price === 0) return 1;
+          if (b.price === 0) return -1;
+          return b.price - a.price;
+        });
         break;
       case 'name-asc':
         result.sort((a, b) => a.name.localeCompare(b.name));
@@ -356,7 +331,15 @@ const Products = () => {
         result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       default:
-        result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        result.sort((a, b) => {
+          const aDiscount = hasDiscount(a) ? calculateDiscount(a.originalPrice, a.price) : 0;
+          const bDiscount = hasDiscount(b) ? calculateDiscount(b.originalPrice, b.price) : 0;
+          
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          
+          return bDiscount - aDiscount;
+        });
     }
     
     setFilteredProducts(result);
@@ -464,6 +447,7 @@ const Products = () => {
               Discover our curated collection of handcrafted furniture and decor, where sustainable hardwoods 
               meet artistic resin flows to create functional masterpieces for your home.
             </p>
+            
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -532,7 +516,7 @@ const Products = () => {
               
               {(priceRange[0] !== 0 || priceRange[1] !== maxPrice) && (
                 <div className="bg-primary/10 text-primary py-1 px-3 rounded-full text-sm font-medium flex items-center">
-                  Price: {priceRange[0]} DH - {priceRange[1]} DH
+                  Price: {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
                   <button 
                     onClick={() => setPriceRange([0, maxPrice])}
                     className="ml-2 hover:text-primary-dark"
@@ -603,21 +587,13 @@ const Products = () => {
                     <Search className="w-8 h-8 text-primary opacity-70" />
                   </div>
                   <h3 className="text-xl font-semibold text-timber-700 mb-2">No pieces found</h3>
-                  <p className="text-timber-600 max-w-md mx-auto">
+                  <p className="text-timber-600 max-w-
+                  \md mx-auto">
                     We couldn't find any furniture matching your criteria. 
                     Try adjusting your filters or explore our custom order options.
                   </p>
-                  <button
-                    onClick={() => navigate('/custom')}
-                    className="mt-4 bg-primary text-white px-6 py-3 rounded-full
-                      hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg
-                      font-medium"
-                  >
-                    Request Custom Piece
-                  </button>
                 </div>
               ) : (
-                // ## MODIFIED: Sizing now matches the first code ##
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredProducts.map((product) => (
                     <ProductCard 

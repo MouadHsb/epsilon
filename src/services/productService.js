@@ -16,6 +16,7 @@ const formatProductForListing = (product) => ({
   id: product.id,
   name: product.name,
   description: product.description,
+  originalPrice: product.originalPrice,
   price: product.price,
   category: product.category,
   image: product.images[0],
