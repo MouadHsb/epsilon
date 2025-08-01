@@ -439,7 +439,7 @@ const Products = () => {
       <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-14">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-5xl font-light text-timber-700 mb-6 tracking-tight">
+            <h2 className="text-4xl font-light text-timber-700 mb-6 tracking-tight">
               Let's Create Something <span className="text-primary font-semibold">Beautiful</span> Together
             </h2>
             
