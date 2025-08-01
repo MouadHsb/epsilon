@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, ChevronLeft, ChevronRight, Minus, Plus, Truck, ShieldCheck, RefreshCw, Heart, Share, Check, TreePine, Palette, Ruler, Award, Clock, Hammer } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Minus, Plus, Truck, ShieldCheck, RefreshCw, Heart, Share, Check, TreePine, Palette, Ruler, Award, Clock, Hammer, Settings, Home } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 import Layout from '../components/Layout';
 import { fetchProductById, fetchProducts } from '../services/productService';
@@ -21,7 +21,7 @@ const ProductDetail = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [activeTab, setActiveTab] = useState('details');
+  const [activeTab, setActiveTab] = useState('features');
   
 
   // Fetch product data
@@ -31,6 +31,17 @@ const ProductDetail = () => {
         setLoading(true);
         const productData = await fetchProductById(parseInt(id));
         setProduct(productData);
+        
+        // Set default active tab based on available data
+        if (productData.features) {
+          setActiveTab('features');
+        } else if (productData.details) {
+          setActiveTab('details');
+        } else if (productData.uses) {
+          setActiveTab('uses');
+        } else if (productData.customization) {
+          setActiveTab('customization');
+        }
         
         // Get related products from the same category
         if (productData?.category) {
@@ -550,6 +561,140 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Product Information Tabs */}
+                {(product.features || product.details || product.uses || product.customization) && (
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl mb-6 border border-primary/10 overflow-hidden">
+                    {/* Tab Navigation */}
+                    <div className="flex border-b border-primary/10">
+                      {product.features && (
+                        <button
+                          onClick={() => setActiveTab('features')}
+                          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                            activeTab === 'features'
+                              ? 'bg-primary/5 text-primary border-b-2 border-primary'
+                              : 'text-timber-600 hover:text-primary hover:bg-primary/2'
+                          }`}
+                        >
+                          <Award className="w-4 h-4 inline-block mr-2" />
+                          Features
+                        </button>
+                      )}
+                      {product.details && (
+                        <button
+                          onClick={() => setActiveTab('details')}
+                          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                            activeTab === 'details'
+                              ? 'bg-primary/5 text-primary border-b-2 border-primary'
+                              : 'text-timber-600 hover:text-primary hover:bg-primary/2'
+                          }`}
+                        >
+                          <Hammer className="w-4 h-4 inline-block mr-2" />
+                          Details
+                        </button>
+                      )}
+                      {product.uses && (
+                        <button
+                          onClick={() => setActiveTab('uses')}
+                          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                            activeTab === 'uses'
+                              ? 'bg-primary/5 text-primary border-b-2 border-primary'
+                              : 'text-timber-600 hover:text-primary hover:bg-primary/2'
+                          }`}
+                        >
+                          <Home className="w-4 h-4 inline-block mr-2" />
+                          Uses
+                        </button>
+                      )}
+                      {product.customization && (
+                        <button
+                          onClick={() => setActiveTab('customization')}
+                          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                            activeTab === 'customization'
+                              ? 'bg-primary/5 text-primary border-b-2 border-primary'
+                              : 'text-timber-600 hover:text-primary hover:bg-primary/2'
+                          }`}
+                        >
+                          <Settings className="w-4 h-4 inline-block mr-2" />
+                          Custom
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Tab Content */}
+                    <div className="p-6">
+                      {activeTab === 'features' && product.features && (
+                        <div className="space-y-3">
+                          <h4 className="font-semibold text-timber-700 mb-4 flex items-center">
+                            <Award className="w-5 h-5 mr-2 text-primary" />
+                            Key Features
+                          </h4>
+                          <ul className="space-y-3">
+                            {product.features.map((feature, index) => (
+                              <li key={index} className="flex items-start gap-3">
+                                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
+                                <span className="text-timber-600 text-sm leading-relaxed">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {activeTab === 'details' && product.details && (
+                        <div className="space-y-3">
+                          <h4 className="font-semibold text-timber-700 mb-4 flex items-center">
+                            <Hammer className="w-5 h-5 mr-2 text-primary" />
+                            Craftsmanship Details
+                          </h4>
+                          <ul className="space-y-3">
+                            {product.details.map((detail, index) => (
+                              <li key={index} className="flex items-start gap-3">
+                                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
+                                <span className="text-timber-600 text-sm leading-relaxed">{detail}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {activeTab === 'uses' && product.uses && (
+                        <div className="space-y-3">
+                          <h4 className="font-semibold text-timber-700 mb-4 flex items-center">
+                            <Home className="w-5 h-5 mr-2 text-primary" />
+                            Perfect For
+                          </h4>
+                          <div className="grid grid-cols-2 gap-3">
+                            {product.uses.map((use, index) => (
+                              <div key={index} className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
+                                <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0"></div>
+                                <span className="text-timber-700 text-sm font-medium">{use}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {activeTab === 'customization' && product.customization && (
+                        <div className="space-y-3">
+                          <h4 className="font-semibold text-timber-700 mb-4 flex items-center">
+                            <Settings className="w-5 h-5 mr-2 text-primary" />
+                            Customization Options
+                          </h4>
+                          <div className="space-y-4">
+                            {product.customization.map((option, index) => (
+                              <div key={index} className="p-4 bg-gradient-to-r from-primary/5 to-timber-50/50 rounded-lg border border-primary/10">
+                                <div className="flex items-start gap-3">
+                                  <Palette className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
+                                  <span className="text-timber-600 text-sm leading-relaxed">{option}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
                 
                 {/* Quantity Selector and Add to Cart */}
                   <QuantityAndCartSection 

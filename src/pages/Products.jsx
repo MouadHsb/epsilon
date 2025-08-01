@@ -392,7 +392,7 @@ const Products = () => {
         <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-20">
           <div className="container mx-auto px-4 sm:px-8">
             <h2 className="text-5xl font-light text-timber-700 mb-8 tracking-tight">
-              Our <span className="text-primary font-semibold">Collection</span>
+              Let's Create Something <span className="text-primary font-semibold">Beautiful</span> Together
             </h2>
             <div className="flex items-center justify-center pt-10 pb-20">
               <div className="flex flex-col items-center">
@@ -436,17 +436,12 @@ const Products = () => {
   return (
     <Layout>
       <Toaster richColors />
-      <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-20">
+      <div className="bg-gradient-to-br from-timber-50 to-white min-h-screen py-14">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="text-center mb-10">
             <h2 className="text-5xl font-light text-timber-700 mb-6 tracking-tight">
-              Our <span className="text-primary font-semibold">Collection</span>
+              Let's Create Something <span className="text-primary font-semibold">Beautiful</span> Together
             </h2>
-            
-            <p className="text-lg text-timber-600 mb-8 max-w-3xl mx-auto">
-              Discover our curated collection of handcrafted furniture and decor, where sustainable hardwoods 
-              meet artistic resin flows to create functional masterpieces for your home.
-            </p>
             
           </div>
           
